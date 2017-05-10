@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1036596680942",
+    "firebase_url": "https://frigidarium-cce18.firebaseio.com",
+    "project_id": "frigidarium-cce18",
+    "storage_bucket": "frigidarium-cce18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036596680942:android:438082a9885c6f4c",
+        "android_client_info": {
+          "package_name": "pt12.frigidarium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036596680942-k9fd4i14lh1fgvb7p8ubh6072cn1hvde.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt12.frigidarium",
+            "certificate_hash": "ca66b2ea2335a2972de6107ef0a91b92ef37a7ef"
+          }
+        },
+        {
+          "client_id": "1036596680942-umcnu3qgplclnv4pka2qn6hc1k6ft61e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVRwdIKNXv6-et3WQ-1zlVa7tViNL7hFQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036596680942-umcnu3qgplclnv4pka2qn6hc1k6ft61e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
