@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 
 
 /**
@@ -28,6 +32,22 @@ public class StockFragment extends Fragment {
     private String mParam2;
 
     //private OnFragmentInteractionListener mListener;
+
+    private int COLUMNS = 2;
+
+    private enum LayoutManagerType {
+        GRID_LAYOUT_MANAGER,
+        LINEAR_LAYOUT_MANAGER
+    }
+    private LayoutManagerType currentLayoutManagerType;
+
+    private RadioButton linearLayoutRadioButton;
+    private RadioButton gridLayoutRadioButton;
+
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private ProductsAdapter adapter;
+
 
     public StockFragment() {
         // Required empty public constructor
@@ -58,13 +78,28 @@ public class StockFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stock, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_stock, container, false);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        layoutManager = new LinearLayoutManager(getActivity());
+
+        currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        setRecyclerViewLayoutManager(currentLayoutManagerType);
+
+        String[] data = {"eerste", "tweede", "derde", "vierde"};
+        adapter = new ProductsAdapter(data);
+        recyclerView.setAdapter(adapter);
+
+        setLayoutChangeButtonListeners(rootView);
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,4 +140,50 @@ public class StockFragment extends Fragment {
         // TOD O: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
+
+
+    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+        int scrollPosition = 0;
+
+        // Get current scroll position when a layout manager already has been set.
+        if (recyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        switch (layoutManagerType) {
+            case GRID_LAYOUT_MANAGER:
+                layoutManager = new GridLayoutManager(getActivity(), COLUMNS);
+                currentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+                break;
+            case LINEAR_LAYOUT_MANAGER:
+                layoutManager = new LinearLayoutManager(getActivity());
+                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                break;
+            default:
+                layoutManager = new LinearLayoutManager(getActivity());
+                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.scrollToPosition(scrollPosition);
+    }
+
+    public void setLayoutChangeButtonListeners(View rootView){
+        linearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
+        linearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+            }
+        });
+
+        gridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
+        gridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
+            }
+        });
+    }
 }
