@@ -27,34 +27,39 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
         this.ref = ref;
         listeners = new HashSet<>();
     }
-    protected void setOwner (final O owner){
-        this.owner = owner;
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getKey().equals(name)){
-                    value = (V) dataSnapshot.getValue();
-                    DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener() {
-                        @Override
-                        public void onFinished(DatabaseEntryOwner unused) {
-                            for (OnChangeListener<O,V> listener :listeners) {
-                                listener.OnChange(owner,name,value);
+    protected void setOwner (final O owner) {
+        if (owner == null){
+            return;
+        }
+        if (this.owner == null) {
+            this.owner = owner;
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getKey().equals(name)) {
+                        value = (V) dataSnapshot.getValue();
+                        DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener() {
+                            @Override
+                            public void onFinished(DatabaseEntryOwner unused) {
+                                for (OnChangeListener<O, V> listener : listeners) {
+                                    listener.OnChange(owner, name, value);
+                                }
                             }
+                        };
+                        if (owner.isFinished(name)) {
+                            fListener.onFinished(owner);
+                        } else {
+                            owner.addOnFinishedListener(fListener);
                         }
-                    };
-                    if(owner.isFinished(name)) {
-                        fListener.onFinished(owner);
-                    }else {
-                        owner.addOnFinishedListener(fListener);
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    return;
+                }
+            });
+        }
     }
     protected void setValue(V value){
         ref.setValue(value);
