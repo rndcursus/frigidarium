@@ -40,6 +40,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
+    private boolean signingIn = false;
+    private Class<?> nextActivity = FirebaseTestActivity.class;
 
 
     @Override
@@ -65,8 +67,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        if (this.signingIn){
+            this.signingIn = true;
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        }
     }
 
     @Override
@@ -84,6 +89,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // Google Sign In failed, update UI appropriately
                 // ...
             }
+            this.signingIn  = false;
         }
     }
 
@@ -100,17 +106,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 break;
             // ...
         }
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
 
@@ -149,10 +144,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(this, FirebaseTestActivity.class);
+            Intent intent = new Intent(this, this.nextActivity);
             this.startActivity(intent);
         }
-
     }
 }
 
