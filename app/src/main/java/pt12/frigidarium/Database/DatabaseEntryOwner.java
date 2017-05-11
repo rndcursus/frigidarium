@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by mattijn on 11/05/17.
+ * this is similar to a row in SQL.
  */
 
 public class DatabaseEntryOwner {
@@ -31,7 +31,7 @@ public class DatabaseEntryOwner {
         return isFinished();
     }
 
-    public DatabaseEntryOwner(DatabaseReference ref, Map<String, DatabaseEntry> entries){
+    protected DatabaseEntryOwner(DatabaseReference ref, Map<String, DatabaseEntry> entries){
         this.entries = entries;
         entriesDone = new HashMap<>();
         finishedListeners  = new HashSet();
@@ -62,19 +62,19 @@ public class DatabaseEntryOwner {
         return true;
     }
 
-    protected boolean addOnFinishedListener(OnFinishedListener listener){
+    protected void addOnFinishedListener(OnFinishedListener listener){
         if (!isFinished()){
             finishedListeners.add(listener);
-            return true;
+        }else{
+            listener.onFinished(this);
         }
-        return false;
     }
 
     protected interface OnFinishedListener{
         public void onFinished(DatabaseEntryOwner owner);
     }
 
-    public DatabaseEntry getEntry(String name){
+    protected DatabaseEntry getEntry(String name){
         return entries.get(name);
     }
 }

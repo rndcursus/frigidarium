@@ -56,18 +56,22 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
             }
         });
     }
-    public void setValue(V value){
+    protected void setValue(V value){
         ref.setValue(value);
     }
-    public void addListener(OnChangeListener<O,V> listener){
+    protected void addListener(OnChangeListener<O,V> listener){
         listeners.add(listener);
     }
 
-    public void removeListener(OnChangeListener<O,V> listener){
+    protected void removeListener(OnChangeListener<O,V> listener){
         listeners.remove(listener);
     }
 
-    public interface OnChangeListener<O extends DatabaseEntryOwner,V> {
+    protected V getValue() {
+        return value;
+    }
+
+    protected interface OnChangeListener<O extends DatabaseEntryOwner,V> {
         public void OnChange(O owner, String name, V value);
     }
 
