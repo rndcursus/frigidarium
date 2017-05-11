@@ -1,5 +1,11 @@
 package pt12.frigidarium.Database;
 
+import android.provider.ContactsContract;
+
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +29,16 @@ public class DatabaseEntryOwner {
             return isFinished();
         }
         return isFinished();
+    }
+
+    public DatabaseEntryOwner(DatabaseReference ref, Map<String, DatabaseEntry> entries){
+        this.entries = entries;
+        entriesDone = new HashMap<>();
+        finishedListeners  = new HashSet();
+        for (Map.Entry<String,DatabaseEntry> entry: entries.entrySet()){
+            entriesDone.put(entry.getKey(),false);
+            entry.getValue().setOwner(this);
+        }
     }
 
     /**
@@ -58,4 +74,7 @@ public class DatabaseEntryOwner {
         public void onFinished(DatabaseEntryOwner owner);
     }
 
+    public DatabaseEntry getEntry(String name){
+        return entries.get(name);
+    }
 }

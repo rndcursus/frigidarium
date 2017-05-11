@@ -19,14 +19,16 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
     private final String name;
     private final DatabaseReference ref;
     private V value;
-    private final O owner;
+    private O owner;
     private final Set<OnChangeListener<O,V>> listeners;
 
-    protected DatabaseEntry(final String name, final O owner, DatabaseReference ref) {
+    protected DatabaseEntry(final String name, DatabaseReference ref) {
         this.name = name;
-        this.owner = owner;
         this.ref = ref;
         listeners = new HashSet<>();
+    }
+    protected void setOwner (final O owner){
+        this.owner = owner;
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -35,9 +37,9 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
                     DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener() {
                         @Override
                         public void onFinished(DatabaseEntryOwner unused) {
-                                for (OnChangeListener<O,V> listener :listeners) {
-                                    listener.OnChange(owner,name,value);
-                                }
+                            for (OnChangeListener<O,V> listener :listeners) {
+                                listener.OnChange(owner,name,value);
+                            }
                         }
                     };
                     if(owner.isFinished(name)) {
@@ -50,7 +52,7 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //todo handle databaseError
+
             }
         });
     }
