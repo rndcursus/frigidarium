@@ -22,7 +22,7 @@ public class FirebaseTestActivity extends AppCompatActivity implements View.OnCl
         Product p = new Product("test_product");
         p.addListener(new Product.OnProductChangeListener() {
             @Override
-            public void onChange(Product p, String name) {
+            public void onChange(String name) {
                 if (name.equals(Product.BRAND)){
                     TextView tv = (TextView) findViewById(R.id.textView2);
                     tv.setText(getBrand());
