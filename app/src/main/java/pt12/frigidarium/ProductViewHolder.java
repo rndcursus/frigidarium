@@ -17,7 +17,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
                 Toast.makeText(view.getContext(), textView.getText(), Toast.LENGTH_SHORT).show();
             }
         });
-        textView = (TextView) view.findViewById(R.id.textView);
+        textView = (TextView) view.findViewById(R.id.product_name);
     }
 
     public TextView getTextView(){

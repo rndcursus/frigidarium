@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,11 +96,15 @@ public class StockFragment extends Fragment {
         currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         setRecyclerViewLayoutManager(currentLayoutManagerType);
 
-        String[] data = {"eerste", "tweede", "derde", "vierde"};
+        LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
         recyclerView.setAdapter(adapter);
 
         setLayoutChangeButtonListeners(rootView);
+
+        String data5 = "vijfde";
+        data.add(data5);
+        adapter.notifyItemInserted(4);
 
         return rootView;
     }

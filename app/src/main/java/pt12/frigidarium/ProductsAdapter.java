@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class ProductsAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
-    private String[] data;
+    private List<String> data;
 
-    public ProductsAdapter(String[] data) {
+    public ProductsAdapter(List<String> data) {
         this.data = data;
     }
 
@@ -25,12 +28,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductViewHolder> {
 
     @Override
     public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
-        viewHolder.getTextView().setText(data[position] + " product");
+        viewHolder.getTextView().setText(data.get(position) + " product");
     }
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return data.size();
     }
 
 }
