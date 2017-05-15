@@ -1,5 +1,11 @@
 package pt12.frigidarium.Database;
 
+import android.support.annotation.NonNull;
+import android.view.ViewStructure;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -7,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static android.R.attr.valueType;
 
@@ -57,6 +64,7 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
             @Override
             public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getKey().equals(name)) {
+                    final V oldData = map.get(dataSnapshot.getKey());
                     map.put(dataSnapshot.getKey(), dataSnapshot.getValue(valueType));
                     DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener<O>() {
                         @Override
@@ -64,7 +72,7 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
                             for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
                                 if (listener instanceof DatabaseMapEntry.OnChangeListener){
                                     DatabaseMapEntry.OnChangeListener<O,V> l = (DatabaseMapEntry.OnChangeListener<O,V>)  listener;
-                                    l.onChildChanged(owner,name,map.get(dataSnapshot.getKey()),dataSnapshot.getKey());
+                                    l.onChildChanged(owner,name,map.get(dataSnapshot.getKey()),dataSnapshot.getKey(), oldData);
                                 }
                             }
                         }
@@ -135,9 +143,36 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
         });
     }
 
+    public HashMap<String, V> getMap() {
+        return map;
+    }
+
+    public void add(V value){
+        Task<Void> x = ref.push().setValue(value);
+    }
+
+    public void remove(String key){
+        ref.child(key).removeValue();
+    }
+    public void change(String key, V val){
+        ref.child(key).setValue(val);
+    }
+    public String getKey(V value){
+        for (Map.Entry<String,V> entry  : map.entrySet()){
+            if (entry.getValue().equals(value)){
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public V getValue(String key) {
+        return map.get(key);
+    }
+
     public interface OnChangeListener<O extends DatabaseEntryOwner,V> extends DatabaseEntry.OnChangeListener<O> {
         public void onChildAdded(O owner, String mapName, V element, String key);
-        public void onChildChanged(O owner, String mapName, V element, String key);
+        public void onChildChanged(O owner, String mapName, V element, String key, V oldElement);
         public void onChildRemoved(O owner, String mapName, V element, String key);
         public void onChildMoved(O owner, String mapName, V element, String dataSnapshotKey, Object newPriority);
 
