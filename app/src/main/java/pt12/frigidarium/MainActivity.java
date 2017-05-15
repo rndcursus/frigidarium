@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            fragment= new ScanFragment();
 
         } else if (id == R.id.nav_stocklist) {
             fragment = new StockFragment();
@@ -113,5 +112,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 }
