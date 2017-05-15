@@ -63,27 +63,6 @@ public class Product extends DatabaseEntryOwner<Product>{
         super.getEntry(CONTENT).addListener(listener);
     }
 
-    public void setBarcode(String barcode){
-        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) super.getEntry(BARCODE);
-        entry.setValue(barcode);
-    }
-    public void setName(String name){
-        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) super.getEntry(NAME);
-        entry.setValue(name);
-    }
-    public void setBrand(String brand){
-        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) super.getEntry(BRAND);
-        entry.setValue(brand);
-    }
-    public void setContent(String content){
-        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) super.getEntry(CONTENT);
-        entry.setValue(content);
-    }
-    public void setUrl(String url){
-        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) super.getEntry(URL);
-        entry.setValue(url);
-    }
-
     public void addListener(OnProductChangeListener onProductChangeListener) {
         onProductChangeListener.setProduct(this);
         this.productListeners.add(onProductChangeListener);
@@ -97,6 +76,27 @@ public class Product extends DatabaseEntryOwner<Product>{
         private void setProduct(Product p){
             product = p;
         }
+        public void setBarcode(String barcode){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(BARCODE);
+            entry.setValue(barcode);
+        }
+        public void setName(String name){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(NAME);
+            entry.setValue(name);
+        }
+        public void setBrand(String brand){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(BRAND);
+            entry.setValue(brand);
+        }
+        public void setContent(String content){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(CONTENT);
+            entry.setValue(content);
+        }
+        public void setUrl(String url){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(URL);
+            entry.setValue(url);
+        }
+
         /**
          * only call this in onChange.
          */
