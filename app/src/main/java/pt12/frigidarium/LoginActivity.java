@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private boolean signingIn = false;
-    private Class<?> nextActivity = MainActivity.class;
+    private Class<?> nextActivity = FirebaseTestActivity.class;
 
 
     @Override
