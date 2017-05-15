@@ -1,4 +1,4 @@
-package pt12.frigidarium.Database;
+package pt12.frigidarium.Database.firebase;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,7 +18,7 @@ public class DatabaseSingleEntry<O extends DatabaseEntryOwner,V> extends Databas
         this.valueType = valueType;
     }
 
-    protected void setValue(V value){
+    public void setValue(V value){
         ref.setValue(value);
     }
     protected void setOwner (final O owner) {
@@ -28,7 +28,7 @@ public class DatabaseSingleEntry<O extends DatabaseEntryOwner,V> extends Databas
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getKey().equals(name)) {
                         value = dataSnapshot.getValue(valueType);
-                        DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener() {
+                        DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener<O>() {
                             @Override
                             public void onFinished(DatabaseEntryOwner unused) {
                                 for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
@@ -58,11 +58,11 @@ public class DatabaseSingleEntry<O extends DatabaseEntryOwner,V> extends Databas
             });
 
     }
-    protected V getValue() {
+    public V getValue() {
         return value;
     }
 
-    protected interface OnChangeListener<O extends DatabaseEntryOwner,V> extends DatabaseEntry.OnChangeListener<O>{
+    public interface OnChangeListener<O extends DatabaseEntryOwner,V> extends DatabaseEntry.OnChangeListener<O>{
         public void onChange(O owner, String name, V value);
     }
 }

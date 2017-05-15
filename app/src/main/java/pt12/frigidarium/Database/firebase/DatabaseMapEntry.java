@@ -1,10 +1,5 @@
-package pt12.frigidarium.Database;
+package pt12.frigidarium.Database.firebase;
 
-import android.support.annotation.NonNull;
-import android.view.ViewStructure;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -13,9 +8,6 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
-
-import static android.R.attr.valueType;
 
 /**
  * Created by mattijn on 11/05/17.
@@ -25,7 +17,7 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
     private HashMap<String, V> map;
     private Class<? extends V> valueType;
 
-    protected DatabaseMapEntry(String name, DatabaseReference ref,Class<? extends V> valueType) {
+    public DatabaseMapEntry(String name, DatabaseReference ref, Class<? extends V> valueType) {
         super(name,ref);
         this.valueType = valueType;
         this.map = new HashMap<>();

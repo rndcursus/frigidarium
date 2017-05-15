@@ -1,4 +1,4 @@
-package pt12.frigidarium.Database;
+package pt12.frigidarium.Database.models;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -8,11 +8,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pt12.frigidarium.Database.firebase.DatabaseEntry;
+import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
+import pt12.frigidarium.Database.firebase.DatabaseMapEntry;
+import pt12.frigidarium.Database.firebase.DatabaseSingleEntry;
+
 /**
  * Created by mattijn on 15/05/17.
  */
 
-public class User extends DatabaseEntryOwner<User>{
+public class User extends DatabaseEntryOwner<User> {
     private static final String UID = "uid";
     public static final String STOCKS = "stocks";
     public static final String NAME = "name";

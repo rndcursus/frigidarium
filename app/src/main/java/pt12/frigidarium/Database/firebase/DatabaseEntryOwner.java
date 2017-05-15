@@ -1,6 +1,4 @@
-package pt12.frigidarium.Database;
-
-import android.provider.ContactsContract;
+package pt12.frigidarium.Database.firebase;
 
 import com.google.firebase.database.DatabaseReference;
 
@@ -62,7 +60,7 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner> {
         return true;
     }
 
-    protected void addOnFinishedListener(OnFinishedListener<O> listener){
+    public void addOnFinishedListener(OnFinishedListener<O> listener){
         if (!isFinished()){
             finishedListeners.add(listener);
         }else{

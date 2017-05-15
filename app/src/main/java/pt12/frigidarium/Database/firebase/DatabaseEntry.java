@@ -1,10 +1,6 @@
-package pt12.frigidarium.Database;
+package pt12.frigidarium.Database.firebase;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,15 +36,15 @@ public class DatabaseEntry<O extends DatabaseEntryOwner> {
             throw new RuntimeException("This entry already has a owner");
         }
     }
-    protected void addListener(OnChangeListener<O> listener){
+    public void addListener(OnChangeListener<O> listener){
         listeners.add(listener);
     }
 
-    protected void removeListener(OnChangeListener<O> listener){
+    public void removeListener(OnChangeListener<O> listener){
         listeners.remove(listener);
     }
 
-    protected interface OnChangeListener<O extends DatabaseEntryOwner> {
+    public interface OnChangeListener<O extends DatabaseEntryOwner> {
         public void onError(O owner, String name, int code, String message, String details);
     }
 

@@ -1,4 +1,4 @@
-package pt12.frigidarium.Database;
+package pt12.frigidarium.Database.models;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -8,11 +8,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pt12.frigidarium.Database.firebase.DatabaseEntry;
+import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
+import pt12.frigidarium.Database.firebase.DatabaseSingleEntry;
+
 /**
  * Het lezen van waardes altijd doen via OnProductChangeListener.
  */
 
-public class Product extends DatabaseEntryOwner<Product>{
+public class Product extends DatabaseEntryOwner<Product> {
 
     public static final String BRAND = "brand";
     public static final String BARCODE = "barcode";
