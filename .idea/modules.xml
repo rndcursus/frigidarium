@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Frigidarium.iml" filepath="$PROJECT_DIR$/Frigidarium.iml" />
+      <module fileurl="file://$USER_HOME$/stack/uni/Rnd/AndroidStudioProjects/frigidarium/app/app.iml" filepath="$USER_HOME$/stack/uni/Rnd/AndroidStudioProjects/frigidarium/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-     
+      <module fileurl="file://$USER_HOME$/stack/uni/Rnd/AndroidStudioProjects/frigidarium/frigidarium.iml" filepath="$USER_HOME$/stack/uni/Rnd/AndroidStudioProjects/frigidarium/frigidarium.iml" />
     </modules>
   </component>
 </project>
