@@ -13,10 +13,10 @@ import java.util.Set;
  * this is similar to a row in SQL.
  */
 
-public class DatabaseEntryOwner {
+public class DatabaseEntryOwner<O extends DatabaseEntryOwner> {
     private Map<String, DatabaseEntry> entries;
     private Map<String, Boolean> entriesDone;
-    private Set<OnFinishedListener> finishedListeners;
+    private Set<OnFinishedListener<O>> finishedListeners;
     private boolean isFinished = true;
 
     /**
@@ -62,16 +62,16 @@ public class DatabaseEntryOwner {
         return true;
     }
 
-    protected void addOnFinishedListener(OnFinishedListener listener){
+    protected void addOnFinishedListener(OnFinishedListener<O> listener){
         if (!isFinished()){
             finishedListeners.add(listener);
         }else{
-            listener.onFinished(this);
+            listener.onFinished((O) this);
         }
     }
 
-    protected interface OnFinishedListener{
-        public void onFinished(DatabaseEntryOwner owner);
+    protected interface OnFinishedListener<O>{
+        public void onFinished(O owner);
     }
 
     protected DatabaseEntry getEntry(String name){
