@@ -16,15 +16,17 @@ import java.util.Set;
  * @param <V> the type of the value.
  */
 public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
-    private final String name;
-    private final DatabaseReference ref;
-    private V value;
-    private O owner;
-    private final Set<OnChangeListener<O,V>> listeners;
+    protected final String name;
+    protected final DatabaseReference ref;
+    protected V value;
+    protected O owner;
+    protected final Set<OnChangeListener<O,V>> listeners;
+    protected final Class<? extends V> valueType;
 
-    protected DatabaseEntry(final String name, DatabaseReference ref) {
+    protected DatabaseEntry(final String name, DatabaseReference ref, Class<? extends V> valueType) {
         this.name = name;
         this.ref = ref;
+        this.valueType = valueType;
         listeners = new HashSet<>();
     }
     protected void setOwner (final O owner) {
@@ -34,10 +36,12 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
         if (this.owner == null) {
             this.owner = owner;
             ref.addValueEventListener(new ValueEventListener() {
+
+
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.getKey().equals(name)) {
-                        value = (V) dataSnapshot.getValue();
+                        value = dataSnapshot.getValue(valueType);
                         DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener() {
                             @Override
                             public void onFinished(DatabaseEntryOwner unused) {
@@ -60,6 +64,9 @@ public class DatabaseEntry<O extends DatabaseEntryOwner,V> {
                 }
             });
         }
+    }
+    protected String getName() {
+        return name;
     }
     protected void setValue(V value){
         ref.setValue(value);

@@ -1,7 +1,5 @@
 package pt12.frigidarium.Database;
 
-import android.provider.ContactsContract;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,22 +30,23 @@ public class Product extends DatabaseEntryOwner{
     private static Map<String, DatabaseEntry> getEntries(String barcode){
         DatabaseReference ref = createReference(barcode);
         Map<String, DatabaseEntry>  entries = new HashMap<>();
-        entries.put(BARCODE, new DatabaseEntry<Product,String>(BARCODE, ref.child(BARCODE)));
-        entries.put(NAME, new DatabaseEntry<Product,String>(NAME, ref.child(NAME)));
-        entries.put(BRAND, new DatabaseEntry<Product,String>(BRAND, ref.child(BRAND)));
-        entries.put(CONTENT, new DatabaseEntry<Product,String>(CONTENT, ref.child(CONTENT)));
-        entries.put(URL, new DatabaseEntry<Product,String>(URL, ref.child(URL)));
+        entries.put(BARCODE, new DatabaseEntry<Product,String>(BARCODE, ref.child(BARCODE), String.class));
+        entries.put(NAME, new DatabaseEntry<Product,String>(NAME, ref.child(NAME), String.class));
+        entries.put(BRAND, new DatabaseEntry<Product,String>(BRAND, ref.child(BRAND), String.class));
+        entries.put(CONTENT, new DatabaseEntry<Product,String>(CONTENT, ref.child(CONTENT), String.class));
+        entries.put(URL, new DatabaseEntry<Product,String>(URL, ref.child(URL), String.class));
         return entries;
     }
 
     public Product(String identifier) {
         super(createReference(identifier), getEntries(identifier));
         productListeners = new HashSet<>();
+        final Product p = this;
         DatabaseEntry.OnChangeListener listener = new DatabaseEntry.OnChangeListener() {
             @Override
             public void OnChange(DatabaseEntryOwner owner, String name, Object value) {
                 for (OnProductChangeListener listener : productListeners) {
-                    listener.onChange(name);
+                    listener.onChange(p, name);
                 }
             }
         };
@@ -136,7 +135,7 @@ public class Product extends DatabaseEntryOwner{
          * this method will only be called after the
          * @param name
          */
-        public abstract void onChange(String name);
+        public abstract void onChange(Product p, String name);
     }
 
 }
