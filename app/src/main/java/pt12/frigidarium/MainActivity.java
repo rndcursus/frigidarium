@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            fragment=new GScanFragment();
 
         } else if (id == R.id.nav_stocklist) {
             fragment = new StockFragment();
