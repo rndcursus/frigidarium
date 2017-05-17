@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -38,8 +41,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "loginActivity";
     private static final int RC_SIGN_IN = 12;
 
+    private EditText email;
+    private EditText password;
+    private Button login_button;
+
+
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private boolean signingIn = false;
     private Class<?> nextActivity = MainActivity.class;
 
@@ -48,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        init_layout();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -80,6 +91,35 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
     }
+
+    public void init_layout() {
+        email = (EditText) findViewById(R.id.login_email);
+        password = (EditText) findViewById(R.id.login_password);
+        login_button = (Button) findViewById(R.id.button_login);
+        if(email == null)
+        {
+            Log.d(TAG, "email is null");
+        }
+        if(login_button == null)
+        {
+            Log.d(TAG, "button is null");
+        }
+        else
+        {
+            login_button.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EmailSignIn(email.getText().toString(), password.getText().toString());
+
+                        }
+                    }
+            );
+        }
+
+
+    }
+
 
     private void signIn() {
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -145,27 +185,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
-/*
-    mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-        @Override
-        public void onComplete(@NonNull Task<AuthResult> task) {
-            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-            // If sign in fails, display a message to the user. If sign in succeeds
-            // the auth state listener will be notified and logic to handle the
-            // signed in user can be handled in the listener.
-            if (!task.isSuccessful()) {
-                Log.w(TAG, "signInWithEmail:failed", task.getException());
-                Toast.makeText(EmailPasswordActivity.this, R.string.auth_failed,
-                        Toast.LENGTH_SHORT).show();
-            }
+    public void EmailSignIn(String email, String password)
+    {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-            // ...
-        }
-    });
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithEmail:failed", task.getException());
+                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
-*/
+                        // ...
+                    }
+                });
+    }
+
+
+
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
