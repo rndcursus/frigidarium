@@ -1,10 +1,15 @@
 package pt12.frigidarium;
 
+import android.*;
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -13,6 +18,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -40,7 +46,7 @@ public class GScanFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    // private OnFragmentInteractionListener mListener;
 
     public GScanFragment() {
         // Required empty public constructor
@@ -82,26 +88,26 @@ public class GScanFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
+       /* if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
+        }*/
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+        /*if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        //mListener = null;
     }
 
     /**
@@ -125,8 +131,8 @@ public class GScanFragment extends Fragment {
     private CameraSource cameraSource;
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceSaved){
-
+    public void onViewCreated(View view, Bundle savedInstanceSaved) {
+        if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
         cameraView = (SurfaceView) getView().findViewById(R.id.camera_view);
         barcodeInfo = (TextView) getView().findViewById(R.id.code_info);
         barcodeDetector =
@@ -136,12 +142,16 @@ public class GScanFragment extends Fragment {
 
         cameraSource = new CameraSource
                 .Builder(this.getContext(), barcodeDetector)
-                .setRequestedPreviewSize(640, 640)
+                .setAutoFocusEnabled(true)
                 .build();
+
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
+                    if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
                     cameraSource.start(cameraView.getHolder());
                 } catch (IOException ie) {
                     Log.e("CAMERA SOURCE", ie.getMessage());
@@ -183,5 +193,19 @@ public class GScanFragment extends Fragment {
 
 
 
+    }
+
+    /*
+    FUNCTION TO CHECK IF PERMISSIONS ARE GRANTED
+     */
+    private boolean permissionsGranted(){
+        String permission = "android.permission.CAMERA";
+        int res = getContext().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestPermissionsForCamera(){
+        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
+        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
     }
 }
