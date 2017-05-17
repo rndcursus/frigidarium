@@ -171,6 +171,6 @@ public class Stock extends DatabaseEntryOwner<Stock> {
         }
     }
     public class OnStockChangedListener{
-        public void on
+        //public void on
     }
 }
