@@ -25,25 +25,25 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="password"
                 android:ems="10"
                 android:inputType="textPassword" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/button_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="@string/text_login_button" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
