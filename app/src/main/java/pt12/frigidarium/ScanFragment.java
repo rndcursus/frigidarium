@@ -73,12 +73,6 @@ public class ScanFragment extends Fragment implements OnClickListener{
     }
     public void onClick(View v){
         if(v.getId()==R.id.scan_button){
-            Context context = getActivity().getApplicationContext();
-            CharSequence text = "Hello toast!";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             scanIntegrator.initiateScan();
 
