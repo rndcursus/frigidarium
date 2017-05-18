@@ -30,11 +30,11 @@ public class DatabaseEntry<O extends DatabaseEntryOwner> {
         if (owner == null){
             return;
         }
-        if (this.owner == null) {
+        //if (this.owner == null) {
             this.owner = owner;
-        }  else {
-            throw new RuntimeException("This entry already has a owner");
-        }
+        //}  else {
+        //    throw new RuntimeException("This entry already has a owner");
+        //}
     }
     public void addListener(OnChangeListener<O> listener){
         listeners.add(listener);

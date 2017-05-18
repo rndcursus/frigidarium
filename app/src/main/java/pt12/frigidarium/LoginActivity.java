@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
-    private boolean signingIn = false;
+    //private boolean signingIn = false;
     private Class<?> nextActivity = MainActivity.class;
 
 
@@ -67,11 +67,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void signIn() {
-        if (this.signingIn){
-            this.signingIn = true;
+        /*if (this.signingIn){
+            this.signingIn = true;*/
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
-        }
+        //}
     }
 
     @Override
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // Google Sign In failed, update UI appropriately
                 // ...
             }
-            this.signingIn  = false;
+            //this.signingIn  = false;
         }
     }
 

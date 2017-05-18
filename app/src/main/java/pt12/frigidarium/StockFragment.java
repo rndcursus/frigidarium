@@ -15,6 +15,10 @@ import android.widget.RadioButton;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import pt12.frigidarium.Database.models.Product;
+import pt12.frigidarium.Database.models.Stock;
+import pt12.frigidarium.Database.models.User;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,7 +100,7 @@ public class StockFragment extends Fragment {
         currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         setRecyclerViewLayoutManager(currentLayoutManagerType);
 
-        LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
+        final LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
         recyclerView.setAdapter(adapter);
 
@@ -106,6 +110,29 @@ public class StockFragment extends Fragment {
         data.add(data5);
         adapter.notifyItemInserted(4);
 
+
+        final Product product = Product.getInstanceByUID("test_product"); //TODO later veranderen naar uid vanuit User
+        Product.OnProductChangeListener x = new Product.OnProductChangeListener() {
+            @Override
+            public void onChange(Product p, String name) {
+                String data6 = getBarcode();
+                data.add(data6);
+                adapter.notifyItemInserted(5);
+            }
+
+            @Override
+            public void onGetOnce() {
+                onChange(product, "");
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+
+            }
+        };
+        product.addListener(x);
+        product.getOnce(x);
+        product.setName("Coca-Cola");
         return rootView;
     }
 

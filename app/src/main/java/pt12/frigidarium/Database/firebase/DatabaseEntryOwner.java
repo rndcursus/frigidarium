@@ -102,9 +102,9 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
         private O owner;
 
         public void setOwner(O owner){
-            if (owner != null){
-                throw new RuntimeException("Owner of a DataAccessor can only be set once.");
-            }
+  //          if (owner != null){
+//                throw new RuntimeException("Owner of a DataAccessor can only be set once.");
+//            }
             this.owner = owner;
         }
 

@@ -89,6 +89,11 @@ public class Product extends DatabaseEntryOwner<Product> {
         this.productListeners.add(onProductChangeListener);
        }
 
+    public void setName(String name){
+        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) this.getEntry(NAME);
+        entry.setValue(name);
+    }
+
     public abstract static class OnProductChangeListener extends DatabaseEntryOwner.DataAccessor<Product>{
         public OnProductChangeListener(){
 
