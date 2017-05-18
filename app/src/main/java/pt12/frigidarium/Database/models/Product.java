@@ -21,7 +21,6 @@ import pt12.frigidarium.Database.firebase.DatabaseSingleEntry;
 public class Product extends DatabaseEntryOwner<Product> {
 
     public static final String BRAND = "brand";
-    public static final String UID = "uid";
     public static final String BARCODE = "barcode";
     public static final String URL = "url";
     public static final String NAME = "name";
@@ -77,7 +76,6 @@ public class Product extends DatabaseEntryOwner<Product> {
         entries.put(BRAND, new DatabaseSingleEntry<Product,String>(BRAND, ref.child(BRAND), String.class));
         entries.put(CONTENT, new DatabaseSingleEntry<Product,String>(CONTENT, ref.child(CONTENT), String.class));
         entries.put(URL, new DatabaseSingleEntry<Product,String>(URL, ref.child(URL), String.class));
-        entries.put(UID, new DatabaseSingleEntry<Product,String>(UID, ref.child(UID), String.class));
         return entries;
     }
 
@@ -130,10 +128,6 @@ public class Product extends DatabaseEntryOwner<Product> {
     public void setUrl(String url) {
         DatabaseSingleEntry<Product, String> entry = (DatabaseSingleEntry<Product, String>) this.getEntry(URL);
         entry.setValue(url);
-    }
-    public String getUID(){
-        DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getEntry(UID);
-        return entry.getValue();
     }
     public abstract static class OnProductChangeListener extends DatabaseEntryOwner.DataAccessor<Product>{
         public OnProductChangeListener(){
@@ -196,14 +190,6 @@ public class Product extends DatabaseEntryOwner<Product> {
             return entry.getValue();
         }
 
-        /**
-         * get's the most up to date uid of this product
-         * @return the uid of this product
-         */
-        public String getUID(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(UID);
-            return entry.getValue();
-        }
         /**
          * This method is called after a change in the database.
          * This class then contains all the updated data.

@@ -30,9 +30,31 @@ public class Stock extends DatabaseEntryOwner<Stock> {
     public static final String INSTOCK =  "in_stock";
     public static final String OUTSTOCK = "out_stock";
     public static final String NAME = "name";
-    public static final String UID = "uid";
     private static Map<String,Stock> stocks= new HashMap<>();
 
+    /**
+     * Use this functio to create a Stock. This Stock will be passed in callback.
+     * @param uid the uid of a Stocl
+     * @param callback the callback after The Stock has been created.
+     */
+    public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<Stock> callback){
+        Stock s = getInstanceByUID(uid);
+        s.addDataAccessor(new DataAccessor<Stock>() {
+            @Override
+            public void onError(Stock owner, String name, int code, String message, String details) {
+                callback.onError(owner,name,code,message,details);
+            }
+
+            @Override
+            public void onGetInstance(Stock owner) {
+                if (getUid() == null || getUid().equals("")){
+                    callback.OnDoesNotExist(owner);
+                }else {
+                    callback.onExist(owner);
+                }
+            }
+        });
+    }
     /**
      * Use this function to create a Stock.
      * @param uid the uid of a stock
@@ -70,17 +92,13 @@ public class Stock extends DatabaseEntryOwner<Stock> {
     private static Map<String, DatabaseEntry> getEntries(String uid){
         DatabaseReference ref = createReference(uid);
         Map<String, DatabaseEntry>  entries = new HashMap<>();
-        entries.put(UID, new DatabaseSingleEntry<Stock,String>(UID, ref.child(UID), String.class));
         entries.put(NAME, new DatabaseSingleEntry<Stock,String>(NAME, ref.child(NAME), String.class));
         entries.put(USERS, new DatabaseMapEntry<Stock,String>(USERS, ref.child(USERS), String.class));
         entries.put(INSTOCK, new DatabaseGroupedEntry<Stock,StockEntry>(INSTOCK, ref.child(INSTOCK), StockEntry.class));
         entries.put(OUTSTOCK, new DatabaseGroupedEntry<Stock,StockEntry>(OUTSTOCK, ref.child(OUTSTOCK), StockEntry.class));
         return entries;
     }
-    public String getUID(){
-        DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getEntry(UID);
-        return entry.getValue();
-    }
+
     private Stock(String uid){
         super(uid, createReference(uid),getEntries(uid));
         DatabaseGroupedEntry instock = (DatabaseGroupedEntry) getEntries(INSTOCK);
@@ -359,10 +377,6 @@ public class Stock extends DatabaseEntryOwner<Stock> {
         }
         protected String getName(){
             return ((DatabaseSingleEntry<Stock,String>)  getOwner().getEntry(NAME)).getValue();
-        }
-
-        protected String getUID(){
-            return ((DatabaseSingleEntry<Stock,String>)  getOwner().getEntry(UID)).getValue();
         }
 
         protected Map<String,User> getUsers(){
