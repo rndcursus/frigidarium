@@ -42,6 +42,9 @@ public class Stock extends DatabaseEntryOwner<Stock> {
         if (!stocks.containsKey(uid)){
             stocks.put(uid,new Stock(uid));
         }
+        for (DataAccessor<Stock> l: stocks.get(uid).getDataAccessors()){
+            l.onGetInstance(stocks.get(uid));
+        }
         return stocks.get(uid);
     }
 

@@ -33,6 +33,9 @@ public class User extends DatabaseEntryOwner<User> {
         if (!users.containsKey(uid)){
             users.put(uid,new User(uid));
         }
+        for (DataAccessor<User> l: users.get(uid).getDataAccessors()){
+            l.onGetInstance(users.get(uid));
+        }
         return users.get(uid);
     }
 
