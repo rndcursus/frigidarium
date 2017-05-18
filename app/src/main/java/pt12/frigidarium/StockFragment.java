@@ -36,17 +36,6 @@ public class StockFragment extends Fragment {
 
     //private OnFragmentInteractionListener mListener;
 
-    private int COLUMNS = 2;
-
-    private enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
-        LINEAR_LAYOUT_MANAGER
-    }
-    private LayoutManagerType currentLayoutManagerType;
-
-    private RadioButton linearLayoutRadioButton;
-    private RadioButton gridLayoutRadioButton;
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ProductsAdapter adapter;
@@ -93,14 +82,11 @@ public class StockFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
 
-        currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        setRecyclerViewLayoutManager(currentLayoutManagerType);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
         recyclerView.setAdapter(adapter);
-
-        setLayoutChangeButtonListeners(rootView);
 
         String data5 = "vijfde";
         data.add(data5);
@@ -147,50 +133,4 @@ public class StockFragment extends Fragment {
         // TOD O: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
-
-
-    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // Get current scroll position when a layout manager already has been set.
-        if (recyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                layoutManager = new GridLayoutManager(getActivity(), COLUMNS);
-                currentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                layoutManager = new LinearLayoutManager(getActivity());
-                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                layoutManager = new LinearLayoutManager(getActivity());
-                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.scrollToPosition(scrollPosition);
-    }
-
-    public void setLayoutChangeButtonListeners(View rootView){
-        linearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
-        linearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
-            }
-        });
-
-        gridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
-        gridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
-            }
-        });
-    }
 }
