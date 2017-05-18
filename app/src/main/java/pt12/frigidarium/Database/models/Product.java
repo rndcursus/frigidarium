@@ -3,6 +3,7 @@ package pt12.frigidarium.Database.models;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +36,9 @@ public class Product extends DatabaseEntryOwner<Product> {
     public static Product getInstanceByUID(String uid){
         if (!products.containsKey(uid)){
             products.put(uid,new Product(uid));
+        }
+        for (DataAccessor<Product> l: products.get(uid).getDataAccessors()){
+            l.onGetInstance(products.get(uid));
         }
         return products.get(uid);
     }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pt12.frigidarium.Database.models.Product;
 import pt12.frigidarium.Database.models.Stock;
 import pt12.frigidarium.Database.models.User;
 
@@ -80,15 +81,6 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
     public void removeDataAccesor(DataAccessor<O> accessor){
         dataAccessors.remove(accessor);
     }
-    public void getOnce(final DataAccessor<O> listener){
-        OnFinishedListener<O> onFinishedListener = new OnFinishedListener<O>() {
-            @Override
-            public void onFinished(O owner) {
-                listener.onGetOnce();
-            }
-        };
-        addOnFinishedListener(onFinishedListener);
-    }
 
     public Set<DataAccessor<O>> getDataAccessors() {
         return dataAccessors;
@@ -115,7 +107,8 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
         protected O getOwner(){
             return owner;
         }
-        public abstract void onGetOnce();
         public abstract void onError(O owner, String name, int code, String message, String details);
+
+        public abstract void onGetInstance(O owner);
     }
 }
