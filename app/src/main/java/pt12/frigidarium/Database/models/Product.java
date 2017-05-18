@@ -42,6 +42,27 @@ public class Product extends DatabaseEntryOwner<Product> {
         }
         return products.get(uid);
     }
+    /**
+     * This function creates a new entry in the firebase database.
+     * However if the User already exists it will be overridden.
+     * @param uid the firebaseuid of the user.
+     * @param name the name of the user
+     * @param barcode the barcode of the product.
+     * @param brand the brand of the product.
+     * @param url the url of the product
+     * @param added_by the user that added this product to the database. //currently not in use
+     * @return the newly created entry
+     */
+    public static Product createProduct(String uid, String name, String brand,  String barcode, String url, String content, String added_by){
+        Product p =  Product.getInstanceByUID(uid);
+        ((DatabaseSingleEntry<Product,String>)  p.getEntry(BRAND)).setValue(brand);
+        ((DatabaseSingleEntry<Product,String>)  p.getEntry(BARCODE)).setValue(barcode);
+        ((DatabaseSingleEntry<Product,String>)  p.getEntry(URL)).setValue(url);
+        ((DatabaseSingleEntry<Product,String>)  p.getEntry(NAME)).setValue(name);
+        ((DatabaseSingleEntry<Product,String>)  p.getEntry(CONTENT)).setValue(content);
+        ((DatabaseSingleEntry<Product,String>)  p.getEntry(UID)).setValue(uid);
+        return p;
+    }
     private static DatabaseReference createReference(String uid){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("products").child(uid);

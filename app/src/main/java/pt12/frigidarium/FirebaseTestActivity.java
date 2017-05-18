@@ -20,16 +20,18 @@ public class FirebaseTestActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_test);
         Product p = Product.getInstanceByUID("test_product");
-        p.addListener(new Product.OnProductChangeListener() {
+        p.addDataAccessor(new Product.OnProductChangeListener() {
 
-            @Override
-            public void onGetOnce() {
-
-            }
 
             @Override
             public void onError(Product owner, String name, int code, String message, String details) {
 
+            }
+
+            @Override
+            public void onGetInstance(Product owner) {
+                TextView tv = (TextView) findViewById(R.id.textView2);
+                tv.setText(getBrand());
             }
 
             @Override

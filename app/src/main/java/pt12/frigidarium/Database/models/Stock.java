@@ -48,6 +48,20 @@ public class Stock extends DatabaseEntryOwner<Stock> {
         return stocks.get(uid);
     }
 
+    /**
+     * This function creates a new entry in the firebase database.
+     * However if the User already exists it will be overridden.
+     * @param uid the firebaseuid of the user.
+     * @param name the name of the user
+     * @return the newly created entry
+     */
+    public static Stock createUser(String uid, String name){
+        Stock s =  Stock.getInstanceByUID(uid);
+        ((DatabaseSingleEntry<Product,String>)  s.getEntry(UID)).setValue(uid);
+        ((DatabaseSingleEntry<Product,String>)  s.getEntry(NAME)).setValue(name);
+        return s;
+    }
+
     private static DatabaseReference createReference(String uid){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("stocks").child(uid);
