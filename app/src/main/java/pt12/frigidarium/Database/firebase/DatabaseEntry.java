@@ -23,7 +23,7 @@ public class DatabaseEntry<O extends DatabaseEntryOwner> {
         listeners = new HashSet<>();
     }
 
-    protected String getName() {
+    public String getName() {
         return name;
     }
     protected void setOwner(O owner){
@@ -32,7 +32,7 @@ public class DatabaseEntry<O extends DatabaseEntryOwner> {
         }
         if (this.owner == null) {
             this.owner = owner;
-        }  else {
+        }  else if (owner != this.owner) {
             throw new RuntimeException("This entry already has a owner");
         }
     }

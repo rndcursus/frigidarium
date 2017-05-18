@@ -90,6 +90,10 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
         addOnFinishedListener(onFinishedListener);
     }
 
+    public Set<DataAccessor<O>> getDataAccessors() {
+        return dataAccessors;
+    }
+
     protected interface OnFinishedListener<O>{
         public void onFinished(O owner);
     }
@@ -102,7 +106,7 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
         private O owner;
 
         public void setOwner(O owner){
-            if (owner != null){
+            if (owner != null && owner != this.owner){
                 throw new RuntimeException("Owner of a DataAccessor can only be set once.");
             }
             this.owner = owner;
