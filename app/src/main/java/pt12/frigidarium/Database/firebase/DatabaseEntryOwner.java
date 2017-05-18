@@ -76,6 +76,7 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
     }
 
     public void addDataAccessor(DataAccessor<O> listener){
+        listener.setOwner((O) this);
         dataAccessors.add(listener);
     }
     public void removeDataAccesor(DataAccessor<O> accessor){
