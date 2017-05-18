@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import pt12.frigidarium.Database.models.Stock;
+import pt12.frigidarium.Database.models.User;
 
 /**
  * this is similar to a row in SQL.
@@ -111,5 +112,6 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
             return owner;
         }
         public abstract void onGetOnce();
+        public abstract void onError(O owner, String name, int code, String message, String details);
     }
 }

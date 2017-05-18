@@ -24,6 +24,11 @@ public class User extends DatabaseEntryOwner<User> {
     private final Set<OnUserChangeListener> userListeners;
     private static Map<String,User> users= new HashMap<>();
 
+    /**
+     * Use this function to create a user.
+     * @param uid the uid of a use
+     * @return null if the user does not exsist in the database
+     */
     public static User getInstanceByUID(String uid){
         if (!users.containsKey(uid)){
             users.put(uid,new User(uid));
@@ -50,21 +55,7 @@ public class User extends DatabaseEntryOwner<User> {
         super(identifier, createReference(identifier), getEntries(identifier));
         userListeners = new HashSet<>();
         final User u = this;
-        super.getEntry(NAME).addListener(new DatabaseSingleEntry.OnChangeListener<User, String>() {
-            @Override
-            public void onChange(User owner, String name, String value) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onNameChange(owner,name, value);
-                }
-            }
 
-            @Override
-            public void onError(User owner, String name, int code, String message, String details) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onError(owner,name,code,message,details);
-                }
-            }
-        });
         super.getEntry(STOCKS).addListener(new DatabaseMapEntry.OnChangeListener<User, String>() {
             @Override
             public void onChildAdded(User owner, String mapName, String element, String key) {
@@ -135,6 +126,7 @@ public class User extends DatabaseEntryOwner<User> {
             DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             entry.remove(key);
         }
+
         protected void removeStockByVal(String val){
             DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             String key = entry.getKey(val);
@@ -142,18 +134,16 @@ public class User extends DatabaseEntryOwner<User> {
                 entry.remove(key);
             }
         }
+
         protected void addStock(String stockUid){
             DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             entry.add(stockUid);
         }
+
         protected String getStockByKey(String  key){
             DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             return entry.getValue(key);
         }
-
-        public abstract void onNameChange(User owner, String name, String value);
-
-        public abstract void onError(User owner, String name, int code, String message, String details);
 
         public abstract void onAddedToStock(User owner, String mapName, String key, String element);
 

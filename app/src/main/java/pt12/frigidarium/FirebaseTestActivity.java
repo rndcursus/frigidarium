@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
 import pt12.frigidarium.Database.models.Product;
+import pt12.frigidarium.Database.models.User;
 
 public class FirebaseTestActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +24,11 @@ public class FirebaseTestActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onGetOnce() {
+
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
 
             }
 

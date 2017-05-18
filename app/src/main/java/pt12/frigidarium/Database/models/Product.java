@@ -27,6 +27,12 @@ public class Product extends DatabaseEntryOwner<Product> {
     public static final String CONTENT = "content";
     private Set<OnProductChangeListener> productListeners;
     private static Map<String,Product> products = new HashMap<>();
+
+    /**
+     * Use this function to create a Product.
+     * @param uid the uid of a product
+     * @return null if the product does not exsist in the database
+     */
     public static Product getInstanceByUID(String uid){
         if (!products.containsKey(uid)){
             products.put(uid,new Product(uid));

@@ -32,6 +32,11 @@ public class Stock extends DatabaseEntryOwner<Stock> {
     public static final String EVENTS = "events";
     private static Map<String,Stock> stocks= new HashMap<>();
 
+    /**
+     * Use this function to create a Stock.
+     * @param uid the uid of a stock
+     * @return null if the stock does not exsist in the database
+     */
     public static Stock getInstanceByUID(String uid){
         if (!stocks.containsKey(uid)){
             stocks.put(uid,new Stock(uid));
