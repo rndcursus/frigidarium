@@ -26,7 +26,29 @@ public class Product extends DatabaseEntryOwner<Product> {
     public static final String NAME = "name";
     public static final String CONTENT = "content";
     private static Map<String,Product> products = new HashMap<>();
+    /**
+     * Use this function to create a Product. This Stock will be passed in callback.
+     * @param uid the uid of a Product
+     * @param callback the callback after The Product has been created.
+     */
+    public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<Product> callback){
+        Product s = getInstanceByUID(uid);
+        s.addDataAccessor(new DataAccessor<Product>() {
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                callback.onError(owner,name,code,message,details);
+            }
 
+            @Override
+            public void onGetInstance(Product owner) {
+                if (getUid() == null || getUid().equals("")){
+                    callback.OnDoesNotExist(owner);
+                }else {
+                    callback.onExist(owner);
+                }
+            }
+        });
+    }
     /**
      * Use this function to create a Product.
      * @param uid the uid of a product

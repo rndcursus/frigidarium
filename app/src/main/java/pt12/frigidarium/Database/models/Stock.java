@@ -7,11 +7,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +30,7 @@ public class Stock extends DatabaseEntryOwner<Stock> {
     private static Map<String,Stock> stocks= new HashMap<>();
 
     /**
-     * Use this functio to create a Stock. This Stock will be passed in callback.
+     * Use this function to create a Stock. This Stock will be passed in callback.
      * @param uid the uid of a Stocl
      * @param callback the callback after The Stock has been created.
      */

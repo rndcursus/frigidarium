@@ -22,7 +22,29 @@ public class User extends DatabaseEntryOwner<User> {
     public static final String STOCKS = "stocks";
     public static final String NAME = "name";
     private static Map<String,User> users= new HashMap<>();
+    /**
+     * Use this function to create a User. This User will be passed in callback.
+     * @param uid the uid of a User
+     * @param callback the callback after The User has been created.
+     */
+    public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<User> callback){
+        User s = getInstanceByUID(uid);
+        s.addDataAccessor(new DataAccessor<User>() {
+            @Override
+            public void onError(User owner, String name, int code, String message, String details) {
+                callback.onError(owner,name,code,message,details);
+            }
 
+            @Override
+            public void onGetInstance(User owner) {
+                if (getUid() == null || getUid().equals("")){
+                    callback.OnDoesNotExist(owner);
+                }else {
+                    callback.onExist(owner);
+                }
+            }
+        });
+    }
     /**
      * Use this function to create a user.
      * @param uid the uid of a use

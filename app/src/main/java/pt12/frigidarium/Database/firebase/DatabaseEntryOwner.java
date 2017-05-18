@@ -126,6 +126,6 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
     public static interface onReadyCallback<O>{
         public void onExist(O owner);
         public void OnDoesNotExist(O owner);
-        public void onError(Stock owner, String name, int code, String message, String details);
+        public void onError(O owner, String name, int code, String message, String details);
     }
 }
