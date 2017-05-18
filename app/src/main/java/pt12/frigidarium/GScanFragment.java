@@ -133,22 +133,25 @@ public class GScanFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceSaved) {
         if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
+        Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
         cameraView = (SurfaceView) getView().findViewById(R.id.camera_view);
-        barcodeInfo = (TextView) getView().findViewById(R.id.code_info);
-        barcodeDetector =
-                new BarcodeDetector.Builder(this.getContext())
-                        .setBarcodeFormats(Barcode.EAN_13)
-                        .build();
+        //barcodeInfo = (TextView) getView().findViewById(R.id.code_info);
+        barcodeDetector = new BarcodeDetector.Builder(this.getContext())
+                .setBarcodeFormats(Barcode.EAN_13 | Barcode.EAN_8)
+                .build();
 
         cameraSource = new CameraSource
                 .Builder(this.getContext(), barcodeDetector)
                 .setAutoFocusEnabled(true)
                 .build();
 
+        //START CAMERA
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
+                    // CHECK AGAIN IF PERMISSION GRANTED. IF PERMISSION NOT GRANTED, THEN THE CAMERA IS NOT STARTED.
                     if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -168,6 +171,7 @@ public class GScanFragment extends Fragment {
             }
         });
 
+        //DETECT  BARCODES
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -176,8 +180,11 @@ public class GScanFragment extends Fragment {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-
+                Toast.makeText(getContext(), "This IS A TEST", Toast.LENGTH_SHORT).show();
                 if (barcodes.size() != 0) {
+                    String firstBarcode = barcodes.valueAt(0).displayValue;
+                   printBarcodeOnScreen(firstBarcode);
+                    /*
                     barcodeInfo.post(new Runnable() {    // Use the post method of the TextView
                         public void run() {
                             barcodeInfo.setText(    // Update the TextView
@@ -185,8 +192,10 @@ public class GScanFragment extends Fragment {
                             );
                         }
                     });
+                    */
                 }
             }
+
         });
 
 
@@ -202,6 +211,10 @@ public class GScanFragment extends Fragment {
         String permission = "android.permission.CAMERA";
         int res = getContext().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void printBarcodeOnScreen(String barcode){
+        Toast.makeText(getContext(), barcode, Toast.LENGTH_SHORT).show();
     }
 
     private void requestPermissionsForCamera(){
