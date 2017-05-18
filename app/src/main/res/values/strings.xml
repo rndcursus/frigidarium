@@ -9,5 +9,13 @@
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_product_message">This product has not yet been registered, please fill in the following fields and help expanding the Frigidarium database</string>
+
+    <string name="product_name_hint">product name (without brandname)</string>
+    <string name="brand_name_hint">brand name</string>
+    <string name="content_hint">content</string>
+    <string name="url_hint">url</string>
+
+    <string name="liter">L</string>
+    <string name="gram">g</string>
 </resources>
