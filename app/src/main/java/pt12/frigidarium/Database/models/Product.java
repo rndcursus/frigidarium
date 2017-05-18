@@ -79,80 +79,82 @@ public class Product extends DatabaseEntryOwner<Product> {
     }
 
     public void addListener(OnProductChangeListener onProductChangeListener) {
-        onProductChangeListener.setProduct(this);
+        onProductChangeListener.setOwner(this);
         this.productListeners.add(onProductChangeListener);
-    }
+       }
 
-    public abstract static class OnProductChangeListener{
-        private Product product;
+    public abstract static class OnProductChangeListener extends DatabaseEntryOwner.DataAccessor<Product>{
         public OnProductChangeListener(){
 
         }
-        private void setProduct(Product p){
-            product = p;
-        }
-        public void setBarcode(String barcode){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(BARCODE);
+
+        protected void setBarcode(String barcode){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(BARCODE);
             entry.setValue(barcode);
         }
-        public void setName(String name){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(NAME);
+        protected void setName(String name){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(NAME);
             entry.setValue(name);
         }
-        public void setBrand(String brand){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(BRAND);
+        protected void setBrand(String brand){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(BRAND);
             entry.setValue(brand);
         }
-        public void setContent(String content){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(CONTENT);
+        protected void setContent(String content){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(CONTENT);
             entry.setValue(content);
         }
-        public void setUrl(String url){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(URL);
+        protected void setUrl(String url){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(URL);
             entry.setValue(url);
         }
-
         /**
-         * only call this in onChange.
+         * get's the most up to date barcode of this product
+         * @return the uid of this product
          */
-        public String getBarcode(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(BARCODE);
+        protected String getBarcode(){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(BARCODE);
             return entry.getValue();
         }
         /**
-         * only call this in onChange.
+         * get's the most up to date name of this product
+         * @return the uid of this product
          */
-        public String getName(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(NAME);
+        protected String getName(){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(NAME);
             return entry.getValue();
         }
         /**
-         * only call this in onChange.
+         * get's the most up to date brand of this product
+         * @return the uid of this product
          */
-        public String getBrand(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(BRAND);
+        protected String getBrand(){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(BRAND);
              return entry.getValue();
         }
         /**
-         * only call this in onChange.
+         * get's the most up to date content of this product
+         * @return the uid of this product
          */
-        public String getContent(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(CONTENT);
+        protected String getContent(){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(CONTENT);
+            return entry.getValue();
+        }
+        /**
+         * get's the most up to date url of this product
+         * @return the uid of this product
+         */
+        protected String getUrl(){
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(URL);
             return entry.getValue();
         }
 
         /**
-         * only call this in onChange.
-         */
-        public String getUrl(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(URL);
-            return entry.getValue();
-        }
-        /**
-         * only call this in onChange.
+         * get's the most up to date uid of this product
+         * @return the uid of this product
          */
         public String getUID(){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) product.getEntry(UID);
+            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(UID);
             return entry.getValue();
         }
         /**
