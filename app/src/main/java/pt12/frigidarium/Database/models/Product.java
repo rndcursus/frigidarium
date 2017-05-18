@@ -25,7 +25,6 @@ public class Product extends DatabaseEntryOwner<Product> {
     public static final String URL = "url";
     public static final String NAME = "name";
     public static final String CONTENT = "content";
-    private Set<OnProductChangeListener> productListeners;
     private static Map<String,Product> products = new HashMap<>();
 
     /**
@@ -59,13 +58,16 @@ public class Product extends DatabaseEntryOwner<Product> {
 
     private Product(String identifier) {
         super(identifier,createReference(identifier), getEntries(identifier));
-        productListeners = new HashSet<>();
         final Product p = this;
         DatabaseEntry.OnChangeListener listener = new DatabaseSingleEntry.OnChangeListener<Product,String>() {
             @Override
             public void onChange(Product owner, String name, String value) {
-                for (OnProductChangeListener listener : productListeners) {
-                    listener.onChange(p, name);
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+
                 }
             }
 
@@ -84,36 +86,50 @@ public class Product extends DatabaseEntryOwner<Product> {
 
     }
 
-    public void addListener(OnProductChangeListener onProductChangeListener) {
-        onProductChangeListener.setOwner(this);
-        this.productListeners.add(onProductChangeListener);
-       }
-
+    public void setBarcode(String barcode){
+        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getEntry(BARCODE);
+        entry.setValue(barcode);
+    }
+    public void setName(String name){
+        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getEntry(NAME);
+        entry.setValue(name);
+    }
+    public void setBrand(String brand){
+        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getEntry(BRAND);
+        entry.setValue(brand);
+    }
+    public void setContent(String content){
+        DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getEntry(CONTENT);
+        entry.setValue(content);
+    }
+    public void setUrl(String url) {
+        DatabaseSingleEntry<Product, String> entry = (DatabaseSingleEntry<Product, String>) this.getEntry(URL);
+        entry.setValue(url);
+    }
+    public String getUID(){
+        DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getEntry(UID);
+        return entry.getValue();
+    }
     public abstract static class OnProductChangeListener extends DatabaseEntryOwner.DataAccessor<Product>{
         public OnProductChangeListener(){
 
         }
-
         protected void setBarcode(String barcode){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(BARCODE);
-            entry.setValue(barcode);
+            getOwner().setBarcode(barcode);
         }
         protected void setName(String name){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(NAME);
-            entry.setValue(name);
+            getOwner().setName(name);
         }
         protected void setBrand(String brand){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(BRAND);
-            entry.setValue(brand);
+            getOwner().setBrand(brand);
         }
         protected void setContent(String content){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(CONTENT);
-            entry.setValue(content);
+            getOwner().setContent(content);
         }
-        protected void setUrl(String url){
-            DatabaseSingleEntry<Product,String> entry = (DatabaseSingleEntry<Product, String>) getOwner().getEntry(URL);
-            entry.setValue(url);
+        protected void setUrl(String url) {
+            getOwner().setUrl(url);
         }
+
         /**
          * get's the most up to date barcode of this product
          * @return the uid of this product
