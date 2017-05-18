@@ -65,7 +65,7 @@ public class RegisterNewProductFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            //mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -79,7 +79,7 @@ public class RegisterNewProductFragment extends Fragment {
         productContent = (EditText) rootView.findViewById(R.id.product_content);
         liter = (RadioButton) rootView.findViewById(R.id.liter);
         gram = (RadioButton) rootView.findViewById(R.id.gram);
-        productUrl = (EditText) rootView.findViewById(R.id.url);
+        productUrl = (EditText) rootView.findViewById(R.id.product_url);
 
     
 
