@@ -32,10 +32,11 @@ public class Stock extends DatabaseEntryOwner<Stock> {
     public static final String EVENTS = "events";
     private static Map<String,Stock> stocks= new HashMap<>();
 
-    private Set<OnStockChangeListener> listeners = new HashSet<>();
-    private static final String ADD_OUT_Of_STOCK = "added_to_out_of_stock";
-    private static final String REMOVE_OUT_Of_STOCK = "removed_out_of_stock";
-
+    /**
+     * Use this function to create a Stock.
+     * @param uid the uid of a stock
+     * @return null if the stock does not exsist in the database
+     */
     public static Stock getInstanceByUID(String uid){
         if (!stocks.containsKey(uid)){
             stocks.put(uid,new Stock(uid));
@@ -170,7 +171,52 @@ public class Stock extends DatabaseEntryOwner<Stock> {
             return true;
         }
     }
-    public class OnStockChangedListener{
-        //public void on
+
+    public abstract static class OnStockChangedListener extends DataAccessor<Stock>{
+
+        protected Set<Product> getProductsInStock(){
+            Set<String> products_uids =  ((DatabaseGroupedEntry<Stock,StockEntry>) getOwner().getEntry(INSTOCK)).getGroups();
+            Set<Product>  products = new HashSet<>();
+            for (String uid : products_uids){
+                products.add(Product.getInstanceByUID(uid));
+            }
+            return products;
+        }
+
+        protected Set<Product> getProductsOutStock(){
+            Set<String> products_uids =  ((DatabaseGroupedEntry<Stock,StockEntry>) getOwner().getEntry(OUTSTOCK)).getGroups();
+            Set<Product>  products = new HashSet<>();
+            for (String uid : products_uids){
+                products.add(Product.getInstanceByUID(uid));
+            }
+            return products;
+        }
+        protected String getName(){
+            return ((DatabaseSingleEntry<Stock,String>)  getOwner().getEntry(NAME)).getValue();
+        }
+
+        protected String getUID(){
+            return ((DatabaseSingleEntry<Stock,String>)  getOwner().getEntry(UID)).getValue();
+        }
+
+        protected Map<String,User> getUsers(){
+            Map<String,String> map  = ((DatabaseMapEntry<Stock,String>)  getOwner().getEntry(USERS)).getMap();
+            Map<String, User>  users  =  new HashMap<>();
+            for (Map.Entry<String,String> entry: map.entrySet()){
+                users.put(entry.getKey(),User.getInstanceByUID(entry.getValue()));
+            }
+            return users;
+        }
+
+        public abstract void onUserAdded(Stock s, User u);
+        public abstract void onUserRemoved(Stock s, User u);
+        public abstract void onProductTypeAddedToInStock(Stock s, Product p);
+        public abstract void onProductTypeRemovedToInStock(Stock s, Product p);
+        public abstract void onProductTypeRemovedToOutStock(Stock s, Product p);
+        public abstract void onProductTypeAddedToOutStock(Stock s, Product p);
+        public abstract void onProductInstanceAddedToInStock(Stock s, Product p, String key, StockEntry instance);
+        public abstract void onProductInstanceRemovedToInStock(Stock s, Product p, String key, StockEntry instance);
+        public abstract void onProductInstanceRemovedToOutStock(Stock s, Product p, String key, StockEntry instance);
+        public abstract void onProductInstanceAddedToOutStock(Stock s, Product p, String key, StockEntry instance);
     }
 }

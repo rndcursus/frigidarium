@@ -102,26 +102,7 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
 
             @Override
             public void onChildMoved(final DataSnapshot dataSnapshot, final String s) {
-                if (dataSnapshot.getKey().equals(name)) {
-                    map.remove(s);
-                    map.put(dataSnapshot.getKey(), dataSnapshot.getValue(valueType));
-                    DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener<O>() {
-                        @Override
-                        public void onFinished(DatabaseEntryOwner unused) {
-                            for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
-                                if (listener instanceof DatabaseMapEntry.OnChangeListener){
-                                    DatabaseMapEntry.OnChangeListener<O,V> l = (DatabaseMapEntry.OnChangeListener<O,V>)  listener;
-                                    l.onChildMoved(owner,name,map.get(dataSnapshot.getKey()),dataSnapshot.getKey(), dataSnapshot.getPriority());
-                                }
-                            }
-                        }
-                    };
-                    if (owner.isFinished(name)) {
-                        fListener.onFinished(owner);
-                    } else {
-                        owner.addOnFinishedListener(fListener);
-                    }
-                }
+                //hier doen we niks mee dit heeft te maken met priority stuffs.
             }
 
             @Override
@@ -178,7 +159,5 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
         public void onChildAdded(O owner, String mapName, V element, String key);
         public void onChildChanged(O owner, String mapName, V element, String key, V oldElement);
         public void onChildRemoved(O owner, String mapName, V element, String key);
-        public void onChildMoved(O owner, String mapName, V element, String dataSnapshotKey, Object newPriority);
-
     }
 }

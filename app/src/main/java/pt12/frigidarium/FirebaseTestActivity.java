@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
 import pt12.frigidarium.Database.models.Product;
+import pt12.frigidarium.Database.models.User;
 
 public class FirebaseTestActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,8 +19,19 @@ public class FirebaseTestActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_test);
-        Product p = new Product("test_product");
+        Product p = Product.getInstanceByUID("test_product");
         p.addListener(new Product.OnProductChangeListener() {
+
+            @Override
+            public void onGetOnce() {
+
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+
+            }
+
             @Override
             public void onChange(Product p, String name) {
                 if (name.equals(Product.BRAND)){

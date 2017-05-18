@@ -24,6 +24,11 @@ public class User extends DatabaseEntryOwner<User> {
     private final Set<OnUserChangeListener> userListeners;
     private static Map<String,User> users= new HashMap<>();
 
+    /**
+     * Use this function to create a user.
+     * @param uid the uid of a use
+     * @return null if the user does not exsist in the database
+     */
     public static User getInstanceByUID(String uid){
         if (!users.containsKey(uid)){
             users.put(uid,new User(uid));
@@ -50,21 +55,7 @@ public class User extends DatabaseEntryOwner<User> {
         super(identifier, createReference(identifier), getEntries(identifier));
         userListeners = new HashSet<>();
         final User u = this;
-        super.getEntry(NAME).addListener(new DatabaseSingleEntry.OnChangeListener<User, String>() {
-            @Override
-            public void onChange(User owner, String name, String value) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onNameChange(owner,name, value);
-                }
-            }
 
-            @Override
-            public void onError(User owner, String name, int code, String message, String details) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onError(owner,name,code,message,details);
-                }
-            }
-        });
         super.getEntry(STOCKS).addListener(new DatabaseMapEntry.OnChangeListener<User, String>() {
             @Override
             public void onChildAdded(User owner, String mapName, String element, String key) {
@@ -92,11 +83,6 @@ public class User extends DatabaseEntryOwner<User> {
             }
 
             @Override
-            public void onChildMoved(User owner, String mapName, String element, String dataSnapshotKey, Object newPriority) {
-                //we do not do anything with priority so this should stay empty
-            }
-
-            @Override
             public void onError(User owner, String name, int code, String message, String details) {
                 for (OnUserChangeListener listener : userListeners){
                     listener.onError(owner,name,code,message,details);
@@ -106,7 +92,7 @@ public class User extends DatabaseEntryOwner<User> {
     }
 
     public void addListener(OnUserChangeListener listener){
-        listener.setUser(this);
+        listener.setOwner(this);
         userListeners.add(listener);
     }
 
@@ -119,50 +105,45 @@ public class User extends DatabaseEntryOwner<User> {
      * Deze class moet gebruikt worden om data over een User te lezen en of te schrijven.
      * Dit moet gedaan worden vanuit een subclass van OnUserChangeListener.
      */
-    public abstract class OnUserChangeListener {
-        private User user;
+    public static abstract class OnUserChangeListener extends DataAccessor<User>{
 
-        private void setUser(User u){
-            this.user = u;
-        }
-        public String getName(){
-            DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.user.getEntry(NAME);
+        protected String getName(){
+            DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getOwner().getEntry(NAME);
             return entry.getValue();
         }
 
-        public String getUID(){
-            DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.user.getEntry(UID);
+        protected String getUID(){
+            DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getOwner().getEntry(UID);
             return entry.getValue();
         }
 
-        public Map<String, String> getStocks(){
-            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.user.getEntry(STOCKS);
+        protected Map<String, String> getStocks(){
+            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             return entry.getMap();
         }
 
-        public void removeStockByKey(String key){
-            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.user.getEntry(STOCKS);
+        protected void removeStockByKey(String key){
+            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             entry.remove(key);
         }
-        public void removeStockByVal(String val){
-            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.user.getEntry(STOCKS);
+
+        protected void removeStockByVal(String val){
+            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             String key = entry.getKey(val);
             if (key != null) {
                 entry.remove(key);
             }
         }
-        public void addStock(String stockUid){
-            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.user.getEntry(STOCKS);
+
+        protected void addStock(String stockUid){
+            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             entry.add(stockUid);
         }
-        public String getStockByKey(String  key){
-            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.user.getEntry(STOCKS);
+
+        protected String getStockByKey(String  key){
+            DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) this.getOwner().getEntry(STOCKS);
             return entry.getValue(key);
         }
-
-        public abstract void onNameChange(User owner, String name, String value);
-
-        public abstract void onError(User owner, String name, int code, String message, String details);
 
         public abstract void onAddedToStock(User owner, String mapName, String key, String element);
 

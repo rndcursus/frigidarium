@@ -7,7 +7,9 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.security.acl.Owner;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pt12.frigidarium.Database.models.Stock;
 
@@ -156,6 +158,11 @@ public class DatabaseGroupedEntry<O extends DatabaseEntryOwner, V> extends Datab
             products.remove(groupUid);
         }
     }
+
+    public Set<String> getGroups() {
+        return products.keySet();
+    }
+
     public interface OnChangeListener<O extends DatabaseEntryOwner,V> extends DatabaseEntry.OnChangeListener<O>{
         public void onGroupAdded(O owner, DatabaseGroupedEntry<O,V> value, DatabaseMapEntry<O, V> group);
         public void onGroupRemoved(O owner, DatabaseGroupedEntry<O,V> value, DatabaseMapEntry<O, V> group);
