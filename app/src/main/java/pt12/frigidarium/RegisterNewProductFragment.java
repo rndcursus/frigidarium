@@ -1,16 +1,21 @@
 package pt12.frigidarium;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import static android.R.attr.data;
+import static android.R.attr.password;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +43,7 @@ public class RegisterNewProductFragment extends Fragment {
     private EditText productUrl;
     private RadioButton liter;
     private RadioButton gram;
+    private Button submit;
 
     public RegisterNewProductFragment() {
         // Required empty public constructor
@@ -65,7 +71,7 @@ public class RegisterNewProductFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            barcode = getArguments().getString(ARG_BARCODE);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -80,8 +86,30 @@ public class RegisterNewProductFragment extends Fragment {
         liter = (RadioButton) rootView.findViewById(R.id.liter);
         gram = (RadioButton) rootView.findViewById(R.id.gram);
         productUrl = (EditText) rootView.findViewById(R.id.url);
+        submit = (Button) rootView.findViewById(R.id.submit);
 
-    
+        submit.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String pn, pb, pc, purl;
+                        pn = productName.getText().toString();
+                        pb = productBrand.getText().toString();
+                        pc = productContent.getText().toString();
+                        if(liter.isChecked())
+                        {
+                            pc = pc + " L";
+                        }
+                        if(gram.isChecked())
+                        {
+                            pc = pc + " g";
+                        }
+                        purl = productUrl.getText().toString();
+                        RegisterProduct(pn, pb, pc, purl);
+                    }
+                }
+        );
+
 
         return rootView;
     }
@@ -128,6 +156,7 @@ public class RegisterNewProductFragment extends Fragment {
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
         //TODO: database dingen
+        Log.v("datalog", "pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
     }
 
 }

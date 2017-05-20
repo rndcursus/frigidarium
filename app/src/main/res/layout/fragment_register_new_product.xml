@@ -80,10 +80,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/brand_name_hint"
+            android:hint="@string/url_hint"
             android:inputType="textNoSuggestions"
             android:singleLine="true"
-            android:text="@string/url_hint" />
+            android:text="" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit" />
 
     </LinearLayout>
 

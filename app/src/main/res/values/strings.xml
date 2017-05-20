@@ -15,7 +15,7 @@
     <string name="brand_name_hint">brand name</string>
     <string name="content_hint">content</string>
     <string name="url_hint">url</string>
-
+    <string name="submit">submit</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
 </resources>
