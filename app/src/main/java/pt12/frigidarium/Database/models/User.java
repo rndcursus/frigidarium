@@ -21,9 +21,30 @@ public class User extends DatabaseEntryOwner<User> {
     private static final String UID = "uid";
     public static final String STOCKS = "stocks";
     public static final String NAME = "name";
-    private final Set<OnUserChangeListener> userListeners;
     private static Map<String,User> users= new HashMap<>();
+    /**
+     * Use this function to create a User. This User will be passed in callback.
+     * @param uid the uid of a User
+     * @param callback the callback after The User has been created.
+     */
+    public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<User> callback){
+        User s = getInstanceByUID(uid);
+        s.addDataAccessor(new DataAccessor<User>() {
+            @Override
+            public void onError(User owner, String name, int code, String message, String details) {
+                callback.onError(owner,name,code,message,details);
+            }
 
+            @Override
+            public void onGetInstance(User owner) {
+                if (getUid() == null || getUid().equals("")){
+                    callback.OnDoesNotExist(owner);
+                }else {
+                    callback.onExist(owner);
+                }
+            }
+        });
+    }
     /**
      * Use this function to create a user.
      * @param uid the uid of a use
@@ -37,6 +58,21 @@ public class User extends DatabaseEntryOwner<User> {
             l.onGetInstance(users.get(uid));
         }
         return users.get(uid);
+    }
+
+    /**
+     * This function creates a new entry in the firebase database.
+     * However if the User already exists it will be overridden.
+     * @param uid the firebaseuid of the user.
+     * @param name the name of the user
+     * @return the newly created entry
+     */
+    public static User createUser(String uid, String name){
+        User u =  User.getInstanceByUID(uid);
+        ((DatabaseSingleEntry<Product,String>)  u.getEntry(UID)).setValue(uid);
+        ((DatabaseSingleEntry<Product,String>)  u.getEntry(NAME)).setValue(name);
+        ((DatabaseMapEntry<Product,String>)  u.getEntry(STOCKS)).init();
+        return u;
     }
 
     private static DatabaseReference createReference(String uid){
@@ -56,38 +92,50 @@ public class User extends DatabaseEntryOwner<User> {
 
     private User(String identifier) {
         super(identifier, createReference(identifier), getEntries(identifier));
-        userListeners = new HashSet<>();
         final User u = this;
 
         super.getEntry(STOCKS).addListener(new DatabaseMapEntry.OnChangeListener<User, String>() {
             @Override
             public void onChildAdded(User owner, String mapName, String element, String key) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onAddedToStock(owner,mapName, key,element);
+                for (DataAccessor l : getDataAccessors()){
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                        listener.onAddedToStock(owner, mapName, key, element);
+                    }
+
                 }
             }
 
             @Override
             public void onChildChanged(User owner, String mapName, String element, String key, String oldElement) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onRemovedFromStock(owner,mapName, key, oldElement);
+                for (DataAccessor l : getDataAccessors()) {
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                        listener.onRemovedFromStock(owner, mapName, key, oldElement);
+                    }
                 }
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onAddedToStock(owner,mapName, key, element);
+                for (DataAccessor l : getDataAccessors()) {
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                        listener.onAddedToStock(owner, mapName, key, element);
+                    }
                 }
 
             }
 
             @Override
             public void onChildRemoved(User owner, String mapName, String element, String key) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onRemovedFromStock(owner,mapName, key,element);
+                for (DataAccessor l : getDataAccessors()) {
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                    listener.onRemovedFromStock(owner, mapName, key, element);
+                }
                 }
             }
 
             @Override
             public void onError(User owner, String name, int code, String message, String details) {
-                for (OnUserChangeListener listener : userListeners){
+                for (DataAccessor<User> listener : getDataAccessors()){
                     listener.onError(owner,name,code,message,details);
                 }
             }
@@ -97,16 +145,6 @@ public class User extends DatabaseEntryOwner<User> {
         DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getEntry(UID);
         return entry.getValue();
     }
-
-    public void addListener(OnUserChangeListener listener){
-        listener.setOwner(this);
-        userListeners.add(listener);
-    }
-
-    public void removeListener(OnUserChangeListener  listener){
-        userListeners.remove(listener);
-    }
-
 
     /**
      * Deze class moet gebruikt worden om data over een User te lezen en of te schrijven.
