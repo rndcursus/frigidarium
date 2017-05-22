@@ -291,6 +291,36 @@ public class Stock extends DatabaseEntryOwner<Stock> {
         outofstock.addEntry(entry, entry.getProduct_uid());
     }
 
+    /**
+     * do not call this method yourself instead use {@link }User.addUserToStock
+     * @param user the user to be added to the stock.
+     */
+    public void addUserToStock(User user) {
+        DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) getEntry(USERS);
+        if (user.getUID()!= null) {
+            if (entry.getKey(user.getUID()) == null){
+                entry.add(user.getUID());
+            }
+        }else{
+            throw new RuntimeException("user does not exsist (yet)");
+        }
+    }
+
+    /**
+     * do not call this method yourself instead use {@link }User.removeUserFromStock
+     * @param user the user to be removed from the stock.
+     */
+    public void removeUserFromStock(User user) {
+        DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) getEntry(USERS);
+        if (user.getUID()!= null) {
+            if (entry.getKey(user.getUID()) != null){
+                entry.remove(entry.getKey(user.getUID()));
+            }
+        }else{
+            throw new RuntimeException("user does not exsist (yet)");
+        }
+    }
+
     public static class StockEvent{
         Map<String, String> timestamp;
         String user_uid;

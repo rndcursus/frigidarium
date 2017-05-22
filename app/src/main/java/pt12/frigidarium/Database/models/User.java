@@ -103,6 +103,37 @@ public class User extends DatabaseEntryOwner<User> {
         return entries;
     }
 
+    /**
+     * adds a user to a stock
+     * @param s the stock that the user will be added to.
+     */
+    public void addUserToStock(Stock s){
+        DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) getEntry(STOCKS);
+        if (s.getUID()!= null) {
+            if (entry.getKey(s.getUID()) == null){
+                entry.add(s.getUID());
+            }
+            s.addUserToStock(this);
+        }else{
+            throw new RuntimeException("can not add user to a stock that does not exist");
+        }
+    }
+    /**
+     * removes a user to a stock
+     * @param s the stock that the user will be removed from.
+     */
+    public void removeUserToStock(Stock s){
+        DatabaseMapEntry<User,String> entry  = (DatabaseMapEntry<User, String>) getEntry(STOCKS);
+        if (s.getUID()!= null) {
+            if (entry.getKey(s.getUID()) != null){
+                entry.remove(entry.getKey(s.getUID()));
+            }
+            s.removeUserFromStock(this);
+        }else{
+            throw new RuntimeException("can not remove user to a stock that does not exist");
+        }
+    }
+
     private User(String identifier) {
         super(identifier, createReference(identifier), getEntries(identifier));
         final User u = this;
