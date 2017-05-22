@@ -19,29 +19,45 @@ public class FirebaseTestActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_test);
-        Product p = Product.getInstanceByUID("test_product");
-        p.addDataAccessor(new Product.OnProductChangeListener() {
 
+        Product.getInstanceByUID("test_product", new DatabaseEntryOwner.onReadyCallback<Product>() {
+            @Override
+            public void onExist(Product owner) {
+                owner.addDataAccessor(new Product.OnProductChangeListener() {
+
+
+                    @Override
+                    public void onError(Product owner, String name, int code, String message, String details) {
+                        return;
+                    }
+
+                    @Override
+                    public void onGetInstance(Product owner) {
+                        TextView tv = (TextView) findViewById(R.id.textView2);
+                        tv.setText(getBrand());
+                    }
+
+                    @Override
+                    public void onChange(Product p, String name) {
+                        if (name.equals(Product.BRAND)){
+                            TextView tv = (TextView) findViewById(R.id.textView2);
+                            tv.setText(getBrand());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void OnDoesNotExist(Product owner) {
+                return;
+            }
 
             @Override
             public void onError(Product owner, String name, int code, String message, String details) {
-
-            }
-
-            @Override
-            public void onGetInstance(Product owner) {
-                TextView tv = (TextView) findViewById(R.id.textView2);
-                tv.setText(getBrand());
-            }
-
-            @Override
-            public void onChange(Product p, String name) {
-                if (name.equals(Product.BRAND)){
-                    TextView tv = (TextView) findViewById(R.id.textView2);
-                    tv.setText(getBrand());
-                }
+                return;
             }
         });
+
         Button logoutButton = (Button) findViewById(R.id.logout);
         logoutButton.setOnClickListener(this);
     }

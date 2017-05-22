@@ -33,6 +33,7 @@ public class Product extends DatabaseEntryOwner<Product> {
      */
     public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<Product> callback){
         Product s = getInstanceByUID(uid);
+        final boolean[] called = {false};
         s.addDataAccessor(new DataAccessor<Product>() {
             @Override
             public void onError(Product owner, String name, int code, String message, String details) {
@@ -41,6 +42,7 @@ public class Product extends DatabaseEntryOwner<Product> {
 
             @Override
             public void onGetInstance(Product owner) {
+                called[0] = true;
                 if (getUid() == null || getUid().equals("")){
                     callback.OnDoesNotExist(owner);
                 }else {
@@ -48,18 +50,30 @@ public class Product extends DatabaseEntryOwner<Product> {
                 }
             }
         });
+        if (!called[0] && s.isFinished()){
+            for (final DataAccessor<Product> l: products.get(uid).getDataAccessors()){
+                l.onGetInstance(products.get(uid));
+            }
+        }
     }
     /**
      * Use this function to create a Product.
      * @param uid the uid of a product
      * @return null if the product does not exsist in the database
      */
-    public static Product getInstanceByUID(String uid){
+    public static Product getInstanceByUID(final String uid){
         if (!products.containsKey(uid)){
             products.put(uid,new Product(uid));
         }
-        for (DataAccessor<Product> l: products.get(uid).getDataAccessors()){
-            l.onGetInstance(products.get(uid));
+        for (final DataAccessor<Product> l: products.get(uid).getDataAccessors()){
+            DatabaseEntryOwner.OnFinishedListener<Product>  lf = new OnFinishedListener<Product>() {
+                @Override
+                public void onFinished(Product owner) {
+                    l.onGetInstance(products.get(uid));
+                }
+            };
+            products.get(uid).addOnFinishedListener(lf);
+
         }
         return products.get(uid);
     }
@@ -118,16 +132,132 @@ public class Product extends DatabaseEntryOwner<Product> {
 
             @Override
             public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
 
+                }
             }
         };
 
-        super.getEntry(BARCODE).addListener(listener);
-        super.getEntry(NAME).addListener(listener);
-        super.getEntry(URL).addListener(listener);
-        super.getEntry(BRAND).addListener(listener);
-        super.getEntry(CONTENT).addListener(listener);
-        super.getEntry(UID).addListener(listener);
+        super.getEntry(BARCODE).addListener(new DatabaseSingleEntry.OnChangeListener<Product,String>() {
+            @Override
+            public void onChange(Product owner, String name, String value) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
+
+                }
+            }
+        });
+        super.getEntry(NAME).addListener(new DatabaseSingleEntry.OnChangeListener<Product,String>() {
+            @Override
+            public void onChange(Product owner, String name, String value) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
+
+                }
+            }
+        });
+        super.getEntry(URL).addListener(new DatabaseSingleEntry.OnChangeListener<Product,String>() {
+            @Override
+            public void onChange(Product owner, String name, String value) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
+
+                }
+            }
+        });
+        super.getEntry(BRAND).addListener(new DatabaseSingleEntry.OnChangeListener<Product,String>() {
+            @Override
+            public void onChange(Product owner, String name, String value) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
+
+                }
+            }
+        });
+        super.getEntry(CONTENT).addListener(new DatabaseSingleEntry.OnChangeListener<Product,String>() {
+            @Override
+            public void onChange(Product owner, String name, String value) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
+
+                }
+            }
+        });
+        super.getEntry(UID).addListener(new DatabaseSingleEntry.OnChangeListener<Product,String>() {
+            @Override
+            public void onChange(Product owner, String name, String value) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    if (listener instanceof Product.OnProductChangeListener){
+                        OnProductChangeListener l = (OnProductChangeListener) listener;
+                        l.onChange(p, name);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Product owner, String name, int code, String message, String details) {
+                for (DataAccessor<Product> listener : getDataAccessors()) {
+                    listener.onError(owner,name,code,message,details);
+
+                }
+            }
+        });
 
     }
 
