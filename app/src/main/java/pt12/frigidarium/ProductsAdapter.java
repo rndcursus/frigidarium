@@ -1,22 +1,29 @@
 package pt12.frigidarium;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+
 import java.util.LinkedList;
 import java.util.List;
 
-public class ProductsAdapter extends RecyclerView.Adapter<ProductViewHolder> {
+import static android.R.attr.data;
 
-    private List<String> data;
+public class ProductsAdapter extends ExpandableRecyclerAdapter<ProductViewHolder, ProductDetailsViewHolder> {
 
-    public ProductsAdapter(List<String> data) {
-        this.data = data;
+    private LayoutInflater inflater;
+
+    public ProductsAdapter(Context context, List<ListProduct> productsList) {
+        super(productsList);
+        inflater = LayoutInflater.from(context);
     }
 
-    @Override
+    /*@Override
     public ProductViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Inflate the view for this view holder
         View thisItemsView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_product_layout,
@@ -24,16 +31,38 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductViewHolder> {
         // Call the view holder's constructor, and pass the view to it;
         // return that new view holder
         return new ProductViewHolder(thisItemsView);
-    }
+    }*/
 
     @Override
+    public ProductViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
+            View view = inflater.inflate(R.layout.list_product_layout, parentViewGroup, false);
+            return new ProductViewHolder(view);
+        }
+
+        @Override
+        public ProductDetailsViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
+            View view = inflater.inflate(R.layout.list_product_details, childViewGroup, false);
+            return new ProductDetailsViewHolder(view);
+        }
+
+        @Override
+        public void onBindParentViewHolder(ProductViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
+            parentViewHolder.getTextView().setText(((ListProduct) parentListItem).getName());
+        }
+
+        @Override
+        public void onBindChildViewHolder(ProductDetailsViewHolder childViewHolder, int position, Object childListItem) {
+            childViewHolder.getTextView().setText(((ProductDetails) childListItem).getAddedBy());
+    }
+
+    /*@Override
     public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
         viewHolder.getTextView().setText(data.get(position) + " product");
-    }
+    }*/
 
-    @Override
+    /*@Override
     public int getItemCount() {
         return data.size();
-    }
+    }*/
 
 }

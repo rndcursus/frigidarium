@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -90,13 +92,15 @@ public class StockFragment extends Fragment {
         RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
         recyclerView.addItemDecoration(dividerDecoration);
 
-        LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
-        adapter = new ProductsAdapter(data);
+        LinkedList<ListProduct> data = new LinkedList<ListProduct>(Arrays.asList(new ListProduct("Cola", "Jumbo", "Mark")));
+        adapter = new ProductsAdapter(this.getContext(), data);
         recyclerView.setAdapter(adapter);
 
-        String data5 = "vijfde";
+        /*String data5 = "vijfde";
         data.add(data5);
-        adapter.notifyItemInserted(4);
+        adapter.notifyItemInserted(4);*/
+
+        //adapter.
 
         return rootView;
     }
