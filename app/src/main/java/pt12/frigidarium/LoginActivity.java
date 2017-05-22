@@ -144,23 +144,32 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI(final FirebaseUser user) {
         if (user != null) {
             final LoginActivity la = this;
-            User.getInstanceByUID(user.getUid(), new DatabaseEntryOwner.onReadyCallback<User>() {
+            DatabaseEntryOwner.onReadyCallback<User> onReadyCallBack = new DatabaseEntryOwner.onReadyCallback<User>() {
+                boolean called  = false;
                 @Override
                 public void onExist(User owner) {
-                    goToNextActivity();
+                    if (!called) {
+                        called = true;
+                        goToNextActivity();
+                    }
                 }
 
                 @Override
                 public void OnDoesNotExist(User owner) {
-                    User.createUser(user.getUid(), user.getDisplayName());
-                    goToNextActivity();
+                    if (!called) {
+                        called = true;
+                        User.createUser(user.getUid(), user.getDisplayName());
+                        goToNextActivity();
+
+                    }
                 }
 
                 @Override
                 public void onError(User owner, String name, int code, String message, String details) {
 
                 }
-            });
+            };
+            User.getInstanceByUID(user.getUid(), onReadyCallBack);
         }
     }
 
