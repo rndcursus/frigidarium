@@ -57,12 +57,18 @@ public class Stock extends DatabaseEntryOwner<Stock> {
      * @param uid the uid of a stock
      * @return null if the stock does not exsist in the database
      */
-    public static Stock getInstanceByUID(String uid){
+    public static Stock getInstanceByUID(final String uid){
         if (!stocks.containsKey(uid)){
             stocks.put(uid,new Stock(uid));
         }
-        for (DataAccessor<Stock> l: stocks.get(uid).getDataAccessors()){
-            l.onGetInstance(stocks.get(uid));
+        for (final DataAccessor<Stock> l: stocks.get(uid).getDataAccessors()){
+            DatabaseEntryOwner.OnFinishedListener<Stock>  lf = new OnFinishedListener<Stock>() {
+                @Override
+                public void onFinished(Stock owner) {
+                    l.onGetInstance(stocks.get(uid));
+                }
+            };
+            stocks.get(uid).addOnFinishedListener(lf);
         }
         return stocks.get(uid);
     }

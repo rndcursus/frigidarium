@@ -50,12 +50,18 @@ public class User extends DatabaseEntryOwner<User> {
      * @param uid the uid of a use
      * @return null if the user does not exsist in the database
      */
-    public static User getInstanceByUID(String uid){
+    public static User getInstanceByUID(final String uid){
         if (!users.containsKey(uid)){
             users.put(uid,new User(uid));
         }
-        for (DataAccessor<User> l: users.get(uid).getDataAccessors()){
-            l.onGetInstance(users.get(uid));
+        for (final DataAccessor<User> l: users.get(uid).getDataAccessors()){
+            DatabaseEntryOwner.OnFinishedListener<User>  lf = new OnFinishedListener<User>() {
+                @Override
+                public void onFinished(User owner) {
+                    l.onGetInstance(users.get(uid));
+                }
+            };
+            users.get(uid).addOnFinishedListener(lf);
         }
         return users.get(uid);
     }

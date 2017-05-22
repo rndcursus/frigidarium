@@ -23,39 +23,39 @@ public class DatabaseSingleEntry<O extends DatabaseEntryOwner,V> extends Databas
     }
     protected void setOwner (final O owner) {
        super.setOwner(owner);
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getKey().equals(name)) {
-                        value = dataSnapshot.getValue(valueType);
-                        DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener<O>() {
-                            @Override
-                            public void onFinished(DatabaseEntryOwner unused) {
-                                for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
-                                    if (listener instanceof DatabaseSingleEntry) {
-                                        DatabaseSingleEntry.OnChangeListener<O,V> l = (DatabaseSingleEntry.OnChangeListener) listener;
-                                        l.onChange(owner, name, value);
-                                    }
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getKey().equals(name)) {
+                    value = dataSnapshot.getValue(valueType);
+                    DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener<O>() {
+                        @Override
+                        public void onFinished(DatabaseEntryOwner unused) {
+                            for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
+                                if (listener instanceof DatabaseSingleEntry.OnChangeListener) {
+                                    DatabaseSingleEntry.OnChangeListener<O,V> l = (DatabaseSingleEntry.OnChangeListener) listener;
+                                    l.onChange(owner, name, value);
                                 }
                             }
-                        };
-                        if (owner.isFinished(name)) {
-                            fListener.onFinished(owner);
-                        } else {
-                            owner.addOnFinishedListener(fListener);
                         }
+                    };
+                    if (owner.isFinished(name)) {
+                        fListener.onFinished(owner);
+                    } else {
+                        owner.addOnFinishedListener(fListener);
                     }
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
-                        listener.onError(owner, name, databaseError.getCode(),
-                                databaseError.getMessage(),
-                                databaseError.getDetails());
-                    }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                for (DatabaseEntry.OnChangeListener<O> listener : listeners) {
+                    listener.onError(owner, name, databaseError.getCode(),
+                            databaseError.getMessage(),
+                            databaseError.getDetails());
                 }
-            });
+            }
+        });
 
     }
     public V getValue() {
