@@ -154,6 +154,7 @@ public class User extends DatabaseEntryOwner<User> {
             }
         });
     }
+
     public String getUID(){
         DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getEntry(UID);
         return entry.getValue();
