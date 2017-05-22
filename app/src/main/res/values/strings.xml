@@ -18,4 +18,10 @@
     <string name="submit">submit</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
+    <string-array name="content_units">
+        <item>g</item>
+        <item>L</item>
+        <item>pieces</item>
+    </string-array>
+
 </resources>
