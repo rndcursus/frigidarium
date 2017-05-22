@@ -29,6 +29,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
+import pt12.frigidarium.Database.models.User;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -40,7 +43,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
-   // private boolean signingIn = false;
     private Class<?> nextActivity = MainActivity.class;
 
 
@@ -67,11 +69,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void signIn() {
-        //if (this.signingIn){
-          //  this.signingIn = true;
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
-        //}
     }
 
     @Override
@@ -142,11 +141,32 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(final FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(this, this.nextActivity);
-            this.startActivity(intent);
+            final LoginActivity la = this;
+            User.getInstanceByUID(user.getUid(), new DatabaseEntryOwner.onReadyCallback<User>() {
+                @Override
+                public void onExist(User owner) {
+                    goToNextActivity();
+                }
+
+                @Override
+                public void OnDoesNotExist(User owner) {
+                    User.createUser(user.getUid(), user.getDisplayName());
+                    goToNextActivity();
+                }
+
+                @Override
+                public void onError(User owner, String name, int code, String message, String details) {
+
+                }
+            });
         }
+    }
+
+    private void goToNextActivity() {
+        Intent intent = new Intent(this, nextActivity);
+        startActivity(intent);
     }
 }
 
