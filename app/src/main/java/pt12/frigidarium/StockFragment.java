@@ -1,9 +1,11 @@
 package pt12.frigidarium;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,6 +85,10 @@ public class StockFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
+        RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
+        recyclerView.addItemDecoration(dividerDecoration);
 
         LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
