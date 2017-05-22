@@ -36,6 +36,7 @@ public class Stock extends DatabaseEntryOwner<Stock> {
      */
     public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<Stock> callback){
         Stock s = getInstanceByUID(uid);
+        final boolean[] called = {false};
         s.addDataAccessor(new DataAccessor<Stock>() {
             @Override
             public void onError(Stock owner, String name, int code, String message, String details) {
@@ -44,6 +45,7 @@ public class Stock extends DatabaseEntryOwner<Stock> {
 
             @Override
             public void onGetInstance(Stock owner) {
+                called[0] = true;
                 if (getUid() == null || getUid().equals("")){
                     callback.OnDoesNotExist(owner);
                 }else {
@@ -51,6 +53,11 @@ public class Stock extends DatabaseEntryOwner<Stock> {
                 }
             }
         });
+        if (!called[0] && s.isFinished()){
+            for (final DataAccessor<Stock> l: stocks.get(uid).getDataAccessors()){
+                l.onGetInstance(stocks.get(uid));
+            }
+        }
     }
     /**
      * Use this function to create a Stock.

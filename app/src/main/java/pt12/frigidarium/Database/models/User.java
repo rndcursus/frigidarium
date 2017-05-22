@@ -29,6 +29,7 @@ public class User extends DatabaseEntryOwner<User> {
      */
     public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<User> callback){
         User s = getInstanceByUID(uid);
+        final boolean[] called = {false};
         s.addDataAccessor(new DataAccessor<User>() {
             @Override
             public void onError(User owner, String name, int code, String message, String details) {
@@ -37,6 +38,7 @@ public class User extends DatabaseEntryOwner<User> {
 
             @Override
             public void onGetInstance(User owner) {
+                called[0] = true;
                 if (getUid() == null || getUid().equals("")){
                     callback.OnDoesNotExist(owner);
                 }else {
@@ -44,6 +46,11 @@ public class User extends DatabaseEntryOwner<User> {
                 }
             }
         });
+        if (!called[0] && s.isFinished()){
+            for (final DataAccessor<User> l: users.get(uid).getDataAccessors()){
+                l.onGetInstance(users.get(uid));
+            }
+        }
     }
     /**
      * Use this function to create a user.
