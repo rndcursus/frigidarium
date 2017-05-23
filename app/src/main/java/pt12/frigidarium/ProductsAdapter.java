@@ -1,6 +1,5 @@
 package pt12.frigidarium;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +11,8 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstant
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDoNothing;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionMoveToSwipedDirection;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ProductsAdapter
@@ -40,6 +39,27 @@ public class ProductsAdapter
     @Override
     public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
         viewHolder.getTextView().setText(data.get(position) + " product");
+
+        // set background resource (target view ID: container)
+        final int swipeState = viewHolder.getSwipeStateFlags();
+
+        if ((swipeState & SwipeableItemConstants.STATE_FLAG_IS_UPDATED) != 0) {
+            int bgResId = 0;
+
+            if ((swipeState & SwipeableItemConstants.STATE_FLAG_IS_ACTIVE) != 0) {
+                bgResId = R.drawable.product_swiping_active_state;
+            } else if ((swipeState & SwipeableItemConstants.STATE_FLAG_SWIPING) != 0) {
+                //bgResId = R.drawable.product_swiping_state;
+            } else {
+                bgResId = R.drawable.product_swiping_normal_state;
+            }
+
+            viewHolder.getContainer().setBackgroundResource(bgResId);
+        }
+
+        // set swiping properties
+        //viewHolder.setSwipeItemHorizontalSlideAmount(item.isPinned() ? SwipeableItemConstants.OUTSIDE_OF_THE_WINDOW_LEFT : 0);
+
     }
 
     @Override
@@ -79,14 +99,96 @@ public class ProductsAdapter
     @Override
     public SwipeResultAction onSwipeItem(ProductViewHolder holder, int position, int result) {
         if (result == SwipeableItemConstants.RESULT_SWIPED_LEFT) {
+            return new SwipeLeftResultAction(this, position, holder);
+            /*
             return new SwipeResultActionMoveToSwipedDirection() {
+
                 // Optionally, you can override these three methods
                 // - void onPerformAction()
                 // - void onSlideAnimationEnd()
+                public void onSlideAnimationEnd(){
+                    Log.e("Animation", "Ended");
+                }
                 // - void onCleanUp()
-            };
+            };*/
         } else {
             return new SwipeResultActionDoNothing();
         }
     }
+
+    // Class to perform left-swipe action: Remove from stock and add to schopping list
+    private static class SwipeLeftResultAction extends SwipeResultActionMoveToSwipedDirection {
+        private ProductViewHolder holder;
+        private ProductsAdapter adapter;
+        private final int position;
+
+        SwipeLeftResultAction(ProductsAdapter adapter, int position, ProductViewHolder holder) {
+            this.adapter = adapter;
+            this.position = position;
+            this.holder = holder;
+        }
+
+        @Override
+        protected void onPerformAction() {
+            super.onPerformAction();
+
+            // Remove from list
+            adapter.data.remove(position);
+            adapter.notifyItemRemoved(position);
+
+            // Add to shopping list
+            // TODO: Add some code to add a product to the user's shopping list
+
+        }
+
+        @Override
+        protected void onCleanUp() {
+            super.onCleanUp();
+            // clear the references
+            adapter = null;
+        }
+
+        /*@Override
+        protected void onSlideAnimationEnd() {
+            super.onSlideAnimationEnd();
+
+            if (mSetPinned && adapter.mEventListener != null) {
+                adapter.mEventListener.onItemPinned(position);
+            }*/
+        }
+
+
+    /*private static class SwipeRightResultAction extends SwipeResultActionRemoveItem {
+        private ProductsAdapter adapter;
+        private final int mPosition;
+
+        SwipeRightResultAction(ProductsAdapter adapter, int position) {
+            this.adapter = adapter;
+            mPosition = position;
+        }
+
+        @Override
+        protected void onPerformAction() {
+            super.onPerformAction();
+
+            adapter.mProvider.removeItem(mPosition);
+            adapter.notifyItemRemoved(mPosition);
+        }
+
+        @Override
+        protected void onSlideAnimationEnd() {
+            super.onSlideAnimationEnd();
+
+            if (adapter.mEventListener != null) {
+                adapter.mEventListener.onItemRemoved(mPosition);
+            }
+        }
+
+        @Override
+        protected void onCleanUp() {
+            super.onCleanUp();
+            // clear the references
+            adapter = null;
+        }
+    }*/
 }

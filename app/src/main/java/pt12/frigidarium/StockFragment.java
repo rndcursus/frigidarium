@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 
 import java.util.Arrays;
@@ -89,32 +91,33 @@ public class StockFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-
-
-
+        // Add divider between items
         Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
         RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
         recyclerView.addItemDecoration(dividerDecoration);
 
+        // Init data set
         LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
 
+        // Add swipe functionality -------------------------------------------------
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
         RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(adapter);
 
         recyclerView.setAdapter(wrappedAdapter);
 
-        // disable change animations
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        // Animator config
+        final GeneralItemAnimator animator = new SwipeDismissItemAnimator();
+        animator.setSupportsChangeAnimations(false);
+        recyclerView.setItemAnimator(animator);
 
         swipeManager.attachRecyclerView(recyclerView);
 
+        // --------------------------------------------------------------------------
 
         String data5 = "vijfde";
         data.add(data5);
         adapter.notifyItemInserted(4);
-
         return rootView;
     }
 

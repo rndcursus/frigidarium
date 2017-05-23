@@ -6,10 +6,10 @@
 
     <!-- Swipe colors -->
 
-    <color name="bg_item_normal_state">#fff0f0f0</color>
+    <color name="bg_item_normal_state">#FFFFFF</color>
     <color name="bg_item_dragging_state">#ffffdddd</color>
     <color name="bg_item_dragging_active_state">#ffff9999</color>
-    <color name="bg_item_swiping_state">#ffddddff</color>
+    <color name="bg_item_swiping_state">#FFFFFF</color>
     <color name="bg_item_swiping_active_state">#ff9999ff</color>
 
     <color name="bg_swipe_item_neutral">@android:color/transparent</color>

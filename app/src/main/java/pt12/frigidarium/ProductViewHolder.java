@@ -38,4 +38,8 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder {
         return textView;
     }
 
+    public FrameLayout getContainer(){
+        return containerView;
+    }
+
 }
