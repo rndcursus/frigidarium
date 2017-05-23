@@ -97,7 +97,7 @@ public class StockFragment extends Fragment {
         recyclerView.addItemDecoration(dividerDecoration);
 
         // Init data set
-        LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
+        LinkedList<tmpProduct> data = new LinkedList<tmpProduct>(Arrays.asList(new tmpProduct("Cola", 0), new tmpProduct("Sinas", 1), new tmpProduct("Bier", 2), new tmpProduct("Wijn", 3)));
         adapter = new ProductsAdapter(data);
 
         // Add swipe functionality -------------------------------------------------
@@ -115,7 +115,7 @@ public class StockFragment extends Fragment {
 
         // --------------------------------------------------------------------------
 
-        String data5 = "vijfde";
+        tmpProduct data5 = new tmpProduct("Kaas", 4);
         data.add(data5);
         adapter.notifyItemInserted(4);
         return rootView;
@@ -159,4 +159,23 @@ public class StockFragment extends Fragment {
         // TOD O: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
+
+    public static class tmpProduct{
+
+        private String name;
+        private long id;
+
+        public tmpProduct(String name, long id){
+            this.name = name;
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public long getId() {
+            return id;
+        }
+    }
 }

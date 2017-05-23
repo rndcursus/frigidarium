@@ -19,9 +19,9 @@ public class ProductsAdapter
         extends RecyclerView.Adapter<ProductViewHolder>
         implements SwipeableItemAdapter<ProductViewHolder> {
 
-    private List<String> data;
+    private List<StockFragment.tmpProduct> data;
 
-    public ProductsAdapter(List<String> data) {
+    public ProductsAdapter(List<StockFragment.tmpProduct> data) {
         setHasStableIds(true);
         this.data = data;
     }
@@ -38,7 +38,7 @@ public class ProductsAdapter
 
     @Override
     public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
-        viewHolder.getTextView().setText(data.get(position) + " product");
+        viewHolder.getTextView().setText(data.get(position).getName() + " product");
 
         // set background resource (target view ID: container)
         final int swipeState = viewHolder.getSwipeStateFlags();
@@ -69,7 +69,7 @@ public class ProductsAdapter
 
     @Override
     public long getItemId(int position){
-        return position;
+        return data.get(position).getId();
     }
 
     @Override
@@ -92,14 +92,13 @@ public class ProductsAdapter
                 break;
         }
 
-
         holder.itemView.setBackgroundResource(bgRes);
     }
 
     @Override
     public SwipeResultAction onSwipeItem(ProductViewHolder holder, int position, int result) {
         if (result == SwipeableItemConstants.RESULT_SWIPED_LEFT) {
-            return new SwipeLeftResultAction(this, position, holder);
+            return new SwipeLeftResultAction(this, position);
             /*
             return new SwipeResultActionMoveToSwipedDirection() {
 
@@ -111,21 +110,21 @@ public class ProductsAdapter
                 }
                 // - void onCleanUp()
             };*/
+        } else if(result == SwipeableItemConstants.RESULT_SWIPED_RIGHT){
+            return new SwipeRightResultAction(this, position);
         } else {
             return new SwipeResultActionDoNothing();
         }
     }
 
-    // Class to perform left-swipe action: Remove from stock and add to schopping list
+    // Class to perform left-swipe action: Remove from stock list and add to schopping list
     private static class SwipeLeftResultAction extends SwipeResultActionMoveToSwipedDirection {
-        private ProductViewHolder holder;
         private ProductsAdapter adapter;
         private final int position;
 
-        SwipeLeftResultAction(ProductsAdapter adapter, int position, ProductViewHolder holder) {
+        SwipeLeftResultAction(ProductsAdapter adapter, int position) {
             this.adapter = adapter;
             this.position = position;
-            this.holder = holder;
         }
 
         @Override
@@ -157,31 +156,24 @@ public class ProductsAdapter
             }*/
         }
 
-
-    /*private static class SwipeRightResultAction extends SwipeResultActionRemoveItem {
+    // Class to perform right-swipe action: Remove from stock list
+    private static class SwipeRightResultAction extends SwipeResultActionRemoveItem {
         private ProductsAdapter adapter;
-        private final int mPosition;
+        private final int position;
 
         SwipeRightResultAction(ProductsAdapter adapter, int position) {
             this.adapter = adapter;
-            mPosition = position;
+            this.position = position;
         }
 
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
 
-            adapter.mProvider.removeItem(mPosition);
-            adapter.notifyItemRemoved(mPosition);
-        }
+            // Remove from list
+            adapter.data.remove(position);
+            adapter.notifyItemRemoved(position);
 
-        @Override
-        protected void onSlideAnimationEnd() {
-            super.onSlideAnimationEnd();
-
-            if (adapter.mEventListener != null) {
-                adapter.mEventListener.onItemRemoved(mPosition);
-            }
         }
 
         @Override
@@ -190,5 +182,14 @@ public class ProductsAdapter
             // clear the references
             adapter = null;
         }
-    }*/
+
+        /*@Override
+        protected void onSlideAnimationEnd() {
+            super.onSlideAnimationEnd();
+
+            if (adapter.mEventListener != null) {
+                adapter.mEventListener.onItemRemoved(mPosition);
+            }
+        }*/
+    }
 }
