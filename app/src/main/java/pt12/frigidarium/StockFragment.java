@@ -88,11 +88,13 @@ public class StockFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
-        RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
-        recyclerView.addItemDecoration(dividerDecoration);
+        //Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
+        //RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
+        //recyclerView.addItemDecoration(dividerDecoration);
 
         LinkedList<ListProduct> data = new LinkedList<ListProduct>(Arrays.asList(new ListProduct("Cola", "Jumbo", "Mark")));
+        data.add(new ListProduct("Pizza", "Dr. Oetker", "Bas"));
+        data.add(new ListProduct("Kaas", "AH Basic", "Bas"));
         adapter = new ProductsAdapter(this.getContext(), data);
         recyclerView.setAdapter(adapter);
 
