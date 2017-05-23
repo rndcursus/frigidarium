@@ -5,7 +5,7 @@
     </item>
     <item android:left="24dp">
         <bitmap
-            android:src="@drawable/ic_delete_black_24dp"
+            android:src="@drawable/ic_delete"
             android:gravity="left|center_vertical"/>
     </item>
 </layer-list>

@@ -59,7 +59,6 @@ public class ProductsAdapter
 
     @Override
     public void onSetSwipeBackground(ProductViewHolder holder, int position, int type) {
-        Log.i("hoi", "hoi");
         int bgRes = 0;
         switch (type) {
             case SwipeableItemConstants.DRAWABLE_SWIPE_NEUTRAL_BACKGROUND:
@@ -75,12 +74,6 @@ public class ProductsAdapter
 
 
         holder.itemView.setBackgroundResource(bgRes);
-/*
-        if (type == SwipeableItemConstants.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
-            holder.itemView.setBackgroundColor(Color.YELLOW);
-        } else {
-            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
-        }*/
     }
 
     @Override
