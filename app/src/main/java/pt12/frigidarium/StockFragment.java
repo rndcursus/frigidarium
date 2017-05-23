@@ -9,10 +9,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -86,13 +89,27 @@ public class StockFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
+
+
+
         Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
         RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
         recyclerView.addItemDecoration(dividerDecoration);
 
         LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
-        recyclerView.setAdapter(adapter);
+
+        RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
+        RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(adapter);
+
+        recyclerView.setAdapter(wrappedAdapter);
+
+        // disable change animations
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        swipeManager.attachRecyclerView(recyclerView);
+
 
         String data5 = "vijfde";
         data.add(data5);
