@@ -27,7 +27,8 @@ public class DatabaseSingleEntry<O extends DatabaseEntryOwner,V> extends Databas
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getKey().equals(name)) {
-                    value = dataSnapshot.getValue(valueType);
+                    V val = dataSnapshot.getValue(valueType);
+                    value = val;
                     DatabaseEntryOwner.OnFinishedListener fListener = new DatabaseEntryOwner.OnFinishedListener<O>() {
                         @Override
                         public void onFinished(DatabaseEntryOwner unused) {
@@ -39,11 +40,8 @@ public class DatabaseSingleEntry<O extends DatabaseEntryOwner,V> extends Databas
                             }
                         }
                     };
-                    if (owner.isFinished(name)) {
-                        fListener.onFinished(owner);
-                    } else {
-                        owner.addOnFinishedListener(fListener);
-                    }
+                    owner.isFinished(name);
+                    owner.addOnFinishedListener(fListener);
                 }
             }
 

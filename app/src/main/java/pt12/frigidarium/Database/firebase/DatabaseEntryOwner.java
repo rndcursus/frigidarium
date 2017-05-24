@@ -1,5 +1,7 @@
 package pt12.frigidarium.Database.firebase;
 
+import android.provider.Contacts;
+
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
@@ -20,7 +22,7 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
     private Map<String, DatabaseEntry> entries;
     private Map<String, Boolean> entriesDone;
     private Set<OnFinishedListener<O>> finishedListeners;
-    private boolean isFinished = true;
+    private boolean isFinished = false;
     private Set<DataAccessor<O>> dataAccessors;
 
     /**
@@ -30,13 +32,11 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
     protected boolean isFinished(String name){
         if (entriesDone.containsKey(name)){
             entriesDone.put(name, true);
-            return isFinished();
         }
         return isFinished();
     }
 
     protected DatabaseEntryOwner(String name, DatabaseReference ref, Map<String, DatabaseEntry> entries){
-        //super(name, ref);
         this.entries = entries;
         entries.put(UID, new DatabaseSingleEntry<Stock,String>(UID, ref.child(UID), String.class)); //alle owners moeten een uid veld hebben.
         entriesDone = new HashMap<>();
@@ -85,12 +85,17 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
         listener.setOwner((O) this);
         dataAccessors.add(listener);
     }
+
     public void removeDataAccesor(DataAccessor<O> accessor){
         dataAccessors.remove(accessor);
     }
 
     public Set<DataAccessor<O>> getDataAccessors() {
         return dataAccessors;
+    }
+
+    public String getUid() {
+        return ((DatabaseSingleEntry<O, String>)entries.get(UID)).getValue();
     }
 
     protected interface OnFinishedListener<O>{
@@ -103,14 +108,28 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
 
     public static abstract class DataAccessor<O extends DatabaseEntryOwner<O>> {
         private O owner;
-
+        private boolean instanceGotten = false;
         public void setOwner(O owner) {
             if (this.owner != null && owner != this.owner) {
                 throw new RuntimeException("Owner of a DataAccessor can only be set once.");
             }
             this.owner = owner;
         }
-
+        public void onGetInstanceOnce(O owner){
+            if (!instanceGotten){
+                instanceGotten = true;
+                if (owner.isFinished()) {
+                    onGetInstance(owner);
+                }else{
+                    owner.addOnFinishedListener(new OnFinishedListener<O>() {
+                        @Override
+                        public void onFinished(O owner) {
+                            onGetInstanceOnce(owner);
+                        }
+                    });
+                }
+            }
+        }
         protected O getOwner() {
             return owner;
         }
@@ -122,6 +141,7 @@ public class DatabaseEntryOwner<O extends DatabaseEntryOwner<O>> {
         public abstract void onError(O owner, String name, int code, String message, String details);
 
         public abstract void onGetInstance(O owner);
+
     }
     public static interface onReadyCallback<O>{
         public void onExist(O owner);

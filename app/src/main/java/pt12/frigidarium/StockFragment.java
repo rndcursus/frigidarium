@@ -16,12 +16,17 @@ import android.widget.RadioButton;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.StringTokenizer;
+
+import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
+import pt12.frigidarium.Database.models.Product;
+import pt12.frigidarium.Database.models.Stock;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link StockFragment.OnFragmentInteractionListener} interface
+ * {@link } interface
  * to handle interaction events.
  * Use the {@link StockFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -90,13 +95,132 @@ public class StockFragment extends Fragment {
         RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
         recyclerView.addItemDecoration(dividerDecoration);
 
-        LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
+        final LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
         adapter = new ProductsAdapter(data);
         recyclerView.setAdapter(adapter);
 
         String data5 = "vijfde";
         data.add(data5);
         adapter.notifyItemInserted(4);
+        String stock_uid = "stock_test";// // TODO: 22/05/17 get this from a user.
+        Stock.getInstanceByUID(stock_uid, new DatabaseEntryOwner.onReadyCallback<Stock>() {
+            @Override
+            public void onExist(Stock stock) {
+                stock.addDataAccessor(new Stock.OnStockTypeChanged() {
+                    @Override
+                    public void onProductTypeAddedToInStock(Stock s, Product p) {
+                        p.addDataAccessor(new Product.OnProductChangeListener() {
+                            private String name;
+                            @Override
+                            public void onChange(Product p, String n) {
+                                int index = data.indexOf(name);
+                                name = getName();
+                                data.set(index, name);
+                                adapter.notifyItemChanged(index);
+                            }
+
+                            @Override
+                            public void onError(Product owner, String name, int code, String message, String details) {
+                                return;
+                            }
+
+                            @Override
+                            public void onGetInstance(Product owner) {
+                                name = getName();
+                                data.add(name);
+                                adapter.notifyItemInserted(data.indexOf(name));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onProductTypeRemovedToInStock(Stock s, Product p) {
+                        p.addDataAccessor(new Product.OnProductChangeListener() {
+                            @Override
+                            public void onChange(Product p, String name) {
+                                return;
+                            }
+
+                            @Override
+                            public void onError(Product owner, String name, int code, String message, String details) {
+                                return;
+                            }
+
+                            @Override
+                            public void onGetInstance(Product owner) {
+                                int index = data.indexOf(getName());
+                                data.remove(index);
+                                adapter.notifyItemRemoved(index);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onProductTypeRemovedToOutStock(Stock s, Product p) {
+
+                    }
+
+                    @Override
+                    public void onProductTypeAddedToOutStock(Stock s, Product p) {
+
+                    }
+
+                    @Override
+                    public void onError(Stock owner, String name, int code, String message, String details) {
+
+                    }
+
+                    @Override
+                    public void onGetInstance(Stock owner) {
+                        for (Product p: getProductsInStock()){
+                            p.addDataAccessor(new Product.OnProductChangeListener() {
+                                private String Pname;
+                                @Override
+                                public void onChange(Product p, String name) {
+                                    int index = data.indexOf(Pname);
+                                    if (name.equals(Product.NAME)) {
+                                        if (index == -1) {
+                                            Pname = getName();
+                                            data.add(Pname);
+                                            adapter.notifyDataSetChanged();
+                                            //adapter.notifyItemInserted(data.indexOf(Pname));
+                                            //index = data.indexOf(Pname);
+                                            int x;
+                                        }else {
+                                            Pname = getName();
+                                            data.set(index, Pname);
+                                            adapter.notifyItemChanged(index);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Product owner, String name, int code, String message, String details) {
+                                    return;
+                                }
+
+                                @Override
+                                public void onGetInstance(Product owner) {
+                                    Pname = getName();
+                                    data.add(Pname);
+                                    adapter.notifyItemInserted(data.indexOf(Pname));
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void OnDoesNotExist(Stock owner) {
+                return;
+            }
+
+            @Override
+            public void onError(Stock owner, String name, int code, String message, String details) {
+                return;
+            }
+        });
 
         return rootView;
     }

@@ -4,6 +4,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.acl.Owner;
 import java.util.HashMap;
@@ -27,11 +28,23 @@ public class DatabaseGroupedEntry<O extends DatabaseEntryOwner, V> extends Datab
 
 
     }
+
     protected void setOwner(final O owner){
         super.setOwner(owner);
         if (owner  == null){
             return;
         }
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                owner.isFinished(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         final DatabaseGroupedEntry<O,V>  t = this;
         ref.addChildEventListener(new ChildEventListener() {
             @Override

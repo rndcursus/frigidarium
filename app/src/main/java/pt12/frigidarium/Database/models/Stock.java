@@ -1,7 +1,5 @@
 package pt12.frigidarium.Database.models;
 
-import android.net.sip.SipAudioCall;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,33 +29,22 @@ public class Stock extends DatabaseEntryOwner<Stock> {
 
     /**
      * Use this function to create a Stock. This Stock will be passed in callback.
-     * @param uid the uid of a Stocl
+     * @param uid the uid of a Stock
      * @param callback the callback after The Stock has been created.
      */
     public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<Stock> callback){
         Stock s = getInstanceByUID(uid);
-        final boolean[] called = {false};
-        s.addDataAccessor(new DataAccessor<Stock>() {
+        s.addOnFinishedListener(new OnFinishedListener<Stock>() {
             @Override
-            public void onError(Stock owner, String name, int code, String message, String details) {
-                callback.onError(owner,name,code,message,details);
-            }
-
-            @Override
-            public void onGetInstance(Stock owner) {
-                called[0] = true;
-                if (getUid() == null || getUid().equals("")){
+            public void onFinished(Stock owner) {
+                if (owner.getUid() == null || owner.getUid().equals("")) {
                     callback.OnDoesNotExist(owner);
-                }else {
+                } else {
                     callback.onExist(owner);
                 }
             }
+
         });
-        if (!called[0] && s.isFinished()){
-            for (final DataAccessor<Stock> l: stocks.get(uid).getDataAccessors()){
-                l.onGetInstance(stocks.get(uid));
-            }
-        }
     }
     /**
      * Use this function to create a Stock.
@@ -72,7 +59,7 @@ public class Stock extends DatabaseEntryOwner<Stock> {
             DatabaseEntryOwner.OnFinishedListener<Stock>  lf = new OnFinishedListener<Stock>() {
                 @Override
                 public void onFinished(Stock owner) {
-                    l.onGetInstance(stocks.get(uid));
+                    l.onGetInstanceOnce(stocks.get(uid));
                 }
             };
             stocks.get(uid).addOnFinishedListener(lf);
@@ -111,9 +98,9 @@ public class Stock extends DatabaseEntryOwner<Stock> {
 
     private Stock(String uid){
         super(uid, createReference(uid),getEntries(uid));
-        DatabaseGroupedEntry instock = (DatabaseGroupedEntry) getEntries(INSTOCK);
-        DatabaseGroupedEntry outstock= (DatabaseGroupedEntry) getEntries(INSTOCK);
-        DatabaseMapEntry<Stock,String> users= (DatabaseMapEntry) getEntries(USERS);
+        DatabaseGroupedEntry instock = (DatabaseGroupedEntry) getEntry(INSTOCK);
+        DatabaseGroupedEntry outstock= (DatabaseGroupedEntry) getEntry(INSTOCK);
+        DatabaseMapEntry<Stock,String> users= (DatabaseMapEntry) getEntry(USERS);
         instock.addListener(new DatabaseGroupedEntry.OnChangeListener<Stock, StockEntry>() {
             @Override
             public void onGroupAdded(Stock owner, DatabaseGroupedEntry<Stock, StockEntry> value, DatabaseMapEntry<Stock, StockEntry> group) {
@@ -290,6 +277,8 @@ public class Stock extends DatabaseEntryOwner<Stock> {
         instock.removeEntry(entry,entry.getProduct_uid());
         outofstock.addEntry(entry, entry.getProduct_uid());
     }
+
+
 
     public static class StockEvent{
         Map<String, String> timestamp;

@@ -34,27 +34,18 @@ public class Product extends DatabaseEntryOwner<Product> {
     public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<Product> callback){
         Product s = getInstanceByUID(uid);
         final boolean[] called = {false};
-        s.addDataAccessor(new DataAccessor<Product>() {
-            @Override
-            public void onError(Product owner, String name, int code, String message, String details) {
-                callback.onError(owner,name,code,message,details);
-            }
+        s.addOnFinishedListener(new OnFinishedListener<Product>() {
 
             @Override
-            public void onGetInstance(Product owner) {
+            public void onFinished(Product owner) {
                 called[0] = true;
-                if (getUid() == null || getUid().equals("")){
+                if (owner.getUid() == null || owner.getUid().equals("")){
                     callback.OnDoesNotExist(owner);
                 }else {
                     callback.onExist(owner);
                 }
             }
         });
-        if (!called[0] && s.isFinished()){
-            for (final DataAccessor<Product> l: products.get(uid).getDataAccessors()){
-                l.onGetInstance(products.get(uid));
-            }
-        }
     }
     /**
      * Use this function to create a Product.
@@ -69,7 +60,7 @@ public class Product extends DatabaseEntryOwner<Product> {
             DatabaseEntryOwner.OnFinishedListener<Product>  lf = new OnFinishedListener<Product>() {
                 @Override
                 public void onFinished(Product owner) {
-                    l.onGetInstance(products.get(uid));
+                    l.onGetInstanceOnce(products.get(uid));
                 }
             };
             products.get(uid).addOnFinishedListener(lf);

@@ -48,7 +48,7 @@ public class User extends DatabaseEntryOwner<User> {
         });
         if (!called[0] && s.isFinished()){
             for (final DataAccessor<User> l: users.get(uid).getDataAccessors()){
-                l.onGetInstance(users.get(uid));
+                l.onGetInstanceOnce(users.get(uid));
             }
         }
     }
@@ -65,7 +65,7 @@ public class User extends DatabaseEntryOwner<User> {
             DatabaseEntryOwner.OnFinishedListener<User>  lf = new OnFinishedListener<User>() {
                 @Override
                 public void onFinished(User owner) {
-                    l.onGetInstance(users.get(uid));
+                    l.onGetInstanceOnce(users.get(uid));
                 }
             };
             users.get(uid).addOnFinishedListener(lf);
