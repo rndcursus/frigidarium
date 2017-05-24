@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,7 @@ import android.widget.RadioButton;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 
 import java.util.Arrays;
@@ -31,7 +33,10 @@ import java.util.LinkedList;
  * Use the {@link StockFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StockFragment extends Fragment {
+public class StockFragment extends Fragment
+        implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
+        RecyclerViewExpandableItemManager.OnGroupExpandListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -47,6 +52,10 @@ public class StockFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ProductsAdapter adapter;
 
+    // Variables for expand and swipe funtionality
+    private RecyclerViewExpandableItemManager recyclerViewExpandableItemManager;
+    private static final String SAVED_STATE_EXPANDABLE_ITEM_MANAGER = "RecyclerViewExpandableItemManager";
+    private RecyclerView.Adapter wrappedAdapter;
 
     public StockFragment() {
         // Required empty public constructor
@@ -87,9 +96,15 @@ public class StockFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_stock, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        // Set layout manager for linear layout
         layoutManager = new LinearLayoutManager(getActivity());
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // Manager for expand functionality
+        final Parcelable savedState = (savedInstanceState != null) ? savedInstanceState.getParcelable(SAVED_STATE_EXPANDABLE_ITEM_MANAGER) : null;
+        recyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(savedState);
+        recyclerViewExpandableItemManager.setOnGroupExpandListener(this);
+        recyclerViewExpandableItemManager.setOnGroupCollapseListener(this);
 
         // Add divider between items
         Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
@@ -98,11 +113,16 @@ public class StockFragment extends Fragment {
 
         // Init data set
         LinkedList<tmpProduct> data = new LinkedList<tmpProduct>(Arrays.asList(new tmpProduct("Cola", 0), new tmpProduct("Sinas", 1), new tmpProduct("Bier", 2), new tmpProduct("Wijn", 3)));
-        adapter = new ProductsAdapter(data);
+        //adapter = new ProductsAdapter(data);
+        adapter = new ProductsAdapter(recyclerViewExpandableItemManager, data);
 
         // Add swipe functionality -------------------------------------------------
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
-        RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(adapter);
+
+        wrappedAdapter = recyclerViewExpandableItemManager.createWrappedAdapter(adapter);       // wrap for expanding
+        //wrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mWrappedAdapter);  // wrap for dragging (NOT NEEDED)
+        wrappedAdapter = swipeManager.createWrappedAdapter(wrappedAdapter);                     // wrap for swiping
+        // OLD: RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(adapter);
 
         recyclerView.setAdapter(wrappedAdapter);
 
@@ -111,7 +131,12 @@ public class StockFragment extends Fragment {
         animator.setSupportsChangeAnimations(false);
         recyclerView.setItemAnimator(animator);
 
+        // OLD: swipeManager.attachRecyclerView(recyclerView);
+        recyclerView.setHasFixedSize(false);
+
+        //mRecyclerViewTouchActionGuardManager.attachRecyclerView(mRecyclerView); NOT NEEDED
         swipeManager.attachRecyclerView(recyclerView);
+        recyclerViewExpandableItemManager.attachRecyclerView(recyclerView);
 
         // --------------------------------------------------------------------------
 
@@ -159,6 +184,21 @@ public class StockFragment extends Fragment {
         // TOD O: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
+
+    @Override
+    public void onGroupCollapse(int groupPosition, boolean fromUser, Object payload) {
+    }
+
+    @Override
+    public void onGroupExpand(int groupPosition, boolean fromUser, Object payload) {
+        if (fromUser) {
+            int childItemHeight = getActivity().getResources().getDimensionPixelSize(R.dimen.list_item_height);
+            int topMargin = (int) (getActivity().getResources().getDisplayMetrics().density * 16); // top-spacing: 16dp
+            int bottomMargin = topMargin; // bottom-spacing: 16dp
+
+            recyclerViewExpandableItemManager.scrollToGroup(groupPosition, childItemHeight, topMargin, bottomMargin);
+        }
+    }
 
     public static class tmpProduct{
 
