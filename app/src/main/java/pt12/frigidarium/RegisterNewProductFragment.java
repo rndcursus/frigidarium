@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
-import static android.R.attr.data;
 
 /**
  * A simple {@link Fragment} subclass.
