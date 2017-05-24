@@ -81,7 +81,7 @@ public class Stock {
         return FirebaseDatabase.getInstance().getReference(TABLENAME+"/"+uid);
     }
 
-    public static void checkExist(final String uid, final CheckExist checkExist){
+    public static void checkExist(final String uid, final CheckExist<Stock> checkExist){
         getRef(uid).addValueEventListener(new ValueEventListener() {
             boolean called = false;
             @Override
@@ -90,7 +90,7 @@ public class Stock {
                     if (dataSnapshot.getValue(Stock.class) == null) {
                         checkExist.onDoesNotExist(uid);
                     } else {
-                        checkExist.onExist(dataSnapshot.getValue(Product.class));
+                        checkExist.onExist(dataSnapshot.getValue(Stock.class));
                     }
                     called = true;
                 }
