@@ -81,11 +81,6 @@ public class DatabaseGroupedEntry<O extends DatabaseEntryOwner, V> extends Datab
                     }
 
                     @Override
-                    public void onChildMoved(O owner, String mapName, V element, String dataSnapshotKey, Object newPriority) {
-
-                    }
-
-                    @Override
                     public void onError(O owner, String name, int code, String message, String details) {
                         for (DatabaseEntry.OnChangeListener<O> l : listeners) {
                             l.onError(owner,name,code,message,details);

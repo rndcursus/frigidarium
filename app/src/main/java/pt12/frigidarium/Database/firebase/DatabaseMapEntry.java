@@ -5,7 +5,9 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -153,6 +155,10 @@ public class DatabaseMapEntry<O extends DatabaseEntryOwner, V> extends DatabaseE
 
     public int size() {
         return map.size();
+    }
+
+    public void init() {
+        ref.setValue(new ArrayList<String>());
     }
 
     public interface OnChangeListener<O extends DatabaseEntryOwner,V> extends DatabaseEntry.OnChangeListener<O> {

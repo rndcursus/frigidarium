@@ -21,19 +21,71 @@ public class User extends DatabaseEntryOwner<User> {
     private static final String UID = "uid";
     public static final String STOCKS = "stocks";
     public static final String NAME = "name";
-    private final Set<OnUserChangeListener> userListeners;
     private static Map<String,User> users= new HashMap<>();
+    /**
+     * Use this function to create a User. This User will be passed in callback.
+     * @param uid the uid of a User
+     * @param callback the callback after The User has been created.
+     */
+    public static void getInstanceByUID(String uid, final DatabaseEntryOwner.onReadyCallback<User> callback){
+        User s = getInstanceByUID(uid);
+        final boolean[] called = {false};
+        s.addDataAccessor(new DataAccessor<User>() {
+            @Override
+            public void onError(User owner, String name, int code, String message, String details) {
+                callback.onError(owner,name,code,message,details);
+            }
 
+            @Override
+            public void onGetInstance(User owner) {
+                called[0] = true;
+                if (getUid() == null || getUid().equals("")){
+                    callback.OnDoesNotExist(owner);
+                }else {
+                    callback.onExist(owner);
+                }
+            }
+        });
+        if (!called[0] && s.isFinished()){
+            for (final DataAccessor<User> l: users.get(uid).getDataAccessors()){
+                l.onGetInstance(users.get(uid));
+            }
+        }
+    }
     /**
      * Use this function to create a user.
      * @param uid the uid of a use
      * @return null if the user does not exsist in the database
      */
-    public static User getInstanceByUID(String uid){
+    public static User getInstanceByUID(final String uid){
         if (!users.containsKey(uid)){
             users.put(uid,new User(uid));
         }
+        for (final DataAccessor<User> l: users.get(uid).getDataAccessors()){
+            DatabaseEntryOwner.OnFinishedListener<User>  lf = new OnFinishedListener<User>() {
+                @Override
+                public void onFinished(User owner) {
+                    l.onGetInstance(users.get(uid));
+                }
+            };
+            users.get(uid).addOnFinishedListener(lf);
+        }
         return users.get(uid);
+    }
+
+    /**
+     * This function creates a new entry in the firebase database.
+     * However if the User already exists it will be overridden.
+     * @param uid the firebaseuid of the user.
+     * @param name the name of the user
+     * @return the newly created entry
+     */
+    public static User createUser(String uid, String name){
+        User u =  User.getInstanceByUID(uid);
+        ((DatabaseSingleEntry<Product,String>)  u.getEntry(UID)).setValue(uid);
+        ((DatabaseSingleEntry<Product,String>)  u.getEntry(NAME)).setValue(name);
+        ((DatabaseMapEntry<Product,String>)  u.getEntry(STOCKS)).init();
+        return u;
     }
 
     private static DatabaseReference createReference(String uid){
@@ -53,53 +105,60 @@ public class User extends DatabaseEntryOwner<User> {
 
     private User(String identifier) {
         super(identifier, createReference(identifier), getEntries(identifier));
-        userListeners = new HashSet<>();
         final User u = this;
 
         super.getEntry(STOCKS).addListener(new DatabaseMapEntry.OnChangeListener<User, String>() {
             @Override
             public void onChildAdded(User owner, String mapName, String element, String key) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onAddedToStock(owner,mapName, key,element);
+                for (DataAccessor l : getDataAccessors()){
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                        listener.onAddedToStock(owner, mapName, key, element);
+                    }
+
                 }
             }
 
             @Override
             public void onChildChanged(User owner, String mapName, String element, String key, String oldElement) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onRemovedFromStock(owner,mapName, key, oldElement);
+                for (DataAccessor l : getDataAccessors()) {
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                        listener.onRemovedFromStock(owner, mapName, key, oldElement);
+                    }
                 }
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onAddedToStock(owner,mapName, key, element);
+                for (DataAccessor l : getDataAccessors()) {
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                        listener.onAddedToStock(owner, mapName, key, element);
+                    }
                 }
 
             }
 
             @Override
             public void onChildRemoved(User owner, String mapName, String element, String key) {
-                for (OnUserChangeListener listener : userListeners){
-                    listener.onRemovedFromStock(owner,mapName, key,element);
+                for (DataAccessor l : getDataAccessors()) {
+                    if (l instanceof OnUserChangeListener) {
+                        OnUserChangeListener listener = (OnUserChangeListener) l;
+                    listener.onRemovedFromStock(owner, mapName, key, element);
+                }
                 }
             }
 
             @Override
             public void onError(User owner, String name, int code, String message, String details) {
-                for (OnUserChangeListener listener : userListeners){
+                for (DataAccessor<User> listener : getDataAccessors()){
                     listener.onError(owner,name,code,message,details);
                 }
             }
         });
     }
 
-    public void addListener(OnUserChangeListener listener){
-        listener.setOwner(this);
-        userListeners.add(listener);
+    public String getUID(){
+        DatabaseSingleEntry<User, String > entry = (DatabaseSingleEntry<User, String>) this.getEntry(UID);
+        return entry.getValue();
     }
-
-    public void removeListener(OnUserChangeListener  listener){
-        userListeners.remove(listener);
-    }
-
 
     /**
      * Deze class moet gebruikt worden om data over een User te lezen en of te schrijven.

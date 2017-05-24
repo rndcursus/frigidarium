@@ -29,6 +29,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
+import pt12.frigidarium.Database.models.User;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -40,7 +43,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
-    private boolean signingIn = false;
     private Class<?> nextActivity = MainActivity.class;
 
 
@@ -67,11 +69,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void signIn() {
-        if (this.signingIn){
-            this.signingIn = true;
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
-        }
     }
 
     @Override
@@ -89,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // Google Sign In failed, update UI appropriately
                 // ...
             }
-            this.signingIn  = false;
+//            this.signingIn  = false;
         }
     }
 
@@ -142,11 +141,41 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(final FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(this, this.nextActivity);
-            this.startActivity(intent);
+            final LoginActivity la = this;
+            DatabaseEntryOwner.onReadyCallback<User> onReadyCallBack = new DatabaseEntryOwner.onReadyCallback<User>() {
+                boolean called  = false;
+                @Override
+                public void onExist(User owner) {
+                    if (!called) {
+                        called = true;
+                        goToNextActivity();
+                    }
+                }
+
+                @Override
+                public void OnDoesNotExist(User owner) {
+                    if (!called) {
+                        called = true;
+                        User.createUser(user.getUid(), user.getDisplayName());
+                        goToNextActivity();
+
+                    }
+                }
+
+                @Override
+                public void onError(User owner, String name, int code, String message, String details) {
+
+                }
+            };
+            User.getInstanceByUID(user.getUid(), onReadyCallBack);
         }
+    }
+
+    private void goToNextActivity() {
+        Intent intent = new Intent(this, nextActivity);
+        startActivity(intent);
     }
 }
 
