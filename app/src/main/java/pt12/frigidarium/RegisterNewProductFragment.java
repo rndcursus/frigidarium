@@ -28,6 +28,7 @@ import static android.R.attr.password;
  * create an instance of this fragment.
  */
 public class RegisterNewProductFragment extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_BARCODE = "param1";
@@ -85,7 +86,7 @@ public class RegisterNewProductFragment extends Fragment {
         productContent = (EditText) rootView.findViewById(R.id.product_content);
         //liter = (RadioButton) rootView.findViewById(R.id.liter);
         //gram = (RadioButton) rootView.findViewById(R.id.gram);
-        productUrl = (EditText) rootView.findViewById(R.id.url);
+        productUrl = (EditText) rootView.findViewById(R.id.product_url);
         submit = (Button) rootView.findViewById(R.id.submit);
         contentUnitDropdown = (Spinner) rootView.findViewById(R.id.content_units_drop);
 
@@ -172,8 +173,7 @@ public class RegisterNewProductFragment extends Fragment {
 
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
-        //TODO: database dingen
+        //TODO: database dingen: voeg nieuw product toe aan productendatabase, maar ook aan fridge van gebruiker
         Log.v("datalog", "barcode:"+barcode+"pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
     }
-
 }
