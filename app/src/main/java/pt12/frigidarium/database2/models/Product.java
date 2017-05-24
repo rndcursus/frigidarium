@@ -48,7 +48,7 @@ public class Product {
     public static void createProduct(Product p){
         getRef(p.uid).setValue(p);
     }
-    
+
     public String getName(){
         return name;
     }
