@@ -36,6 +36,10 @@ public class Product {
         return FirebaseDatabase.getInstance().getReference(TABLENAME+"/"+uid);
     }
 
+    /**
+     * Do not use this constructor to create your own instance of a Product.
+     */
+    public Product (){}
     public Product(@NonNull String uid, String name, String brand, String barcode, String url, String content){
         this.uid = uid;
         this.name =  name;
@@ -109,11 +113,5 @@ public class Product {
                 checkExist.onError(databaseError);
             }
         });
-    }
-
-    public interface CheckExist{
-        public  void onExist(Product product);
-        public void onDoesNotExist(String uid);
-        public void onError(DatabaseError error);
     }
 }
