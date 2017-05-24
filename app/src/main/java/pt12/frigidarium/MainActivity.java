@@ -1,6 +1,8 @@
 package pt12.frigidarium;
 
 import android.*;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,9 +17,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.text.Text;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
+
+    TextView codeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +45,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //codeView = (TextView) findViewById(R.id.code_info);
     }
 
     @Override
@@ -75,10 +87,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
+        Intent intent = null;
 
         if (id == R.id.nav_camera) {
-            fragment=new GScanFragment();
-
+            intent = new Intent(this, BarcodeScanActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_stocklist) {
             fragment = new StockFragment();
         } else if (id == R.id.nav_shoppinglist) {
