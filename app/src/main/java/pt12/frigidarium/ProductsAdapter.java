@@ -1,5 +1,7 @@
 package pt12.frigidarium;
 
+import android.accessibilityservice.GestureDescription;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,14 +16,17 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem;
 
 import java.util.List;
+import java.util.Map;
+
+import pt12.frigidarium.database2.models.StockEntry;
 
 public class ProductsAdapter
         extends RecyclerView.Adapter<ProductViewHolder>
         implements SwipeableItemAdapter<ProductViewHolder> {
 
-    private List<StockFragment.tmpProduct> data;
+    private List<Pair<String,Map<String, StockEntry>>> data;
 
-    public ProductsAdapter(List<StockFragment.tmpProduct> data) {
+    public ProductsAdapter(List<Pair<String,Map<String, StockEntry>> > data) {
         setHasStableIds(true);
         this.data = data;
     }
@@ -38,7 +43,7 @@ public class ProductsAdapter
 
     @Override
     public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
-        viewHolder.getTextView().setText(data.get(position).getName() + " product");
+        viewHolder.setproduct(data.get(position));
 
         // set background resource (target view ID: container)
         final int swipeState = viewHolder.getSwipeStateFlags();
@@ -69,7 +74,7 @@ public class ProductsAdapter
 
     @Override
     public long getItemId(int position){
-        return data.get(position).getId();
+        return 0;// // TODO: 24/05/17 deze functie moet een goed id teruggeven
     }
 
     @Override

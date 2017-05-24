@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
 
                 @Override
-                public void OnDoesNotExist(User owner) {
+                 public void OnDoesNotExist(User owner) {
                     if (!called) {
                         called = true;
                         User.createUser(user.getUid(), user.getDisplayName());
