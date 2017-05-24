@@ -17,7 +17,6 @@ import org.w3c.dom.Text;
 
 import java.util.Map;
 
-import pt12.frigidarium.Database.models.Stock;
 import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.StockEntry;
 

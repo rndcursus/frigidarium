@@ -32,7 +32,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
-import pt12.frigidarium.Database.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
 
 
