@@ -2,6 +2,7 @@ package pt12.frigidarium;
 
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
@@ -55,7 +56,8 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
     }
 
     public static class ProductTitleViewHolder extends ProductViewHolder {
-        public ImageButton indicator;
+        private ImageButton indicator;
+        private boolean isExpanded;
 
         private static final float INITIAL_POSITION = 0.0f;
         private static final float ROTATED_POSITION = 180f;
@@ -75,10 +77,21 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
 
         }
 
+        @Override
+        public void setExpandStateFlags(int flags) {
+            super.setExpandStateFlags(flags);
+        }
+
+        public void setExpandState(boolean isExpanded){
+            if(this.isExpanded != isExpanded){
+                onExpansionToggled(isExpanded);
+            }
+            this.isExpanded = isExpanded;
+        }
 
         public void onExpansionToggled(boolean expanded) {
             //super.onExpansionToggled(expanded);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 RotateAnimation rotateAnimation;
                 if (expanded) { // rotate clockwise
                     rotateAnimation = new RotateAnimation(ROTATED_POSITION,
@@ -94,7 +107,7 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
                 rotateAnimation.setDuration(200);
                 rotateAnimation.setFillAfter(true);
                 indicator.startAnimation(rotateAnimation);
-            }
+            }*/
         }
 
         public TextView getTextView(){

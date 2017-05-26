@@ -220,7 +220,7 @@ public class ProductsAdapter
                 isExpanded = false;
             }
 
-            viewHolder.onExpansionToggled(isExpanded/*, animateIndicator*/);
+            viewHolder.setExpandState(isExpanded/*, animateIndicator*/);
             viewHolder.getContainer().setBackgroundResource(bgResId);
         }
     }
