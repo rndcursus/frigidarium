@@ -10,7 +10,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.security.PublicKey;
 
-import pt12.frigidarium.Database.firebase.DatabaseEntry;
 
 /**
  * Created by mattijn on 24/05/17.
