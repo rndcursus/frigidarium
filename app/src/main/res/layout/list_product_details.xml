@@ -9,29 +9,54 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         tools:ignore="UselessParent">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EEEEEE">
+            android:background="#EEEEEE"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/added_by"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Toegevoegd door:" />
+                android:orientation="vertical"
+                >
 
-            <CheckBox
-                android:id="@+id/child_list_item_crime_solved_check_box"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/added_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Toegevoegd door:" />
+
+                <TextView
+                    android:id="@+id/product_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Inhoud:" />
+
+                <TextView
+                    android:id="@+id/product_barcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Barcode:" />
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/product_action_buttons"
+                layout="@layout/include_product_details_action_buttons"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp"
-                android:text="Solved" />
-        </RelativeLayout>
+                />
+
+        </LinearLayout>
+
+
     </FrameLayout>
 </RelativeLayout>
