@@ -1,0 +1,105 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pt12.frigidarium.RegisterNewProductActivity">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+
+        <TextView
+            android:id="@+id/new_product_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/new_product_message"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/product_name_hint"
+            android:inputType="textNoSuggestions"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/product_brand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/brand_name_hint"
+            android:inputType="textNoSuggestions"
+            android:singleLine="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/product_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/content_hint"
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
+
+            <Spinner
+                android:id="@+id/content_units_drop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!--
+            <RadioGroup
+                android:id="@+id/VolMass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/line0"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/liter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/liter" />
+
+                <RadioButton
+                    android:id="@+id/gram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/gram" />
+            </RadioGroup>
+            -->
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/product_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/url_hint"
+            android:inputType="textNoSuggestions"
+            android:singleLine="true"
+            android:text="" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit" />
+
+    </LinearLayout>
+
+</FrameLayout>

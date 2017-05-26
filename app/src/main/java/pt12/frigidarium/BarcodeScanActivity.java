@@ -98,13 +98,9 @@ public class BarcodeScanActivity extends Activity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if(barcodes.size() >0){
-                    Intent intent = new Intent();
-                    intent.putExtra("barcode", barcodes.valueAt(0).displayValue); //Get tht latest Barcode
-                    //INTENT NAAR TOEVOEG ACTIVITY
+                    addNewProduct(barcodes.valueAt(0).displayValue);
                 }
             }
-
-
         });
 
     }
@@ -113,6 +109,14 @@ public class BarcodeScanActivity extends Activity {
     /*
     FUNCTION TO CHECK IF PERMISSIONS ARE GRANTED
      */
+
+    private void addNewProduct(String barcode){
+        Intent intent;
+        intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+        intent.putExtra("barcode", barcode); //Get tht latest Barcode
+        //INTENT NAAR TOEVOEG ACTIVITY
+        startActivity(intent);
+    }
     private boolean permissionsGranted(){
         String permission = "android.permission.CAMERA";
         int res = checkCallingOrSelfPermission(permission);
