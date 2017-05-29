@@ -2,6 +2,7 @@ package pt12.frigidarium;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -49,9 +50,12 @@ public class BarcodeScanActivity extends Activity {
 
     }
 
+    /**
+     * FUNCTION THAT CREATES THE CAMERA SOURCE, AND KEEPS HOLD OF NEW BARCODES THAT ARE SCANNED.
+     */
     private void createCameraSource(){
         barcodeDetector = new BarcodeDetector.Builder(this)
-                .setBarcodeFormats(Barcode.EAN_13 | Barcode.EAN_8)
+                .setBarcodeFormats(Barcode.EAN_13 | Barcode.EAN_8 | Barcode.QR_CODE)
                 .build();
 
         cameraSource = new CameraSource
@@ -98,7 +102,10 @@ public class BarcodeScanActivity extends Activity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if(barcodes.size() >0){
-                    addNewProduct(barcodes.valueAt(0).displayValue);
+                    if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
+                        addNewProduct(barcodes.valueAt(0).displayValue);
+                    else
+                        addToNewList(barcodes.valueAt(0).displayValue);
                 }
             }
         });
@@ -106,27 +113,41 @@ public class BarcodeScanActivity extends Activity {
     }
 
 
-    /*
-    FUNCTION TO CHECK IF PERMISSIONS ARE GRANTED
+    /**
+     * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
+     * @param barcode
      */
-
     private void addNewProduct(String barcode){
         Intent intent;
         intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
         intent.putExtra("barcode", barcode); //Get tht latest Barcode
-        //INTENT NAAR TOEVOEG ACTIVITY
         startActivity(intent);
     }
+
+    /**
+     * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
+     * @param qrcode
+     */
+    private void addToNewList(String qrcode){
+        Intent intent;
+        intent = new Intent();
+        intent.putExtra("qr code", qrcode);
+        // startActivity(intent);
+    }
+
+    /**
+     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
+     * @return
+     */
     private boolean permissionsGranted(){
         String permission = "android.permission.CAMERA";
         int res = checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void printBarcodeOnScreen(String barcode){
-        Toast.makeText(this, barcode, Toast.LENGTH_SHORT).show();
-    }
-
+    /**
+     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
+     */
     private void requestPermissionsForCamera(){
         final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
         requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
