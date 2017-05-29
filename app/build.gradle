@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -31,6 +32,7 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:10.0.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.6'
     testCompile 'junit:junit:4.12'
 
 }

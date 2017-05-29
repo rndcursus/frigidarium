@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,9 +27,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseError;
 
-import pt12.frigidarium.Database.firebase.DatabaseEntryOwner;
-import pt12.frigidarium.Database.models.User;
+import pt12.frigidarium.database2.models.CheckExist;
+import pt12.frigidarium.database2.models.User;
 
 /**
  * A login screen that offers login via email/password.
@@ -143,8 +143,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void updateUI(final FirebaseUser user) {
         if (user != null) {
-            final LoginActivity la = this;
-            DatabaseEntryOwner.onReadyCallback<User> onReadyCallBack = new DatabaseEntryOwner.onReadyCallback<User>() {
+            CheckExist<User>  onReadyCallback = new CheckExist<User>() {
                 boolean called  = false;
                 @Override
                 public void onExist(User owner) {
@@ -155,21 +154,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
 
                 @Override
-                public void OnDoesNotExist(User owner) {
+                public void onDoesNotExist(String uid) {
                     if (!called) {
                         called = true;
-                        User.createUser(user.getUid(), user.getDisplayName());
+                        User.createUser(new User(user.getUid(), user.getDisplayName()));
                         goToNextActivity();
 
                     }
                 }
 
                 @Override
-                public void onError(User owner, String name, int code, String message, String details) {
-
+                public void onError(DatabaseError error) {
+                    //// TODO: 25/05/17 handle error
                 }
             };
-            User.getInstanceByUID(user.getUid(), onReadyCallBack);
+            User.checkExist(user.getUid(), onReadyCallback);
         }
     }
 
