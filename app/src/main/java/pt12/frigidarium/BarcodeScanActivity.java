@@ -2,6 +2,7 @@ package pt12.frigidarium;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -125,14 +126,15 @@ public class BarcodeScanActivity extends Activity {
     }
 
     /**
-     * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
+     * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param qrcode
      */
     private void addToNewList(String qrcode){
         Intent intent;
         intent = new Intent();
         intent.putExtra("qr code", qrcode);
-        // startActivity(intent);
+        String stockId = getSharedPreferences("null",MODE_PRIVATE).getString("stock_id",null);
+        // startActivity(intent)
         //
     }
 
