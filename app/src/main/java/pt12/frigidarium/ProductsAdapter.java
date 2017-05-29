@@ -1,8 +1,8 @@
 package pt12.frigidarium;
 
 import android.support.annotation.IntRange;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +20,18 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 
 import java.util.List;
+import java.util.Map;
+
+import pt12.frigidarium.database2.models.StockEntry;
 
 public class ProductsAdapter
         extends AbstractExpandableItemAdapter<ProductViewHolder.ProductTitleViewHolder, ProductViewHolder.ProductDetailsViewHolder>
         implements ExpandableSwipeableItemAdapter<ProductViewHolder.ProductTitleViewHolder, ProductViewHolder.ProductDetailsViewHolder> {
 
-    private List<StockFragment.tmpProduct> data;
+    private List<Pair<String,Map<String, StockEntry>>> data;
     private final RecyclerViewExpandableItemManager expandableItemManager;
 
-    public ProductsAdapter(RecyclerViewExpandableItemManager expandableItemManager, List<StockFragment.tmpProduct> data) {
+    public ProductsAdapter(RecyclerViewExpandableItemManager expandableItemManager, List<Pair<String,Map<String, StockEntry>> > data) {
         setHasStableIds(true);
         this.data = data;
         this.expandableItemManager = expandableItemManager;
@@ -46,7 +49,7 @@ public class ProductsAdapter
 
     @Override
     public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
-        viewHolder.getTextView().setText(data.get(position).getName() + " product");
+        viewHolder.setproduct(data.get(position));
 
         // set background resource (target view ID: container)
         final int swipeState = viewHolder.getSwipeStateFlags();
@@ -77,6 +80,8 @@ public class ProductsAdapter
 
     @Override
     public long getItemId(int position){
+        return 0;// // TODO: 24/05/17 deze functie moet een goed id teruggeven
+    }
         return data.get(position).getId();
     }*/
 

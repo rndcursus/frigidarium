@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -15,15 +16,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 
-import java.util.Arrays;
+
 import java.util.LinkedList;
+import java.util.Map;
+
+import pt12.frigidarium.database2.models.StockEntry;
 
 
 /**
@@ -113,17 +122,14 @@ public class StockFragment extends Fragment
         recyclerView.addItemDecoration(dividerDecoration);
 
         // Init data set
-        LinkedList<tmpProduct> data = new LinkedList<tmpProduct>(Arrays.asList(new tmpProduct("Cola", 0), new tmpProduct("Sinas", 1), new tmpProduct("Bier", 2), new tmpProduct("Wijn", 3)));
-        //adapter = new ProductsAdapter(data);
+        final LinkedList<Pair<String,Map<String,StockEntry>>> data = new LinkedList<>();
         adapter = new ProductsAdapter(recyclerViewExpandableItemManager, data);
 
         // Add swipe functionality -------------------------------------------------
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
 
         wrappedAdapter = recyclerViewExpandableItemManager.createWrappedAdapter(adapter);       // wrap for expanding
-        //wrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mWrappedAdapter);  // wrap for dragging (NOT NEEDED)
         wrappedAdapter = swipeManager.createWrappedAdapter(wrappedAdapter);                     // wrap for swiping
-        // OLD: RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(adapter);
 
         recyclerView.setAdapter(wrappedAdapter);
 
@@ -132,7 +138,6 @@ public class StockFragment extends Fragment
         animator.setSupportsChangeAnimations(false);
         recyclerView.setItemAnimator(animator);
 
-        // OLD: swipeManager.attachRecyclerView(recyclerView);
         recyclerView.setHasFixedSize(false);
 
         //mRecyclerViewTouchActionGuardManager.attachRecyclerView(mRecyclerView); NOT NEEDED
@@ -141,9 +146,64 @@ public class StockFragment extends Fragment
 
         // --------------------------------------------------------------------------
 
-        tmpProduct data5 = new tmpProduct("Kaas", 4);
-        data.add(data5);
-        adapter.notifyItemInserted(4);
+        // Database interaction
+        String stock_uid = "stock_test"; //// TODO: 24/05/17 via code de uid opvragen
+        DatabaseReference inStockref = FirebaseDatabase.getInstance().getReference("stocks/"+stock_uid+"/in_stock");
+        inStockref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
+                Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                data.add(pair);
+                int index = data.indexOf(pair);
+                adapter.notifyItemInserted(index);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                int index =  -1;
+                for (Pair<String,Map<String,StockEntry>> entry: data){
+                    if (entry.first.equals(dataSnapshot.getKey())){
+                        index = data.indexOf(entry);
+                        break;
+                    }
+                }
+                if (index <  0){
+                    return;
+                }
+                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
+                Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                data.set(index, pair);
+                adapter.notifyItemChanged(index);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                int index =  -1;
+                for (Pair<String,Map<String,StockEntry>> entry: data){
+                    if (entry.first.equals(dataSnapshot.getKey())){
+                        index = data.indexOf(entry);
+                        break;
+                    }
+                }
+                if (index <  0){
+                    return;
+                }
+                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
+                data.remove(index);
+                adapter.notifyItemRemoved(index);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //// TODO: 24/05/17 handle errors
+            }
+        });
         return rootView;
     }
 
@@ -198,25 +258,6 @@ public class StockFragment extends Fragment
             int bottomMargin = topMargin; // bottom-spacing: 16dp
 
             recyclerViewExpandableItemManager.scrollToGroup(groupPosition, childItemHeight, topMargin, bottomMargin);
-        }
-    }
-
-    public static class tmpProduct{
-
-        private String name;
-        private long id;
-
-        public tmpProduct(String name, long id){
-            this.name = name;
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public long getId() {
-            return id;
         }
     }
 }

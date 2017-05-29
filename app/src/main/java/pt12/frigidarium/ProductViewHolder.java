@@ -3,6 +3,7 @@ package pt12.frigidarium;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.support.v4.util.Pair;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
@@ -10,21 +11,43 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 
-import org.w3c.dom.Text;
+
+import java.util.Map;
+
+import pt12.frigidarium.database2.models.Product;
+import pt12.frigidarium.database2.models.StockEntry;
 
 public class ProductViewHolder extends AbstractSwipeableItemViewHolder
     implements ExpandableItemViewHolder {
 
     private TextView textView;
     FrameLayout containerView;
+    private ValueEventListener mValueEventListener;
+    private View view;
+
 
     private int expandStateFlags;
 
     public ProductViewHolder(View view){
         super(view);
+        view.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Toast.makeText(view.getContext(), textView.getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        textView = (TextView) view.findViewById(R.id.product_name);
+        containerView = (FrameLayout) view.findViewById(R.id.container);
+        this.view = view;
 
         containerView = (FrameLayout) view.findViewById(R.id.container);
 
@@ -104,6 +127,29 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             }*/
         }
 
+        public void setproduct(final Pair<String, Map<String, StockEntry>> products){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products/"+products.first);
+            if (mValueEventListener != null){
+                ref.removeEventListener(mValueEventListener);
+            }
+
+            mValueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Product p =  dataSnapshot.getValue(Product.class);
+                    getTextView().setText(p.name);
+                    ((TextView) view.findViewById(R.id.product_brand)).setText(p.brand);
+                    ((TextView) view.findViewById(R.id.product_description)).setText("Nog "+   products.second.size() + " op voorraad");
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            ref.addValueEventListener(mValueEventListener);
+        }
+
         public TextView getTextView(){
             return textView;
         }
@@ -115,5 +161,3 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
         }
     }
 }
-
-
