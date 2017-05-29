@@ -9,13 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
 
         <TextView
             android:id="@+id/new_product_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/new_product_message" />
+            android:text="@string/new_product_message"
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/product_name"
@@ -43,14 +46,19 @@
 
             <EditText
                 android:id="@+id/product_content"
-                android:layout_width="181dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/content_hint"
                 android:inputType="numberDecimal"
-                android:singleLine="true"
-                android:layout_weight="0.68" />
+                android:singleLine="true" />
 
+            <Spinner
+                android:id="@+id/content_units_drop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!--
             <RadioGroup
                 android:id="@+id/VolMass"
                 android:layout_width="wrap_content"
@@ -72,6 +80,7 @@
                     android:layout_weight="1"
                     android:text="@string/gram" />
             </RadioGroup>
+            -->
 
         </LinearLayout>
 
@@ -80,10 +89,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/brand_name_hint"
+            android:hint="@string/url_hint"
             android:inputType="textNoSuggestions"
             android:singleLine="true"
-            android:text="@string/url_hint" />
+            android:text="" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit" />
 
     </LinearLayout>
 
