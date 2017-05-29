@@ -1,10 +1,13 @@
 package pt12.frigidarium;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +27,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 public class BarcodeScanActivity extends Activity {
 
@@ -32,6 +36,7 @@ public class BarcodeScanActivity extends Activity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private Tracker tracker;
+    private Boolean scanningPaused = false;
     public static String BARCODE = null;
 
 
@@ -101,11 +106,14 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(barcodes.size() >0){
-                    if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
-                        addNewProduct(barcodes.valueAt(0).displayValue);
-                    else
-                        addToNewList(barcodes.valueAt(0).displayValue);
+                if(!scanningPaused)
+                {
+                    if(barcodes.size() >0){
+                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
+                            addNewProduct(barcodes.valueAt(0).displayValue);
+                        else
+                            addToNewList(barcodes.valueAt(0).displayValue);
+                    }
                 }
             }
         });
@@ -118,10 +126,47 @@ public class BarcodeScanActivity extends Activity {
      * @param barcode
      */
     private void addNewProduct(String barcode){
-        Intent intent;
-        intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-        intent.putExtra("barcode", barcode); //Get tht latest Barcode
-        startActivity(intent);
+        scanningPaused = true;
+        if(productIsRegistered(barcode))
+        {
+            DatePickerDialog.Builder builder = new DatePickerDialog.Builder(this);
+            builder.setMessage(R.string.dialog_switch_list)
+            builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    DatePickerDialog datepickerdialog = (DatePickerDialog) builder.create();
+                    componentTimeToTimestamp(datepickerdialog.getDatePicker().getYear(), datepickerdialog.getDatePicker().getMonth(), datepickerdialog.getDatePicker().getDayOfMonth());
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+        }
+        else {
+            Intent intent;
+            intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+            intent.putExtra("barcode", barcode); //Get tht latest Barcode
+            startActivity(intent);
+
+        }
+
+        scanningPaused = false;
+    }
+
+    int componentTimeToTimestamp(int year, int month, int day) {
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return (int) (c.getTimeInMillis() / 1000L);
     }
 
     /**
@@ -129,9 +174,25 @@ public class BarcodeScanActivity extends Activity {
      * @param qrcode
      */
     private void addToNewList(String qrcode){
-        Intent intent;
-        intent = new Intent();
-        intent.putExtra("qr code", qrcode);
+        scanningPaused = true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_switch_list)
+
+        builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //switchUserToList(qrcode);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        scanningPaused = false;
+
+
+
+
         // startActivity(intent);
         //
     }

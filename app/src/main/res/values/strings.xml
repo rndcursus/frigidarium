@@ -22,6 +22,11 @@
     <string name="submit">submit</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
+    <string name="cancel">cancel</string>
+    <string name="cont">continue</string>
+    <string name="add">add</string>
+    <string name="dialog_switch_list">Are you sure you want to switch to another list? This will make you unable to access your current stock and shopping lists.</string>
+    <string name="on_current_list">"You are already part of this list."</string>
     <string-array name="content_units">
         <item>g</item>
         <item>L</item>
