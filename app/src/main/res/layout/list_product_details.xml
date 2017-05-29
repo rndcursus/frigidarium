@@ -46,6 +46,12 @@
                     android:padding="8dp"
                     android:text="Barcode:" />
 
+                <TextView
+                    android:id="@+id/product_best_before"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"/>
+
             </LinearLayout>
 
             <include

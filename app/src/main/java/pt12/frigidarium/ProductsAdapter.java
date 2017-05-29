@@ -167,17 +167,21 @@ public class ProductsAdapter
 
     @Override
     public int getChildCount(int groupPosition) {
-        return 1;
+        return data.get(groupPosition).second.size();
     }
 
     @Override
     public long getGroupId(int groupPosition) {
-        return data.get(groupPosition).getId();
+        //return data.get(groupPosition).getId();
+        return 0;
+        // TODO: getGroupId()
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return data.get(groupPosition).getId();
+        //return data.get(groupPosition).getId();
+        return 0;
+        // TODO: getChildId()
     }
 
     @Override
@@ -201,7 +205,7 @@ public class ProductsAdapter
     @Override
     public void onBindGroupViewHolder(ProductViewHolder.ProductTitleViewHolder viewHolder, int position, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         // Corresponding original adapter method is: onBindViewHolder
-        viewHolder.getTextView().setText(data.get(position).getName() + " product");
+        viewHolder.setproduct(data.get(position));
 
         // set background resource (target view ID: container)
         final int swipeState = viewHolder.getSwipeStateFlags();
@@ -233,6 +237,7 @@ public class ProductsAdapter
     @Override
     public void onBindChildViewHolder(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         //holder.getTextView().setText(data.get(groupPosition).getName());
+        holder.setDetails(data.get(groupPosition).second.get(childPosition));
 
         final int swipeState = holder.getSwipeStateFlags();
 

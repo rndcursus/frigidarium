@@ -31,26 +31,12 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
 
     private TextView textView;
     FrameLayout containerView;
-    private ValueEventListener mValueEventListener;
-    private View view;
-
 
     private int expandStateFlags;
 
     public ProductViewHolder(View view){
         super(view);
-        view.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Toast.makeText(view.getContext(), textView.getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        textView = (TextView) view.findViewById(R.id.product_name);
         containerView = (FrameLayout) view.findViewById(R.id.container);
-        this.view = view;
-
-        containerView = (FrameLayout) view.findViewById(R.id.container);
-
     }
 
     @Override
@@ -72,6 +58,12 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
         return expandStateFlags;
     }
 
+
+
+
+
+
+
     public static class ProductTitleViewHolder extends ProductViewHolder {
         private ImageButton indicator;
         private boolean isExpanded;
@@ -83,12 +75,14 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
 
         private TextView textView;
 
+        private ValueEventListener mValueEventListener;
+
+        private View view;
+
         public ProductTitleViewHolder(View view) {
             super(view);
+            this.view = view;
             indicator = (ImageButton) view.findViewById(R.id.indicator);
-
-            ((TextView) view.findViewById(R.id.product_brand)).setText("Brand");
-            ((TextView) view.findViewById(R.id.product_description)).setText("Nog 1 op voorraad");
 
             textView = (TextView) view.findViewById(R.id.product_name);
 
@@ -156,8 +150,14 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
     }
 
     public static class ProductDetailsViewHolder extends ProductViewHolder {
+        private View view;
         public ProductDetailsViewHolder(View v) {
             super(v);
+            this.view = v;
+        }
+
+        public void setDetails(final StockEntry details){
+            ((TextView) view.findViewById(R.id.product_best_before)).setText(details.best_before.toString());
         }
     }
 }
