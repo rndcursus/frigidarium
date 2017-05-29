@@ -133,6 +133,7 @@ public class BarcodeScanActivity extends Activity {
         intent = new Intent();
         intent.putExtra("qr code", qrcode);
         // startActivity(intent);
+        //
     }
 
     /**
