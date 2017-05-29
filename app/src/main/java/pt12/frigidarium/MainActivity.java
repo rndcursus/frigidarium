@@ -1,6 +1,7 @@
 package pt12.frigidarium;
 
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, StockListFragment.OnListFragmentInteractionListener{
+
+    private static final int WRITE = 0; //todo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,22 +85,23 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
+        switch (item.getItemId()){
+            case R.id.nav_camera:
+                // Handle the camera action
+                break;
+            case R.id.nav_stocklist:
+                fragment = new StockFragment();
+                break;
+            case  R.id.nav_shoppinglist:
+                fragment = new ShoppingFragment();
+                break;
+            case R.id.nav_manage:
+                break;
+            case R.id.nav_stockchoose:
+                fragment = StockListFragment.newInstance(1);
+                break;
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-
-        } else if (id == R.id.nav_stocklist) {
-            fragment = new StockFragment();
-        } else if (id == R.id.nav_shoppinglist) {
-            fragment = new ShoppingFragment();
-        } else if (id == R.id.nav_manage) {
-
-        } /*else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
-
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragment != null) {
             fragmentManager.beginTransaction()
@@ -114,4 +118,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onListFragmentInteraction(String stockUid) {
+        getPreferences(WRITE).edit().putString(LoginActivity.STOCKPREFERNCEKEY, stockUid);
+    }
 }
