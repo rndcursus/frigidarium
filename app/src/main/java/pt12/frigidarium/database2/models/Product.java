@@ -111,4 +111,8 @@ public class Product {
             }
         });
     }
+
+    public static String createProductUID(String barcode) {
+        return barcode;
+    }
 }

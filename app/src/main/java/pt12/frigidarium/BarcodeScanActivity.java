@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,10 +24,14 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.DatabaseError;
 
 import java.io.IOException;
 
+import pt12.frigidarium.database2.models.CheckExist;
+import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.Stock;
+import pt12.frigidarium.database2.models.StockEntry;
 import pt12.frigidarium.database2.models.User;
 
 public class BarcodeScanActivity extends Activity {
@@ -121,11 +126,29 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
      * @param barcode
      */
-    private void addNewProduct(String barcode){
-        Intent intent;
-        intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-        intent.putExtra("barcode", barcode); //Get the latest Barcode
-        startActivity(intent);
+    private void addNewProduct(final String barcode){
+        Product.checkExist(barcode, new CheckExist<Product>() {
+            @Override
+            public void onExist(Product product) {
+                long best_before = 0L;
+                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
+                Stock.addStockEntryToInStock(Product.createProductUID(barcode), entry);
+            }
+
+            @Override
+            public void onDoesNotExist(String uid) {
+                Intent intent;
+                intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+                intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+
+            }
+        });
+
     }
 
     /**
@@ -133,13 +156,14 @@ public class BarcodeScanActivity extends Activity {
      * @param userID the userID to be added to te current list.
      */
     private void addToNewList(String userID){
-        Intent intent;
-        intent = new Intent();
-        intent.putExtra("qr code", userID);
-        String stockId = getSharedPreferences("null",MODE_PRIVATE).getString("stock_id",null);
+        String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
-        Stock.addUserToStock(stockId, userID);
-        User.addUserToStock(userID,stockId);
+        if (stockId != null) {
+            Stock.addUserToStock(stockId, userID);
+            User.addUserToStock(userID, stockId);
+        }else{
+            // todo current user is not set.
+        }
     }
     /**
      * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED

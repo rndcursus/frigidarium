@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 public class RegisterNewProductActivity extends AppCompatActivity {
 
+    public static final String BARCODE = "barcode";
     private EditText productName;
     private EditText productBrand;
     private EditText productContent;
@@ -26,9 +27,9 @@ public class RegisterNewProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getIntent().getStringExtra("barcode") != null)
+        if(getIntent().getStringExtra(BARCODE) != null)
         {
-            barcode = getIntent().getStringExtra("barcode");
+            barcode = getIntent().getStringExtra(BARCODE);
         }
         setContentView(R.layout.fragment_register_new_product);
         productName = (EditText) findViewById(R.id.product_name);
