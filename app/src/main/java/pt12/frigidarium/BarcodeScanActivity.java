@@ -26,6 +26,9 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import pt12.frigidarium.database2.models.Stock;
+import pt12.frigidarium.database2.models.User;
+
 public class BarcodeScanActivity extends Activity {
 
     private SurfaceView cameraView;
@@ -121,23 +124,23 @@ public class BarcodeScanActivity extends Activity {
     private void addNewProduct(String barcode){
         Intent intent;
         intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-        intent.putExtra("barcode", barcode); //Get tht latest Barcode
+        intent.putExtra("barcode", barcode); //Get the latest Barcode
         startActivity(intent);
     }
 
     /**
      * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
-     * @param qrcode
+     * @param userID the userID to be added to te current list.
      */
-    private void addToNewList(String qrcode){
+    private void addToNewList(String userID){
         Intent intent;
         intent = new Intent();
-        intent.putExtra("qr code", qrcode);
+        intent.putExtra("qr code", userID);
         String stockId = getSharedPreferences("null",MODE_PRIVATE).getString("stock_id",null);
-        // startActivity(intent)
-        //
+        //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
+        Stock.addUserToStock(stockId, userID);
+        User.addUserToStock(userID,stockId);
     }
-
     /**
      * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
      * @return

@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1036596680942-df02h52h4sit1fiivtmjvqhfvhhjb2mv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt12.frigidarium",
+            "certificate_hash": "2206939d98cebaf8cc77758ff46c0f1f122ffdcc"
+          }
+        },
+        {
+          "client_id": "1036596680942-c84fpjjhrn4g8vuvvl0rh4e5ehn8bdc1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt12.frigidarium",
+            "certificate_hash": "b466b25d174ad5df79b76df8699b9549d26ea962"
+          }
+        },
+        {
           "client_id": "1036596680942-cms01n1idfmiths7u3mq0e345plje08t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
