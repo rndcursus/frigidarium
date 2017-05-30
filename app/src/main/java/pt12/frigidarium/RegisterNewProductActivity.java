@@ -26,10 +26,10 @@ public class RegisterNewProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if(getIntent().getStringExtra("barcode") != null)
+        {
             barcode = getIntent().getStringExtra("barcode");
-
+        }
         setContentView(R.layout.fragment_register_new_product);
         productName = (EditText) findViewById(R.id.product_name);
         productBrand = (EditText) findViewById(R.id.product_brand);

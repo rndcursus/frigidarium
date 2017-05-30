@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:orientation="horizontal"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
@@ -21,4 +20,70 @@ android:paddingBottom="10dp">
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:textSize="10sp" />
-</LinearLayout>
+</LinearLayout>-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- for getSwipeableContainerView() -->
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_item_normal_state"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <include
+                android:id="@+id/product_text_layout"
+                layout="@layout/include_product_name_and_brand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true" />
+
+            <LinearLayout
+                android:id="@+id/stock_amount_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/product_text_layout"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/product_text_layout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/amount_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:src="@drawable/ic_shopping_cart_black_24dp" />
+
+                <!--<TextView
+                    android:id="@+id/post_num_stars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    tools:text="7" />-->
+
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+    <!--<include layout="@layout/include_post_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/post_author_layout"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp" />-->
+
+</RelativeLayout>
