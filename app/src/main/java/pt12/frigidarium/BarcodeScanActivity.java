@@ -133,6 +133,9 @@ public class BarcodeScanActivity extends Activity {
                 long best_before = 0L;
                 StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
                 Stock.addStockEntryToInStock(Product.createProductUID(barcode), entry);
+                Intent intent;
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -145,7 +148,7 @@ public class BarcodeScanActivity extends Activity {
 
             @Override
             public void onError(DatabaseError error) {
-
+                //// TODO: 30-5-2017 handle error 
             }
         });
 
