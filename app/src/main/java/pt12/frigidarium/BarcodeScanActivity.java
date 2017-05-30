@@ -148,7 +148,7 @@ public class BarcodeScanActivity extends Activity {
 
             @Override
             public void onError(DatabaseError error) {
-                //// TODO: 30-5-2017 handle error 
+                //// TODO: 30-5-2017 handle error
             }
         });
 
