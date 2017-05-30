@@ -11,8 +11,8 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="395dp"
+        android:layout_height="587dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.above_inc.shyam.drawer.MainActivity"
         tools:layout_editor_absoluteX="8dp"
@@ -23,6 +23,14 @@
             android:id="@+id/frame_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/code_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:textSize="20sp" />
+
 
     </RelativeLayout>
 

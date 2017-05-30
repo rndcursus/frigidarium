@@ -18,4 +18,5 @@
     <color name="bg_swipe_item_gray">#999999</color>
     <color name="bg_swipe_group_item_pinned">#fff45f30</color>
     <color name="bg_swipe_group_item_dismiss">#ff295db3</color>
+    <color name="black_overlay">#66000000</color>
 </resources>
