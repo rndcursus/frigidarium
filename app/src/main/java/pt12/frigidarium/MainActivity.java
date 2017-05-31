@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_stockchoose:
                 fragment = StockListFragment.newInstance(1);
                 break;
-
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragment != null) {

@@ -30,4 +30,12 @@
         android:layout_marginTop="5dp"
         tools:text="Een belangrijke eigenschap" />
 
+    <TextView
+        android:id="@+id/product_barcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Barcode:" />
+
+
 </LinearLayout>
