@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity
             intent = new Intent(this, BarcodeScanActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_stocklist) {
-            fragment = new StockFragment();
+            fragment = StockFragment.newInstance(true);
         } else if (id == R.id.nav_shoppinglist) {
-            fragment = new ShoppingFragment();
+            fragment = StockFragment.newInstance(false);
         } else if (id == R.id.nav_manage) {
-
+            fragment= new SettingsFragment();
         } /*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
