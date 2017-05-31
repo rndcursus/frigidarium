@@ -18,10 +18,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -34,9 +36,11 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.6'
+    compile 'com.google.android.gms:play-services-vision:10.0.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.google.zxing:core:3.0.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 }
-
 
 apply plugin: 'com.google.gms.google-services'

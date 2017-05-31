@@ -1,5 +1,8 @@
 package pt12.frigidarium;
 
+import android.*;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
@@ -15,27 +18,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.text.Text;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StockListFragment.OnListFragmentInteractionListener{
 
     private static final int WRITE = 0; //todo
 
+    TextView codeView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //codeView = (TextView) findViewById(R.id.code_info);
     }
 
     @Override
@@ -85,22 +90,25 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
-        switch (item.getItemId()){
-            case R.id.nav_camera:
-                // Handle the camera action
-                break;
-            case R.id.nav_stocklist:
-                fragment = new StockFragment();
-                break;
-            case  R.id.nav_shoppinglist:
-                fragment = new ShoppingFragment();
-                break;
-            case R.id.nav_manage:
-                break;
-            case R.id.nav_stockchoose:
-                fragment = StockListFragment.newInstance(1);
-                break;
-        }
+        Intent intent = null;
+
+        if (id == R.id.nav_camera) {
+            intent = new Intent(this, BarcodeScanActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_stocklist) {
+            fragment = StockFragment.newInstance(true);
+        } else if (id == R.id.nav_shoppinglist) {
+            fragment = StockFragment.newInstance(false);
+        } else if (id == R.id.nav_manage) {
+            fragment= new SettingsFragment();
+        } else if (id == R.id.nav_stockchoose){
+            fragment = StockListFragment.newInstance(1);
+        }/*else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }*/
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragment != null) {
             fragmentManager.beginTransaction()
