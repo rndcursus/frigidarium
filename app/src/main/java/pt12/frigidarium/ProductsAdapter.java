@@ -19,6 +19,8 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +98,7 @@ public class ProductsAdapter
 
     @Override
     public int onGetChildItemSwipeReactionType(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, int x, int y) {
-        return SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_ANY;
+        return SwipeableItemConstants.REACTION_CAN_SWIPE_RIGHT;
     }
 
     public void onSetSwipeBackground(ProductViewHolder holder, int position, int type) {
@@ -118,12 +120,12 @@ public class ProductsAdapter
 
     @Override
     public void onSetGroupItemSwipeBackground(ProductViewHolder.ProductTitleViewHolder holder, int groupPosition, int type) {
-        onSetSwipeBackground((ProductViewHolder) holder, groupPosition, type);
+        onSetSwipeBackground(holder, groupPosition, type);
     }
 
     @Override
     public void onSetChildItemSwipeBackground(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, int type) {
-        return;
+        onSetSwipeBackground(holder, groupPosition, type);
     }
 
     public SwipeResultAction onSwipeItem(ProductViewHolder holder, int position, int result) {
@@ -173,14 +175,15 @@ public class ProductsAdapter
     @Override
     public long getGroupId(int groupPosition) {
         //return data.get(groupPosition).getId();
-        return 0;
+        //return data.get(groupPosition).hashCode();
+        return groupPosition;
         // TODO: getGroupId()
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         //return data.get(groupPosition).getId();
-        return 0;
+        return groupPosition + childPosition;
         // TODO: getChildId()
     }
 
@@ -237,7 +240,8 @@ public class ProductsAdapter
     @Override
     public void onBindChildViewHolder(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         //holder.getTextView().setText(data.get(groupPosition).getName());
-        holder.setDetails(data.get(groupPosition).second.get(childPosition));
+        LinkedList<StockEntry> entries = new LinkedList<StockEntry>(data.get(groupPosition).second.values());
+        holder.setDetails(entries.get(childPosition));
 
         final int swipeState = holder.getSwipeStateFlags();
 

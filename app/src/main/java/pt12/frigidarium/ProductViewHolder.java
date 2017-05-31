@@ -157,7 +157,7 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
         }
 
         public void setDetails(final StockEntry details){
-            ((TextView) view.findViewById(R.id.product_best_before)).setText(details.best_before.toString());
+            ((TextView) view.findViewById(R.id.product_best_before)).setText("Houdbaarheidsdatum: " + details.best_before.toString());
         }
     }
 }
