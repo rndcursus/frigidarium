@@ -68,6 +68,7 @@ public class BarcodeScanActivity extends Activity{
      * FUNCTION THAT CREATES THE CAMERA SOURCE, AND KEEPS HOLD OF NEW BARCODES THAT ARE SCANNED.
      */
     private void createCameraSource(){
+
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.EAN_13 | Barcode.EAN_8 | Barcode.QR_CODE)
                 .build();
@@ -118,6 +119,7 @@ public class BarcodeScanActivity extends Activity{
                 if(!scanningPaused)
                 {
                     if(barcodes.size() >0){
+                        scanningPaused = true;
                         if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
                             addNewProduct(barcodes.valueAt(0).displayValue);
                         else
@@ -135,7 +137,7 @@ public class BarcodeScanActivity extends Activity{
      * @param bc
      */
     private void addNewProduct(String bc){
-        scanningPaused = true;
+        //scanningPaused = true;
         barcode = bc;
         if(/*TODO: !productIsRegistered(barcode)*/ true){
             Intent intent;
@@ -218,7 +220,6 @@ public class BarcodeScanActivity extends Activity{
      * @param qrcode
      */
     private void addToNewList(String qrcode){
-        scanningPaused = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
 
