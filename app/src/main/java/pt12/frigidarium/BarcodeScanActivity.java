@@ -66,15 +66,17 @@ public class BarcodeScanActivity extends Activity {
         //addNewProduct("hoi");
 
         if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
-        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
 
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
-        //barcodeInfo = (TextView) getView().findViewById(R.id.code_info);
         createCameraSource();
+    }
 
-
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //Simple fix to stop the barcode detector when activity is not running.
+        barcodeDetector.release();
     }
 
     /**
@@ -94,7 +96,9 @@ public class BarcodeScanActivity extends Activity {
                 .build();
 
 
-        //START CAMERA
+        /**
+         * CAMERAVIEW USES THE CAMERASOURCE TO START THE CAMERA.
+         */
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -119,6 +123,9 @@ public class BarcodeScanActivity extends Activity {
             }
         });
 
+        /**
+         * BARCODE TETECTOR. KEEPS TRACK OF NEW BARCODES THAT ARE SCANNED, AND CALLS THE CORRESPONDING FUNCTION
+         */
         barcodeDetector.setProcessor( new Detector.Processor<Barcode>(){
 
             @Override
@@ -131,7 +138,7 @@ public class BarcodeScanActivity extends Activity {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if(!scanningPaused)
                 {
-                    if(barcodes.size() >0){
+                    if(barcodes.size() > 0){
                         scanningPaused = true;
                         if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
                             addNewProduct(barcodes.valueAt(0).displayValue);
@@ -154,8 +161,6 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void onExist(Product product) {
                 long best_before = 0L;
-
-
                 CreateDialog(barcode);
             }
 
@@ -165,6 +170,7 @@ public class BarcodeScanActivity extends Activity {
                 intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                 intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
                 startActivity(intent);
+                Toast.makeText(getApplicationContext(), "Product succesvol toegevoegd", Toast.LENGTH_SHORT).show();
                 //CreateDialog();
                 //// TODO: 31-5-2017 dialog kan pas worden aangeroepen nadat het formulier is ingevuld.
             }
@@ -209,6 +215,10 @@ public class BarcodeScanActivity extends Activity {
         requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
     }
 
+    /**
+     * INVULLEN NOG
+     * @param barcode
+     */
     private void CreateDialog(final String barcode)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
@@ -235,6 +245,12 @@ public class BarcodeScanActivity extends Activity {
         add_dialog.setView(input);
 
         add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+
+            /**
+             *
+             * @param dialog
+             * @param whichButton
+             */
             public void onClick(DialogInterface dialog, int whichButton) {
                 String exdatestring = input.getText().toString().trim();
                 if(!exdatestring.equals(""))
@@ -258,7 +274,7 @@ public class BarcodeScanActivity extends Activity {
                         Toast.makeText(a, R.string.date_toast, Toast.LENGTH_SHORT).show();
                     }
                 }
-                scanningPaused = false;
+
             }
         });
         add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -270,7 +286,12 @@ public class BarcodeScanActivity extends Activity {
         add_dialog.show();
     }
 
+    /**
+     *
+     * @param qrcode
+     */
     private void addToNewList(final String qrcode){
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
 
@@ -285,11 +306,6 @@ public class BarcodeScanActivity extends Activity {
             }
         });
         scanningPaused = false;
-
-
-
-        // startActivity(intent);
-        //
     }
 
 
