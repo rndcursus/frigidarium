@@ -156,9 +156,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
     public static String getCurrentStock(){
+        if (pref == null){
+            throw new RuntimeException("shared preferences has not been set");
+        }
         return pref.getString(STOCKPREFERNCEKEY, "");
     }
     public static void setCurrentStock(String stockUid){
+        if (pref == null){
+            throw new RuntimeException("shared preferences has not been set");
+        }
         pref.edit().putString(STOCKPREFERNCEKEY,stockUid).apply();
     }
     private void updateUI(final FirebaseUser user) {
