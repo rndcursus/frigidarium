@@ -1,35 +1,36 @@
 package pt12.frigidarium;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.CommonStatusCodes;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.FocusingProcessor;
-import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 
-public class BarcodeScanActivity extends Activity {
+import static android.R.attr.value;
+
+public class BarcodeScanActivity extends Activity{
 
     private SurfaceView cameraView;
     private TextView barcodeInfo;
@@ -37,14 +38,19 @@ public class BarcodeScanActivity extends Activity {
     private CameraSource cameraSource;
     private Tracker tracker;
     private Boolean scanningPaused = false;
+    private String barcode;
+    Activity a = this;
+
     public static String BARCODE = null;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
-
+        //addNewProduct("hoi");
 
         if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
         Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
@@ -52,6 +58,9 @@ public class BarcodeScanActivity extends Activity {
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         //barcodeInfo = (TextView) getView().findViewById(R.id.code_info);
         createCameraSource();
+
+
+
 
     }
 
@@ -123,39 +132,57 @@ public class BarcodeScanActivity extends Activity {
 
     /**
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
-     * @param barcode
+     * @param bc
      */
-    private void addNewProduct(String barcode){
+    private void addNewProduct(String bc){
         scanningPaused = true;
-        if(productIsRegistered(barcode))
-        {
-            DatePickerDialog.Builder builder = new DatePickerDialog.Builder(this);
-            builder.setMessage(R.string.dialog_switch_list)
-            builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    DatePickerDialog datepickerdialog = (DatePickerDialog) builder.create();
-                    componentTimeToTimestamp(datepickerdialog.getDatePicker().getYear(), datepickerdialog.getDatePicker().getMonth(), datepickerdialog.getDatePicker().getDayOfMonth());
-                }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                }
-            });
-
-        }
-        else {
+        barcode = bc;
+        if(/*TODO: !productIsRegistered(barcode)*/ true){
             Intent intent;
             intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
             intent.putExtra("barcode", barcode); //Get tht latest Barcode
             startActivity(intent);
 
         }
+        final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
+        final EditText input = new EditText(this);
+        input.setHint(R.string.date_hint);
+        add_dialog.setView(input);
+        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, /*TODO: getProductName(barcode)*/ "productnaam"));
+        add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String exdatestring = input.getText().toString().trim();
+                if(!exdatestring.equals(""))
+                {
+                    try {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+                        Date date = simpleDateFormat.parse(exdatestring);
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(date);
+                        long exdate = (cal.getTimeInMillis() / 1000L);
+                        /*TODO: addProduct(barcode, exdate);*/
+                        Log.v("datalog", "barcode:"+barcode+", date:"+exdate);
+
+                    } catch (ParseException e) {
+                        Toast.makeText(a, R.string.date_toast, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
+        add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+        add_dialog.show();
+
 
         scanningPaused = false;
     }
 
-    int componentTimeToTimestamp(int year, int month, int day) {
+
+    private int componentTimeToTimestamp(int year, int month, int day) {
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, year);
@@ -169,6 +196,23 @@ public class BarcodeScanActivity extends Activity {
         return (int) (c.getTimeInMillis() / 1000L);
     }
 
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the AddProductDialogFragment.AddProductDialogListener interface
+    /*
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        // User touched the dialog's positive button
+        exdate = addproductdialog.getDate();
+        //TODO: addProductToStock(barcode, exdate);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // User touched the dialog's negative button
+    }
+    */
+
     /**
      * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param qrcode
@@ -176,7 +220,7 @@ public class BarcodeScanActivity extends Activity {
     private void addToNewList(String qrcode){
         scanningPaused = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_switch_list)
+        builder.setMessage(R.string.dialog_switch_list);
 
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

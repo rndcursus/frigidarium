@@ -52,16 +52,6 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                         pn = productName.getText().toString().trim();
                         pb = productBrand.getText().toString().trim();
                         pc = productContent.getText().toString().trim() + " " + contentUnitDropdown.getSelectedItem().toString();
-                        /*
-                        if(liter.isChecked())
-                        {
-                            pc = pc + " L";
-                        }
-                        if(gram.isChecked())
-                        {
-                            pc = pc + " g";
-                        }
-                        */
                         purl = productUrl.getText().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
                         {
@@ -83,7 +73,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
 
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
-        //TODO: database dingen: voeg nieuw product toe aan productendatabase, maar ook aan fridge van gebruiker
+        //TODO: database dingen: voeg nieuw product toe aan productendatabase
         Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
     }
 
