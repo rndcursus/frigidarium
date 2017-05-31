@@ -132,7 +132,12 @@ public class BarcodeScanActivity extends Activity {
             public void onExist(Product product) {
                 long best_before = 0L;
                 StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
-                Stock.addStockEntryToInStock(Product.createProductUID(barcode), entry);
+                String stockId = getPreferences(0).getString("current_stock", "");
+                if (stockId.equals("")){
+                    //todo no current stock
+                    return;
+                }
+                Stock.addStockEntryToInStock(stockId, entry);
                 Intent intent;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
