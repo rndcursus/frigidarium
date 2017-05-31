@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
  */
 
 public class Stock {
-    private static final String TABLENAME = "stocks";
+    public static final String TABLENAME = "stocks";
     public static final String USERS = "users";
     public static final String INSTOCK =  "in_stock";
     public static final String OUTSTOCK = "out_stock";
@@ -70,11 +70,11 @@ public class Stock {
     /**
      * creates a new stock in the database
      * @param stock the stock to be added to the database.
-     * @param user The user that owns this database.
+     * @param userID The user that owns this database.
      */
-    public static void createStock(Stock stock, User user){
+    public static void createStock(Stock stock, String userID){
         getRef(stock.getUid()).setValue(stock);
-        getRef(stock.getUid()).child(USERS).push().setValue(user.getUid());
+        getRef(stock.getUid()).child(USERS).push().setValue(userID);
     }
 
     public static DatabaseReference getRef(String uid){

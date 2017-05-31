@@ -1,5 +1,6 @@
 package pt12.frigidarium;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -140,70 +141,77 @@ public class StockFragment extends Fragment
 
         // --------------------------------------------------------------------------
 
-        // Database interaction
-        String stock_uid = "stock_test"; //// TODO: 24/05/17 via code de uid opvragen
+
+        String stock_uid = getActivity().getPreferences(Context.MODE_PRIVATE).getString(LoginActivity.STOCKPREFERNCEKEY,"");
         DatabaseReference inStockref;
-        if(isInStock) {
+        if (!stock_uid.equals("")) {
+            if(isInStock) {
             inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/in_stock");
         }
         else {
             inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/out_stock");
         }
-        inStockref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
-                Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
-                data.add(pair);
-                int index = data.indexOf(pair);
-                adapter.notifyItemInserted(index);
-            }
+            inStockref.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {
+                    };
+                    Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                    data.add(pair);
+                    int index = data.indexOf(pair);
+                    adapter.notifyItemInserted(index);
+                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                int index =  -1;
-                for (Pair<String,Map<String,StockEntry>> entry: data){
-                    if (entry.first.equals(dataSnapshot.getKey())){
-                        index = data.indexOf(entry);
-                        break;
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    int index = -1;
+                    for (Pair<String, Map<String, StockEntry>> entry : data) {
+                        if (entry.first.equals(dataSnapshot.getKey())) {
+                            index = data.indexOf(entry);
+                            break;
+                        }
                     }
-                }
-                if (index <  0){
-                    return;
-                }
-                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
-                Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
-                data.set(index, pair);
-                adapter.notifyItemChanged(index);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                int index =  -1;
-                for (Pair<String,Map<String,StockEntry>> entry: data){
-                    if (entry.first.equals(dataSnapshot.getKey())){
-                        index = data.indexOf(entry);
-                        break;
+                    if (index < 0) {
+                        return;
                     }
+                    GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {
+                    };
+                    Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                    data.set(index, pair);
+                    adapter.notifyItemChanged(index);
                 }
-                if (index <  0){
-                    return;
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    int index = -1;
+                    for (Pair<String, Map<String, StockEntry>> entry : data) {
+                        if (entry.first.equals(dataSnapshot.getKey())) {
+                            index = data.indexOf(entry);
+                            break;
+                        }
+                    }
+                    if (index < 0) {
+                        return;
+                    }
+                    GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {
+                    };
+                    data.remove(index);
+                    adapter.notifyItemRemoved(index);
                 }
-                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
-                data.remove(index);
-                adapter.notifyItemRemoved(index);
-            }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //// TODO: 24/05/17 handle errors
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //// TODO: 24/05/17 handle errors
+                }
+            });
+        } else {
+            //todo er is geen stock in de settings code zal hier nooit  mogen komen.
+        }
         return rootView;
     }
 

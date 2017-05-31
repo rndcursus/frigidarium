@@ -4,6 +4,7 @@ import android.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,9 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.text.Text;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, StockListFragment.OnListFragmentInteractionListener{
+
+    private static final int WRITE = 0; //todo
 
     TextView codeView;
 
@@ -98,7 +101,9 @@ public class MainActivity extends AppCompatActivity
             fragment = StockFragment.newInstance(false);
         } else if (id == R.id.nav_manage) {
             fragment= new SettingsFragment();
-        } /*else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_stockchoose){
+            fragment = StockListFragment.newInstance(1);
+        }/*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
@@ -120,4 +125,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onListFragmentInteraction(String stockUid) {
+        getPreferences(WRITE).edit().putString(LoginActivity.STOCKPREFERNCEKEY, stockUid);
+    }
 }
