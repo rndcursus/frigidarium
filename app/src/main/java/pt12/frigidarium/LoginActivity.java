@@ -1,6 +1,7 @@
 package pt12.frigidarium;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
@@ -161,16 +162,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 public void onExist(User owner) {
                     if (!called) {
                         called = true;
-                        String stockID = getPreferences(READ).getString(STOCKPREFERNCEKEY, "");
+                        String stockID = getPreferences(Context.MODE_PRIVATE).getString(STOCKPREFERNCEKEY, "");
                         if (stockID.equals("")){
                             if (owner.getStocks() .size() == 0){//the user is in no stocks
                                 String stockUid = UUID.randomUUID().toString();
                                 Stock.createStock(new Stock(stockUid, owner.getName()),owner.getUid());
-                                getPreferences(WRITE).edit().putString(STOCKPREFERNCEKEY,stockUid).commit();
+                                getPreferences(Context.MODE_PRIVATE).edit().putString(STOCKPREFERNCEKEY,stockUid).apply();
                             }else {
                                 for (String stockId : owner.getStocks().values()){// put the first stock in the list as the current stock visible.
                                     Stock.createStock(new Stock(stockId, owner.getName()),owner.getUid());
-                                    getPreferences(WRITE).edit().putString(STOCKPREFERNCEKEY,stockId).commit();
+                                    getPreferences(Context.MODE_PRIVATE).edit().putString(STOCKPREFERNCEKEY,stockId).apply();
                                     break;
                                 }
                             }
@@ -186,7 +187,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         User.createUser(new User(user.getUid(), user.getDisplayName()));
                         String stockUid = UUID.randomUUID().toString();
                         Stock.createStock(new Stock(stockUid, user.getDisplayName()),user.getUid());
-                        getPreferences(WRITE).edit().putString(STOCKPREFERNCEKEY,stockUid).commit();
+                        getPreferences(Context.MODE_PRIVATE).edit().putString(STOCKPREFERNCEKEY,stockUid).apply();
                         goToNextActivity();
                     }
                 }

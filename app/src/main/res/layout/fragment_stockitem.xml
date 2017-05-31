@@ -24,4 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/stap_uit_de_lijst" />
+    <Button
+        android:id="@+id/set_current_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/huidige_lijst" />
 </LinearLayout>

@@ -26,6 +26,7 @@
     <string name="share_button">Share your stock</string>
 
     <string name="stap_uit_de_lijst">Stap uit de lijst</string>
+    <string name="huidige_lijst">Huidige Lijst</string>
     <string-array name="content_units">
         <item>g</item>
         <item>L</item>
