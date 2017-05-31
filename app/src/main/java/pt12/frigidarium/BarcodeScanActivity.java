@@ -146,41 +146,7 @@ public class BarcodeScanActivity extends Activity{
             startActivity(intent);
 
         }
-        final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
-        final EditText input = new EditText(this);
-        input.setHint(R.string.date_hint);
-        add_dialog.setView(input);
-        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, /*TODO: getProductName(barcode)*/ "productnaam"));
-        add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String exdatestring = input.getText().toString().trim();
-                if(!exdatestring.equals(""))
-                {
-                    try {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
-                        Date date = simpleDateFormat.parse(exdatestring);
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(date);
-                        long exdate = (cal.getTimeInMillis() / 1000L);
-                        /*TODO: addProduct(barcode, exdate);*/
-                        Log.v("datalog", "barcode:"+barcode+", date:"+exdate);
-
-                    } catch (ParseException e) {
-                        Toast.makeText(a, R.string.date_toast, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-        });
-        add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.cancel();
-            }
-        });
-        add_dialog.show();
-
-
-        scanningPaused = false;
+        CreateDialog();
     }
 
 
@@ -215,6 +181,43 @@ public class BarcodeScanActivity extends Activity{
     }
     */
 
+    private void CreateDialog()
+    {
+        final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
+        final EditText input = new EditText(this);
+        input.setHint(R.string.date_hint);
+        add_dialog.setView(input);
+        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, /*TODO: getProductName(barcode)*/ "productnaam"));
+        add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String exdatestring = input.getText().toString().trim();
+                if(!exdatestring.equals(""))
+                {
+                    try {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+                        Date date = simpleDateFormat.parse(exdatestring);
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(date);
+                        long exdate = (cal.getTimeInMillis() / 1000L);
+                        /*TODO: addProduct(barcode, exdate);*/
+                        Log.v("datalog", "barcode:"+barcode+", date:"+exdate);
+
+                    } catch (ParseException e) {
+                        Toast.makeText(a, R.string.date_toast, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                scanningPaused = false;
+            }
+        });
+        add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+                scanningPaused = false;
+            }
+        });
+        add_dialog.show();
+    }
+
     /**
      * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param qrcode
@@ -234,7 +237,6 @@ public class BarcodeScanActivity extends Activity{
             }
         });
         scanningPaused = false;
-
 
 
 
