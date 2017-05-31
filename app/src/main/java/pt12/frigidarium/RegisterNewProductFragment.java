@@ -1,7 +1,6 @@
 package pt12.frigidarium;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,9 +14,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import static android.R.attr.data;
-import static android.R.attr.password;
 
 /**
  * A simple {@link Fragment} subclass.

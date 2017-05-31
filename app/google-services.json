@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1036596680942-ci8gj3uepn3i6ldbknj4dlli086mk598.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt12.frigidarium",
+            "certificate_hash": "1501962781d519e7d8c47c642e4f8707c644b2f3"
+          }
+        },
+        {
           "client_id": "1036596680942-qci6mfio9im9q68hpvjrcqsgpnuu5dgu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

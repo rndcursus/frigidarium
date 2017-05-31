@@ -57,16 +57,6 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                         pn = productName.getText().toString().trim();
                         pb = productBrand.getText().toString().trim();
                         pc = productContent.getText().toString().trim() + " " + contentUnitDropdown.getSelectedItem().toString();
-                        /*
-                        if(liter.isChecked())
-                        {
-                            pc = pc + " L";
-                        }
-                        if(gram.isChecked())
-                        {
-                            pc = pc + " g";
-                        }
-                        */
                         purl = productUrl.getText().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
                         {

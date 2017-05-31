@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ServerValue;
 
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Created by mattijn on 24/05/17.
