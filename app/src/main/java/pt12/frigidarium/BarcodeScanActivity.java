@@ -184,7 +184,7 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param userID the userID to be added to te current list.
      */
-    private void addToNewList(String userID){
+    private void addUserToList(String userID){
         String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
         if (stockId != null) {
@@ -249,13 +249,13 @@ public class BarcodeScanActivity extends Activity {
         add_dialog.show();
     }
 
-    private void addToNewList(String qrcode){
+    private void addToNewList(final String qrcode){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
 
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //switchUserToList(qrcode);
+                addUserToList(qrcode);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
