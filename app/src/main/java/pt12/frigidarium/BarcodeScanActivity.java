@@ -3,19 +3,17 @@ package pt12.frigidarium;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.LabeledIntent;
+
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.EditText;
-import android.widget.NumberPicker;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,9 +35,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import static android.R.attr.value;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+
 import android.app.AlertDialog;
 import pt12.frigidarium.database2.models.CheckExist;
 import pt12.frigidarium.database2.models.Product;

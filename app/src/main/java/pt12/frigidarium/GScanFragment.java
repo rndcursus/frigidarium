@@ -1,15 +1,14 @@
 package pt12.frigidarium;
 
-import android.*;
-import android.Manifest;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Camera;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
