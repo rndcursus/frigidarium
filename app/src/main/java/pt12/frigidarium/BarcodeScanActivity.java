@@ -136,10 +136,10 @@ public class BarcodeScanActivity extends Activity{
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
      * @param bc
      */
-    private void addNewProduct(String bc){
+    private void addNewProduct(String bc) {
         //scanningPaused = true;
         barcode = bc;
-        if(/*TODO: !productIsRegistered(barcode)*/ true){
+        if (/*TODO: !productIsRegistered(barcode)*/ true) {
             Intent intent;
             intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
             intent.putExtra("barcode", barcode); //Get tht latest Barcode
@@ -149,37 +149,28 @@ public class BarcodeScanActivity extends Activity{
         CreateDialog();
     }
 
+    /**
+     * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
+     * @param qrcode
+     */
 
-    private int componentTimeToTimestamp(int year, int month, int day) {
-
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, day);
-        c.set(Calendar.HOUR, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        return (int) (c.getTimeInMillis() / 1000L);
+    /**
+     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
+     * @return
+     */
+    private boolean permissionsGranted(){
+        String permission = "android.permission.CAMERA";
+        int res = checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    // The dialog fragment receives a reference to this Activity through the
-    // Fragment.onAttach() callback, which it uses to call the following methods
-    // defined by the AddProductDialogFragment.AddProductDialogListener interface
-    /*
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        // User touched the dialog's positive button
-        exdate = addproductdialog.getDate();
-        //TODO: addProductToStock(barcode, exdate);
+    /**
+     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
+     */
+    private void requestPermissionsForCamera(){
+        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
+        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
     }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-        // User touched the dialog's negative button
-    }
-    */
 
     private void CreateDialog()
     {
@@ -218,10 +209,6 @@ public class BarcodeScanActivity extends Activity{
         add_dialog.show();
     }
 
-    /**
-     * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
-     * @param qrcode
-     */
     private void addToNewList(String qrcode){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
@@ -244,22 +231,5 @@ public class BarcodeScanActivity extends Activity{
         //
     }
 
-    /**
-     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
-     * @return
-     */
-    private boolean permissionsGranted(){
-        String permission = "android.permission.CAMERA";
-        int res = checkCallingOrSelfPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
-    }
-
-    /**
-     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
-     */
-    private void requestPermissionsForCamera(){
-        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
-        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
-    }
 
 }
