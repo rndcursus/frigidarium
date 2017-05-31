@@ -33,7 +33,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static android.R.attr.value;
-
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.app.AlertDialog;
 import pt12.frigidarium.database2.models.CheckExist;
 import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.Stock;
@@ -158,9 +160,7 @@ public class BarcodeScanActivity extends Activity {
                     return;
                 }
                 Stock.addStockEntryToInStock(stockId, entry);
-                Intent intent;
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                CreateDialog();
             }
 
             @Override
@@ -169,6 +169,7 @@ public class BarcodeScanActivity extends Activity {
                 intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                 intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
                 startActivity(intent);
+                CreateDialog();
             }
 
             @Override
