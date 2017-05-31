@@ -15,6 +15,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,11 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -146,21 +151,16 @@ public class BarcodeScanActivity extends Activity {
 
     /**
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
-     * @param bc
+     * @param barcode
      */
     private void addNewProduct(final String barcode){
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
             public void onExist(Product product) {
                 long best_before = 0L;
-                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
-                String stockId = getPreferences(0).getString("current_stock", "");
-                if (stockId.equals("")){
-                    //todo no current stock
-                    return;
-                }
-                Stock.addStockEntryToInStock(stockId, entry);
-                CreateDialog();
+
+
+                CreateDialog(barcode);
             }
 
             @Override
@@ -169,7 +169,8 @@ public class BarcodeScanActivity extends Activity {
                 intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                 intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
                 startActivity(intent);
-                CreateDialog();
+                //CreateDialog();
+                //// TODO: 31-5-2017 dialog kan pas worden aangeroepen nadat het formulier is ingevuld.
             }
 
             @Override
@@ -212,13 +213,31 @@ public class BarcodeScanActivity extends Activity {
         requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
     }
 
-    private void CreateDialog()
+    private void CreateDialog(final String barcode)
     {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
         final EditText input = new EditText(this);
+        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, "loading name"));
+        ref.addValueEventListener(new ValueEventListener(){
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Product p = dataSnapshot.getValue(Product.class);
+                if (p != null) {
+                    add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, p.getName()));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         input.setHint(R.string.date_hint);
         add_dialog.setView(input);
-        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, /*TODO: getProductName(barcode)*/ "productnaam"));
+
         add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String exdatestring = input.getText().toString().trim();
@@ -230,7 +249,13 @@ public class BarcodeScanActivity extends Activity {
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(date);
                         long exdate = (cal.getTimeInMillis() / 1000L);
-                        /*TODO: addProduct(barcode, exdate);*/
+                        StockEntry entry = new StockEntry(Product.createProductUID(barcode), exdate);
+                        String stockId = getPreferences(0).getString("current_stock", "");
+                        if (stockId.equals("")){
+                            //todo no current stock
+                            return;
+                        }
+                        Stock.addStockEntryToInStock(stockId, entry);
                         Log.v("datalog", "barcode:"+barcode+", date:"+exdate);
 
                     } catch (ParseException e) {
