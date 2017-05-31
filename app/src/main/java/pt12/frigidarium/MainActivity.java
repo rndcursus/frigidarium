@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
 
         } else if (id == R.id.nav_stocklist) {
-            fragment = new StockFragment();
+            fragment = StockFragment.newInstance(true);
         } else if (id == R.id.nav_shoppinglist) {
-            fragment = new ShoppingFragment();
+            fragment = StockFragment.newInstance(false);
         } else if (id == R.id.nav_manage) {
 
         } /*else if (id == R.id.nav_share) {
