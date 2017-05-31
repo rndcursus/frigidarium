@@ -122,7 +122,7 @@ public class MyStockItemRecyclerViewAdapter extends RecyclerView.Adapter<MyStock
                     String current_sid = mActivity.getPreferences(Context.MODE_PRIVATE).getString(LoginActivity.STOCKPREFERNCEKEY, "");
                     if (current_sid.equals(stock)){
                         mView.setBackgroundColor(unselectedColor);
-                        mActivity.getPreferences(Context.MODE_PRIVATE).edit().putString(LoginActivity.STOCKPREFERNCEKEY,"").apply();
+                        LoginActivity.setCurrentStock(stock);
                     }
                     User.removeUserFromStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stock);
                     Stock.removeUserFromStock(stock, FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -137,7 +137,7 @@ public class MyStockItemRecyclerViewAdapter extends RecyclerView.Adapter<MyStock
                     }
                     currentStockView = vh;
                     currentStockView.mView.setBackgroundColor(selectedColor);
-                    mActivity.getPreferences(Context.MODE_PRIVATE).edit().putString(LoginActivity.STOCKPREFERNCEKEY,stock).apply();
+                    LoginActivity.setCurrentStock(stock);
                 }
             });
 

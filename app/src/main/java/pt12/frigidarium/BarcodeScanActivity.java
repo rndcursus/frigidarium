@@ -132,7 +132,7 @@ public class BarcodeScanActivity extends Activity {
             public void onExist(Product product) {
                 long best_before = 0L;
                 StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
-                String stockId = getPreferences(0).getString("current_stock", "");
+                String stockId = LoginActivity.getCurrentStock();
                 if (stockId.equals("")){
                     //todo no current stock
                     return;
@@ -164,7 +164,7 @@ public class BarcodeScanActivity extends Activity {
      * @param userID the userID to be added to te current list.
      */
     private void addToNewList(String userID){
-        String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
+        String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
         if (stockId != null) {
             Stock.addUserToStock(stockId, userID);

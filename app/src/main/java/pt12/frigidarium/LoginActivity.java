@@ -3,6 +3,7 @@ package pt12.frigidarium;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private Class<?> nextActivity = MainActivity.class;
+    private static SharedPreferences pref;
 
 
     @Override
@@ -153,8 +155,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
-
+    public static String getCurrentStock(){
+        return pref.getString(STOCKPREFERNCEKEY, "");
+    }
+    public static void setCurrentStock(String stockUid){
+        pref.edit().putString(STOCKPREFERNCEKEY,stockUid).apply();
+    }
     private void updateUI(final FirebaseUser user) {
+        pref = getPreferences(Context.MODE_PRIVATE);
         if (user != null) {
             CheckExist<User>  onReadyCallback = new CheckExist<User>() {
                 boolean called  = false;
@@ -162,16 +170,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 public void onExist(User owner) {
                     if (!called) {
                         called = true;
-                        String stockID = getPreferences(Context.MODE_PRIVATE).getString(STOCKPREFERNCEKEY, "");
+                        String stockID = getCurrentStock();
                         if (stockID.equals("")){
                             if (owner.getStocks() .size() == 0){//the user is in no stocks
                                 String stockUid = UUID.randomUUID().toString();
                                 Stock.createStock(new Stock(stockUid, owner.getName()),owner.getUid());
-                                getPreferences(Context.MODE_PRIVATE).edit().putString(STOCKPREFERNCEKEY,stockUid).apply();
+                                User.addUserToStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stockUid);
+                                setCurrentStock(stockUid);
                             }else {
                                 for (String stockId : owner.getStocks().values()){// put the first stock in the list as the current stock visible.
-                                    Stock.createStock(new Stock(stockId, owner.getName()),owner.getUid());
-                                    getPreferences(Context.MODE_PRIVATE).edit().putString(STOCKPREFERNCEKEY,stockId).apply();
+                                    setCurrentStock(stockId);
                                     break;
                                 }
                             }
@@ -187,7 +195,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         User.createUser(new User(user.getUid(), user.getDisplayName()));
                         String stockUid = UUID.randomUUID().toString();
                         Stock.createStock(new Stock(stockUid, user.getDisplayName()),user.getUid());
-                        getPreferences(Context.MODE_PRIVATE).edit().putString(STOCKPREFERNCEKEY,stockUid).apply();
+                        setCurrentStock(stockUid);
                         goToNextActivity();
                     }
                 }

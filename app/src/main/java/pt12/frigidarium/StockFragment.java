@@ -13,6 +13,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,15 +143,14 @@ public class StockFragment extends Fragment
         // --------------------------------------------------------------------------
 
 
-        String stock_uid = getActivity().getPreferences(Context.MODE_PRIVATE).getString(LoginActivity.STOCKPREFERNCEKEY,"");
+        String stock_uid = LoginActivity.getCurrentStock();
         DatabaseReference inStockref;
         if (!stock_uid.equals("")) {
             if(isInStock) {
-            inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/in_stock");
-        }
-        else {
-            inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/out_stock");
-        }
+                inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/in_stock");
+             } else {
+                inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/out_stock");
+            }
             inStockref.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
