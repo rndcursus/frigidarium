@@ -1,19 +1,38 @@
 package pt12.frigidarium;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 
-import java.util.Arrays;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
+
+
 import java.util.LinkedList;
+import java.util.Map;
+
+import pt12.frigidarium.database2.models.StockEntry;
 
 
 /**
@@ -24,35 +43,28 @@ import java.util.LinkedList;
  * Use the {@link StockFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StockFragment extends Fragment {
+public class StockFragment extends Fragment
+        implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
+        RecyclerViewExpandableItemManager.OnGroupExpandListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_IS_IN_STOCK = "isInStock";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private boolean isInStock;
 
     //private OnFragmentInteractionListener mListener;
-
-    private int COLUMNS = 2;
-
-    private enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
-        LINEAR_LAYOUT_MANAGER
-    }
-    private LayoutManagerType currentLayoutManagerType;
-
-    private RadioButton linearLayoutRadioButton;
-    private RadioButton gridLayoutRadioButton;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ProductsAdapter adapter;
 
+    // Variables for expand and swipe funtionality
+    private RecyclerViewExpandableItemManager recyclerViewExpandableItemManager;
+    private static final String SAVED_STATE_EXPANDABLE_ITEM_MANAGER = "RecyclerViewExpandableItemManager";
+    private RecyclerView.Adapter wrappedAdapter;
 
-    public StockFragment() {
+    private StockFragment() {
         // Required empty public constructor
     }
 
@@ -60,16 +72,14 @@ public class StockFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param isInStock Parameter 1.
      * @return A new instance of fragment StockFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static StockFragment newInstance(String param1, String param2) {
+    public static StockFragment newInstance(Boolean isInStock) {
         StockFragment fragment = new StockFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_IS_IN_STOCK, String.valueOf(isInStock));
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,8 +88,7 @@ public class StockFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            isInStock = Boolean.parseBoolean(getArguments().getString(ARG_IS_IN_STOCK)  );
         }
 
     }
@@ -91,21 +100,110 @@ public class StockFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_stock, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        // Set layout manager for linear layout
         layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        setRecyclerViewLayoutManager(currentLayoutManagerType);
+        // Manager for expand functionality
+        final Parcelable savedState = (savedInstanceState != null) ? savedInstanceState.getParcelable(SAVED_STATE_EXPANDABLE_ITEM_MANAGER) : null;
+        recyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(savedState);
+        recyclerViewExpandableItemManager.setOnGroupExpandListener(this);
+        recyclerViewExpandableItemManager.setOnGroupCollapseListener(this);
 
-        LinkedList<String> data = new LinkedList<String>(Arrays.asList("eerste", "tweede", "derde", "vierde"));
-        adapter = new ProductsAdapter(data);
-        recyclerView.setAdapter(adapter);
+        // Add divider between items
+        Drawable divider = ContextCompat.getDrawable(this.getContext() ,R.drawable.divider);
+        RecyclerView.ItemDecoration dividerDecoration = new ProductDividerDecoration(divider);
+        recyclerView.addItemDecoration(dividerDecoration);
 
-        setLayoutChangeButtonListeners(rootView);
+        // Init data set
+        final LinkedList<Pair<String,Map<String,StockEntry>>> data = new LinkedList<>();
+        adapter = new ProductsAdapter(recyclerViewExpandableItemManager, data);
 
-        String data5 = "vijfde";
-        data.add(data5);
-        adapter.notifyItemInserted(4);
+        // Add swipe functionality -------------------------------------------------
+        RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
 
+        wrappedAdapter = recyclerViewExpandableItemManager.createWrappedAdapter(adapter);       // wrap for expanding
+        wrappedAdapter = swipeManager.createWrappedAdapter(wrappedAdapter);                     // wrap for swiping
+
+        recyclerView.setAdapter(wrappedAdapter);
+
+        // Animator config
+        final GeneralItemAnimator animator = new SwipeDismissItemAnimator();
+        animator.setSupportsChangeAnimations(false);
+        recyclerView.setItemAnimator(animator);
+
+        recyclerView.setHasFixedSize(false);
+
+        //mRecyclerViewTouchActionGuardManager.attachRecyclerView(mRecyclerView); NOT NEEDED
+        swipeManager.attachRecyclerView(recyclerView);
+        recyclerViewExpandableItemManager.attachRecyclerView(recyclerView);
+
+        // --------------------------------------------------------------------------
+
+        // Database interaction
+        String stock_uid = "stock_test"; //// TODO: 24/05/17 via code de uid opvragen
+        DatabaseReference inStockref;
+        if(isInStock) {
+            inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/in_stock");
+        }
+        else {
+            inStockref = FirebaseDatabase.getInstance().getReference("stocks/" + stock_uid + "/out_stock");
+        }
+        inStockref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
+                Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                data.add(pair);
+                int index = data.indexOf(pair);
+                adapter.notifyItemInserted(index);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                int index =  -1;
+                for (Pair<String,Map<String,StockEntry>> entry: data){
+                    if (entry.first.equals(dataSnapshot.getKey())){
+                        index = data.indexOf(entry);
+                        break;
+                    }
+                }
+                if (index <  0){
+                    return;
+                }
+                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
+                Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                data.set(index, pair);
+                adapter.notifyItemChanged(index);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                int index =  -1;
+                for (Pair<String,Map<String,StockEntry>> entry: data){
+                    if (entry.first.equals(dataSnapshot.getKey())){
+                        index = data.indexOf(entry);
+                        break;
+                    }
+                }
+                if (index <  0){
+                    return;
+                }
+                GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {};
+                data.remove(index);
+                adapter.notifyItemRemoved(index);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //// TODO: 24/05/17 handle errors
+            }
+        });
         return rootView;
     }
 
@@ -148,49 +246,18 @@ public class StockFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }*/
 
-
-    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // Get current scroll position when a layout manager already has been set.
-        if (recyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                layoutManager = new GridLayoutManager(getActivity(), COLUMNS);
-                currentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                layoutManager = new LinearLayoutManager(getActivity());
-                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                layoutManager = new LinearLayoutManager(getActivity());
-                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.scrollToPosition(scrollPosition);
+    @Override
+    public void onGroupCollapse(int groupPosition, boolean fromUser, Object payload) {
     }
 
-    public void setLayoutChangeButtonListeners(View rootView){
-        linearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
-        linearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
-            }
-        });
+    @Override
+    public void onGroupExpand(int groupPosition, boolean fromUser, Object payload) {
+        if (fromUser) {
+            int childItemHeight = getActivity().getResources().getDimensionPixelSize(R.dimen.list_item_height);
+            int topMargin = (int) (getActivity().getResources().getDisplayMetrics().density * 16); // top-spacing: 16dp
+            int bottomMargin = topMargin; // bottom-spacing: 16dp
 
-        gridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
-        gridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
-            }
-        });
+            recyclerViewExpandableItemManager.scrollToGroup(groupPosition, childItemHeight, topMargin, bottomMargin);
+        }
     }
 }

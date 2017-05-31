@@ -3,9 +3,12 @@ package pt12.frigidarium;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.app.AlertDialog;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -23,6 +26,7 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.DatabaseError;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -30,7 +34,13 @@ import java.util.Date;
 
 import static android.R.attr.value;
 
-public class BarcodeScanActivity extends Activity{
+import pt12.frigidarium.database2.models.CheckExist;
+import pt12.frigidarium.database2.models.Product;
+import pt12.frigidarium.database2.models.Stock;
+import pt12.frigidarium.database2.models.StockEntry;
+import pt12.frigidarium.database2.models.User;
+
+public class BarcodeScanActivity extends Activity {
 
     private SurfaceView cameraView;
     private TextView barcodeInfo;
@@ -136,24 +146,53 @@ public class BarcodeScanActivity extends Activity{
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
      * @param bc
      */
-    private void addNewProduct(String bc) {
-        //scanningPaused = true;
-        barcode = bc;
-        if (/*TODO: !productIsRegistered(barcode)*/ true) {
-            Intent intent;
-            intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-            intent.putExtra("barcode", barcode); //Get tht latest Barcode
-            startActivity(intent);
+    private void addNewProduct(final String barcode){
+        Product.checkExist(barcode, new CheckExist<Product>() {
+            @Override
+            public void onExist(Product product) {
+                long best_before = 0L;
+                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
+                String stockId = getPreferences(0).getString("current_stock", "");
+                if (stockId.equals("")){
+                    //todo no current stock
+                    return;
+                }
+                Stock.addStockEntryToInStock(stockId, entry);
+                Intent intent;
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
 
-        }
-        CreateDialog();
+            @Override
+            public void onDoesNotExist(String uid) {
+                Intent intent;
+                intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+                intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+                //// TODO: 30-5-2017 handle error
+            }
+        });
+
     }
 
     /**
-     * FUNCTION THAT IS CALLED WHEN A QE CODE IS SCANNED. USER ADDED TO NEW LIST
-     * @param qrcode
+     * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
+     * @param userID the userID to be added to te current list.
      */
-
+    private void addToNewList(String userID){
+        String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
+        //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
+        if (stockId != null) {
+            Stock.addUserToStock(stockId, userID);
+            User.addUserToStock(userID, stockId);
+        }else{
+            // todo current user is not set.
+        }
+    }
     /**
      * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
      * @return

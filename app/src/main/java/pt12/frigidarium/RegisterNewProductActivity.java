@@ -11,8 +11,13 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import pt12.frigidarium.database2.models.Product;
+import pt12.frigidarium.database2.models.Stock;
+import pt12.frigidarium.database2.models.StockEntry;
+
 public class RegisterNewProductActivity extends AppCompatActivity {
 
+    public static final String BARCODE = "barcode";
     private EditText productName;
     private EditText productBrand;
     private EditText productContent;
@@ -26,10 +31,10 @@ public class RegisterNewProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(getIntent().getStringExtra("barcode") != null)
-            barcode = getIntent().getStringExtra("barcode");
-
+        if(getIntent().getStringExtra(BARCODE) != null)
+        {
+            barcode = getIntent().getStringExtra(BARCODE);
+        }
         setContentView(R.layout.fragment_register_new_product);
         productName = (EditText) findViewById(R.id.product_name);
         productBrand = (EditText) findViewById(R.id.product_brand);
@@ -55,7 +60,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                         purl = productUrl.getText().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
                         {
-                            Toast.makeText(getApplicationContext(), "Not all required fields are filled", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Not all required fields are filled", Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
                         }
                         else
                         {
@@ -73,7 +78,14 @@ public class RegisterNewProductActivity extends AppCompatActivity {
 
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
-        //TODO: database dingen: voeg nieuw product toe aan productendatabase
+        Product.createProduct(new Product(Product.createProductUID(barcode),productName,productBrand, barcode, productUrl, productContent)); //product gaat aangemaakt worden
+        String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
+        if (stockId != null && !stockId.equals("")) {
+            long best_before = 0L;//// TODO: 30-5-2017 add best before
+            Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),best_before));
+        }else {
+            //// TODO: 30-5-2017 user heeft geen current stock
+        }
         Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
     }
 
