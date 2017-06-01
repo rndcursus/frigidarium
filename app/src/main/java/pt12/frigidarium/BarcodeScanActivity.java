@@ -199,7 +199,7 @@ public class BarcodeScanActivity extends Activity {
     private void addToNewList(String userID){
         String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
-        if (stockId != null) {
+        if (!stockId.equals("")) {
             Stock.addUserToStock(stockId, userID);
             User.addUserToStock(userID, stockId);
         }else{
@@ -299,7 +299,7 @@ public class BarcodeScanActivity extends Activity {
      *
      * @param qrcode
      */
-    private void addToNewList(final String qrcode){
+    private void addUserToList(final String qrcode){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
