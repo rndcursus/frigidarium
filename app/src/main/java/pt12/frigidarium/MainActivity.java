@@ -1,6 +1,7 @@
 package pt12.frigidarium;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
@@ -17,11 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
+    public NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +38,13 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //SET MENU ITEM TO STOCK LIST
-        navigationView.getMenu().getItem(3).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(3));
+        navigationView.getMenu().getItem(1).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(1));
+        requestPermissionsForCamera();
     }
 
     @Override
@@ -84,8 +88,15 @@ public class MainActivity extends AppCompatActivity
         Intent intent = null;
 
         if (id == R.id.nav_camera) {
-            intent = new Intent(this, BarcodeScanActivity.class);
-            startActivity(intent);
+
+            if(permissionsGranted()){
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();// CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
+                intent = new Intent(this, BarcodeScanActivity.class);
+                startActivity(intent);
+            }
+            else{
+                requestPermissionsForCamera();
+            }
         } else if (id == R.id.nav_stocklist) {
             fragment = StockFragment.newInstance(true);
         } else if (id == R.id.nav_shoppinglist) {
@@ -115,4 +126,23 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    /**
+     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
+     * @return
+     */
+    private boolean permissionsGranted(){
+        String permission = "android.permission.CAMERA";
+        int res = checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    /**
+     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
+     */
+    private void requestPermissionsForCamera(){
+        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
+        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSION
+    }
+
+
 }
