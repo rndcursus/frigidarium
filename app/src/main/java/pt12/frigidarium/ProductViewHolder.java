@@ -1,6 +1,7 @@
 package pt12.frigidarium;
 
 
+import android.content.res.Resources;
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -129,7 +130,7 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
                     Product p =  dataSnapshot.getValue(Product.class);
                     getTextView().setText(p.name);
                     ((TextView) view.findViewById(R.id.product_brand)).setText(p.brand);
-                    ((TextView) view.findViewById(R.id.product_description)).setText("Nog "+   products.second.size() + " op voorraad");
+                    ((TextView) view.findViewById(R.id.product_description)).setText(Resources.getSystem().getString(R.string.opVooraad, products.second.size()));
                 }
 
                 @Override
@@ -158,7 +159,7 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
         }
 
         public void setBestBeforeText(){
-            ((TextView) view.findViewById(R.id.product_best_before)).setText("Houdbaarheidsdatum: " + details.getValue().best_before.toString());
+            ((TextView) view.findViewById(R.id.product_best_before)).setText(R.string.expirationDate + details.getValue().best_before.toString());
         }
 
         public String getDatabaseKey(){

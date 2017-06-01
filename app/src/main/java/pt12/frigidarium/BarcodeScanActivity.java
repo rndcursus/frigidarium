@@ -175,7 +175,7 @@ public class BarcodeScanActivity extends Activity {
                 intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                 intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Product succesvol toegevoegd", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.addedSuccesful, Toast.LENGTH_SHORT).show();
                 //CreateDialog();
                 //// TODO: 31-5-2017 dialog kan pas worden aangeroepen nadat het formulier is ingevuld.
             }
