@@ -14,14 +14,14 @@ public class StockEntry {
         return product_uid;
     }
     public String product_uid;
-    public Map<String, String> timeAdded;
+    public Long timeAdded;
     public Long best_before;
     public String addedByUser;
     public StockEntry() {}
     public StockEntry(String uid, Long best_before){
         this.product_uid  = uid;
         this.best_before = best_before;
-        this.timeAdded = ServerValue.TIMESTAMP;
+        this.timeAdded = 0L;
         this.addedByUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 }
