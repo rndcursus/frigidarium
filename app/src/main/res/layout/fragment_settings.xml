@@ -41,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_lang"
+        android:prompt="@string/spinner_prompt"
         android:layout_alignParentStart="true" />
 
     <TextView

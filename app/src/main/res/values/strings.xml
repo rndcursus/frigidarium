@@ -58,5 +58,6 @@
         <item>German</item>
     </string-array>
     <string name="select_lang">Choose a language</string>
+    <string name="spinner_prompt">Choose a language</string>
 </resources>
 
