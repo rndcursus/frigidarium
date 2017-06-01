@@ -1,5 +1,6 @@
 package pt12.frigidarium.database2.models;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -103,25 +104,36 @@ public class Stock {
     }
 
     public static void removeUserFromStock(final String stockUid, final String userUid){
-        getRef(stockUid).child(USERS).addValueEventListener(new ValueEventListener() {
-            boolean called = false;
+        getRef(stockUid).child(USERS).addChildEventListener(new ChildEventListener() {
+            private boolean called = false;
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (!called){
-                    called =  true;
-                    GenericTypeIndicator<Map<String, String>> genericTypeIndicator = new GenericTypeIndicator<Map<String, String>>() {};
-                    Map<String,String> users = dataSnapshot.getValue(genericTypeIndicator);
-                    for (Map.Entry<String,String> user: users.entrySet()){
-                        if (user.getValue().equals(userUid)){
-                            getRef(stockUid).child(USERS).child(user.getKey()).removeValue();
-                        }
+                    if (userUid.equals(dataSnapshot.getValue(String.class))){
+                        getRef(stockUid).child(USERS).child(dataSnapshot.getKey()).removeValue();
+                        called = true;
                     }
                 }
             }
 
             @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
             public void onCancelled(DatabaseError databaseError) {
-                //// TODO: 24/05/17 handle error
+
             }
         });
     }

@@ -54,7 +54,7 @@ public class BarcodeScanActivity extends Activity {
     private String barcode;
     Activity a = this;
 
-    public static String BARCODE = null;
+    public static final String BARCODE = "barcode";
 
 
 
