@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemConstants;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableSwipeableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
@@ -17,6 +19,7 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +30,10 @@ public class ProductsAdapter
         extends AbstractExpandableItemAdapter<ProductViewHolder.ProductTitleViewHolder, ProductViewHolder.ProductDetailsViewHolder>
         implements ExpandableSwipeableItemAdapter<ProductViewHolder.ProductTitleViewHolder, ProductViewHolder.ProductDetailsViewHolder> {
 
-    private List<Pair<String,Map<String, StockEntry>>> data;
+    private List<Pair<Pair<String, Long>,Map<String, StockEntry>>> data;
     private final RecyclerViewExpandableItemManager expandableItemManager;
 
-    public ProductsAdapter(RecyclerViewExpandableItemManager expandableItemManager, List<Pair<String,Map<String, StockEntry>> > data) {
+    public ProductsAdapter(RecyclerViewExpandableItemManager expandableItemManager, List<Pair<Pair<String, Long>,Map<String, StockEntry>> > data) {
         setHasStableIds(true);
         this.data = data;
         this.expandableItemManager = expandableItemManager;
@@ -153,7 +156,11 @@ public class ProductsAdapter
 
     @Override
     public SwipeResultAction onSwipeChildItem(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, int result) {
-        return null;
+        if (result == SwipeableItemConstants.RESULT_SWIPED_RIGHT) {
+            return new SwipeChildResultAction(this, groupPosition, childPosition, holder);
+        } else {
+            return new SwipeResultActionDoNothing();
+        }
     }
 
 
@@ -173,15 +180,29 @@ public class ProductsAdapter
     public long getGroupId(int groupPosition) {
         //return data.get(groupPosition).getId();
         //return data.get(groupPosition).hashCode();
-        return groupPosition;
+        return data.get(groupPosition).first.second;
         // TODO: getGroupId()
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         //return data.get(groupPosition).getId();
-        return groupPosition + childPosition;
+        LinkedList<Map.Entry<String, StockEntry>> list = new LinkedList<Map.Entry<String, StockEntry>>(data.get(groupPosition).second.entrySet());
+        return getId(list.get(childPosition).getKey());
         // TODO: getChildId()
+    }
+
+    private static HashMap<String, Long> map = new HashMap<>();
+    private static long childId = 1;
+    private static long getId(String s){
+        if(map.size() < 1){
+            map.put("tmp", (long) 0);
+        }
+        if (!map.keySet().contains(s)) {
+            map.put(s, childId);
+            childId++;
+        }
+        return map.get(s);
     }
 
     @Override
@@ -237,7 +258,7 @@ public class ProductsAdapter
     @Override
     public void onBindChildViewHolder(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         //holder.getTextView().setText(data.get(groupPosition).getName());
-        LinkedList<StockEntry> entries = new LinkedList<StockEntry>(data.get(groupPosition).second.values());
+        LinkedList<Map.Entry<String, StockEntry>> entries = new LinkedList<Map.Entry<String, StockEntry>>(data.get(groupPosition).second.entrySet());
         holder.setDetails(entries.get(childPosition));
 
         final int swipeState = holder.getSwipeStateFlags();
@@ -315,9 +336,15 @@ public class ProductsAdapter
         protected void onPerformAction() {
             super.onPerformAction();
 
-            // Remove from list
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("stocks/" + LoginActivity.getCurrentStock() + "/in_stock/" + adapter.data.get(position).first.first);
+            //adapter.notifyDataSetChanged();
             adapter.data.remove(position);
-            adapter.notifyItemRemoved(position);
+            adapter.expandableItemManager.notifyGroupItemRemoved(position);
+            ref.removeValue();
+
+            // Remove from list
+            //adapter.data.remove(position);
+            //adapter.notifyItemRemoved(position);
 
         }
 
@@ -336,5 +363,41 @@ public class ProductsAdapter
                 adapter.mEventListener.onItemRemoved(mPosition);
             }
         }*/
+    }
+
+    // Class to perform right-swipe action: Remove from stock list
+    private static class SwipeChildResultAction extends SwipeResultActionRemoveItem {
+        private ProductsAdapter adapter;
+        private final int groupPosition;
+        private final int childPosition;
+        private final ProductViewHolder.ProductDetailsViewHolder viewHolder;
+
+        SwipeChildResultAction(ProductsAdapter adapter, int groupPosition, int childPosition, ProductViewHolder.ProductDetailsViewHolder viewHolder) {
+            this.adapter = adapter;
+            this.groupPosition = groupPosition;
+            this.childPosition = childPosition;
+            this.viewHolder = viewHolder;
+        }
+
+        @Override
+        protected void onPerformAction() {
+            super.onPerformAction();
+
+            String databaseKey = viewHolder.getDatabaseKey();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("stocks/" + LoginActivity.getCurrentStock() + "/in_stock/" + adapter.data.get(groupPosition).first.first + "/" + databaseKey);
+            //adapter.notifyDataSetChanged();
+            adapter.data.get(groupPosition).second.remove(databaseKey);
+            adapter.expandableItemManager.notifyChildItemRemoved(groupPosition, childPosition);
+            ref.removeValue();
+            // Remove from list
+            //adapter.data.remove(position);
+        }
+
+        @Override
+        protected void onCleanUp() {
+            super.onCleanUp();
+            // clear the references
+            adapter = null;
+        }
     }
 }

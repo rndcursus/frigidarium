@@ -118,8 +118,8 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             }*/
         }
 
-        public void setproduct(final Pair<String, Map<String, StockEntry>> products){
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products/"+products.first);
+        public void setproduct(final Pair<Pair<String, Long>, Map<String, StockEntry>> products){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products/"+products.first.first);
             if (mValueEventListener != null){
                 ref.removeEventListener(mValueEventListener);
             }
@@ -148,13 +148,22 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
 
     public static class ProductDetailsViewHolder extends ProductViewHolder {
         private View view;
+        private Map.Entry<String, StockEntry> details;
         public ProductDetailsViewHolder(View v) {
             super(v);
             this.view = v;
         }
 
-        public void setDetails(final StockEntry details){
-            ((TextView) view.findViewById(R.id.product_best_before)).setText(R.string.expirationDate + details.best_before.toString());
+        public void setDetails(final Map.Entry<String, StockEntry> details){
+            this.details = details;
+        }
+
+        public void setBestBeforeText(){
+            ((TextView) view.findViewById(R.id.product_best_before)).setText(R.string.expirationDate + details.getValue().best_before.toString());
+        }
+
+        public String getDatabaseKey(){
+            return details.getKey();
         }
     }
 }
