@@ -4,6 +4,8 @@ package pt12.frigidarium;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -77,8 +80,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
-
-
+        TextView tv1= (TextView) findViewById(R.id.text_login);
+        TextView tv2= (TextView) findViewById(R.id.text_login2);
+        tv1.setText(R.string.login_text);
+        tv2.setText(getString(R.string.login_text2));
+        tv1.setTextColor(Color.BLUE);
+        tv1.setTypeface(Typeface.SERIF);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
     }
 

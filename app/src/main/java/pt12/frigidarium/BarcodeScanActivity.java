@@ -196,7 +196,7 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param userID the userID to be added to te current list.
      */
-    private void addToNewList(String userID){
+    private void addUserToList(String userID){
         String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
         if (stockId != null) {
