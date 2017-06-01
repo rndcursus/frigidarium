@@ -290,7 +290,7 @@ public class BarcodeScanActivity extends Activity {
      *
      * @param qrcode
      */
-    private void addUserToList(final String qrcode){
+    private void addToNewList(final String qrcode){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
