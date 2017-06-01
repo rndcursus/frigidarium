@@ -45,7 +45,7 @@
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
 
-    <string name="opVooraad">"%1$d in stock" </string>
+    <string name="opVooraad">"In stock: "</string>
     <string name="expirationDate">Expiration date: </string>
 
     <string name="not_all_field_filled_in">Not all required fields are filled</string>

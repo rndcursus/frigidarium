@@ -44,7 +44,7 @@
     <string name="on_current_list">Je bent al onderdeel van deze lijst.</string>
     <string name="share_button">Deel jouw vooraadlijst</string>
 
-    <string name="opVooraad">"Nog %1$d op voorraad" </string>
+    <string name="opVooraad">"Voorraad: "</string>
     <string name="expirationDate">Houdbaarheidsdatum: </string>
 
     <string name="not_all_field_filled_in">Niet alle vereiste velden zijn ingevuld</string>
