@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import pt12.frigidarium.database2.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
 
 public class ProductsAdapter
@@ -297,12 +298,15 @@ public class ProductsAdapter
         protected void onPerformAction() {
             super.onPerformAction();
 
-            // Remove from list
-            adapter.data.remove(position);
-            adapter.notifyItemRemoved(position);
-
             // Add to shopping list
-            // TODO: Add some code to add a product to the user's shopping list
+            LinkedList<Map.Entry<String, StockEntry>> entries = new LinkedList<>(adapter.data.get(position).second.entrySet());
+            Stock.addStockEntryToOutStock(LoginActivity.getCurrentStock(), entries.getFirst().getValue());
+
+            // Remove from stock list
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("stocks/" + LoginActivity.getCurrentStock() + "/in_stock/" + adapter.data.get(position).first.first);
+            adapter.data.remove(position);
+            adapter.expandableItemManager.notifyGroupItemRemoved(position);
+            ref.removeValue();
 
         }
 
