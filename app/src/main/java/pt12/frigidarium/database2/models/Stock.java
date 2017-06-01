@@ -111,6 +111,24 @@ public class Stock {
                 if (!called){
                     if (userUid.equals(dataSnapshot.getValue(String.class))){
                         getRef(stockUid).child(USERS).child(dataSnapshot.getKey()).removeValue();
+                        getRef(stockUid).child(USERS).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                GenericTypeIndicator<Map<String,String>>  genericTypeIndicator = new GenericTypeIndicator<Map<String, String>>() {};
+                                Map<String,String> val = dataSnapshot.getValue(genericTypeIndicator);
+                                if (val == null){
+                                    return;
+                                }
+                                if (val.size() == 0){
+                                    getRef(stockUid).removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                         called = true;
                     }
                 }
