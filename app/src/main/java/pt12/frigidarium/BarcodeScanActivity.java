@@ -207,7 +207,7 @@ public class BarcodeScanActivity extends Activity {
      * INVULLEN NOG
      * @param barcode
      */
-    private void reateDialog(final String barcode)
+    private void createDialog(final String barcode, final boolean exists)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
