@@ -21,7 +21,7 @@ public class StockEntry {
     public StockEntry(String uid, Long best_before){
         this.product_uid  = uid;
         this.best_before = best_before;
-        this.timeAdded = 0L;
+        this.timeAdded = System.currentTimeMillis()/1000;
         this.addedByUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 }
