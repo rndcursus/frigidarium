@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth mAuth;
     private Class<?> nextActivity = MainActivity.class;
     private static SharedPreferences pref;
+    private boolean wentToNext = false;
 
 
     @Override
@@ -127,6 +128,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart() {
         super.onStart();
+        wentToNext = false;
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
@@ -222,8 +224,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void goToNextActivity() {
-        Intent intent = new Intent(this, nextActivity);
-        startActivity(intent);
+
+        if (!wentToNext) {
+            Intent intent = new Intent(this, nextActivity);
+            startActivity(intent);
+            wentToNext = true;
+        }
     }
 }
 
