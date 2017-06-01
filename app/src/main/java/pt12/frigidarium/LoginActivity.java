@@ -58,11 +58,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth mAuth;
     private Class<?> nextActivity = MainActivity.class;
     private static SharedPreferences pref;
+    private boolean wentToNext = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = getPreferences(MODE_PRIVATE);
         setContentView(R.layout.activity_login);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -80,6 +82,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
     private void signIn() {
@@ -126,9 +131,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        wentToNext = false;
+
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
@@ -178,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         called = true;
                         String stockID = getCurrentStock();
                         if (stockID.equals("")){
-                            if (owner.getStocks() .size() == 0){//the user is in no stocks
+                            if (owner.getStocks().size() == 0){//the user is in no stocks
                                 String stockUid = UUID.randomUUID().toString();
                                 Stock.createStock(new Stock(stockUid, owner.getName()),owner.getUid());
                                 User.addUserToStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stockUid);
@@ -189,6 +193,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     break;
                                 }
                             }
+                        }else if (owner.getStocks().size() == 0){//the user is in no stocks
+                                String stockUid = UUID.randomUUID().toString();
+                                Stock.createStock(new Stock(stockUid, owner.getName()),owner.getUid());
+                                User.addUserToStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stockUid);
+                                setCurrentStock(stockUid);
                         }
                         goToNextActivity();
                     }
@@ -216,8 +225,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void goToNextActivity() {
-        Intent intent = new Intent(this, nextActivity);
-        startActivity(intent);
+
+        if (!wentToNext) {
+            Intent intent = new Intent(this, nextActivity);
+            startActivity(intent);
+            wentToNext = true;
+        }
     }
 }
 

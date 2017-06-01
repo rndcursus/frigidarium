@@ -54,7 +54,7 @@ public class BarcodeScanActivity extends Activity {
     private String barcode;
     Activity a = this;
 
-    public static String BARCODE = null;
+    public static final String BARCODE = "barcode";
 
 
 
@@ -132,14 +132,25 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(!scanningPaused)
-                {
+                if(!scanningPaused){
                     if(barcodes.size() > 0){
                         scanningPaused = true;
-                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
-                            addNewProduct(barcodes.valueAt(0).displayValue);
-                        else
-                            addToNewList(barcodes.valueAt(0).displayValue);
+                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }else {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[0];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }
+                        scanningPaused = false;
                     }
                 }
             }
@@ -195,19 +206,20 @@ public class BarcodeScanActivity extends Activity {
     private void addUserToList(String userID){
         String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
-        if (stockId != null) {
+        if (!stockId.equals("")) {
             Stock.addUserToStock(stockId, userID);
             User.addUserToStock(userID, stockId);
         }else{
             // todo current user is not set.
         }
+        finish();
     }
 
     /**
      * INVULLEN NOG
      * @param barcode
      */
-    private void CreateDialog(final String barcode)
+    private void reateDialog(final String barcode)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
@@ -278,7 +290,7 @@ public class BarcodeScanActivity extends Activity {
      *
      * @param qrcode
      */
-    private void addToNewList(final String qrcode){
+    private void addUserToList(final String qrcode){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
