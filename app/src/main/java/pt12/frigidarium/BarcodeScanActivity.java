@@ -140,10 +140,15 @@ public class BarcodeScanActivity extends Activity {
                 {
                     if(barcodes.size() > 0){
                         scanningPaused = true;
-                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
-                            addNewProduct(barcodes.valueAt(0).displayValue);
-                        else
+                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                addToNewList(barcodes.valueAt(0).displayValue);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }else {
                             addToNewList(barcodes.valueAt(0).displayValue);
+                        }
                     }
                 }
             }
@@ -228,7 +233,7 @@ public class BarcodeScanActivity extends Activity {
      * INVULLEN NOG
      * @param barcode
      */
-    private void CreateDialog(final String barcode)
+    private void reateDialog(final String barcode)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
