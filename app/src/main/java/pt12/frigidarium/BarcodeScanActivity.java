@@ -1,21 +1,23 @@
 package pt12.frigidarium;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
 
@@ -61,8 +64,7 @@ public class BarcodeScanActivity extends Activity {
     private Handler dialogHandler;
     public static final String BARCODE = "barcode";
     private static final int CREATE_NEW_USER_DIALOG = 10;
-
-
+    private static final int CREATE_NEW_DATE_DIALOG = 8;
 
 
     @Override
@@ -73,6 +75,7 @@ public class BarcodeScanActivity extends Activity {
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
         dialogHandler = new Handler(){
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void handleMessage(Message msg){
                 switch (msg.what){
@@ -82,6 +85,11 @@ public class BarcodeScanActivity extends Activity {
                             addToNewList(stockId);
                         }
                         break;
+                    case CREATE_NEW_DATE_DIALOG:
+                        if (msg.obj instanceof Product){
+                            Product product = (Product) msg.obj;
+                            createDatePickerDialog(product);
+                        }
                 }
             }
         };
@@ -187,17 +195,7 @@ public class BarcodeScanActivity extends Activity {
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
             public void onExist(Product product) {
-                long best_before = 0L;
-                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
-                String stockId = LoginActivity.getCurrentStock();
-                if (stockId.equals("")){
-                    //todo no current stock
-                    return;
-                }
-                Stock.addStockEntryToInStock(stockId, entry);
-                Intent intent;
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                dialogHandler.sendMessage(Message.obtain(dialogHandler,CREATE_NEW_DATE_DIALOG, product));
             }
 
             @Override
@@ -282,7 +280,7 @@ public class BarcodeScanActivity extends Activity {
                         cal.setTime(date);
                         long exdate = (cal.getTimeInMillis() / 1000L);
                         StockEntry entry = new StockEntry(Product.createProductUID(barcode), exdate);
-                        String stockId = getPreferences(0).getString("current_stock", "");
+                        String stockId = LoginActivity.getCurrentStock();
                         if (stockId.equals("")){
                             //todo no current stock
                             return;
@@ -306,6 +304,29 @@ public class BarcodeScanActivity extends Activity {
         add_dialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void createDatePickerDialog(final Product product){
+        //test datepicker
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                GregorianCalendar date = new GregorianCalendar();
+                date.set(year,month,dayOfMonth);
+                long bestBefore = date.getTimeInMillis()/1000L;
+                StockEntry entry = new StockEntry(Product.createProductUID(product.getUid()), bestBefore);
+                String stockId = LoginActivity.getCurrentStock();
+                if (stockId.equals("")){
+                    //todo no current stock
+                    return;
+                }
+                Stock.addStockEntryToInStock(stockId, entry);
+                scanningPaused = false;
+            }
+        },cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH));
+        dialog.show();
+    }
     /**
      *
      * @param qrcode
@@ -326,10 +347,8 @@ public class BarcodeScanActivity extends Activity {
                 scanningPaused = false;
             }
         });
-        boolean uithread = Looper.myLooper() == Looper.getMainLooper();
         AlertDialog dialog = builder.create();
         dialog.show();
-        scanningPaused = false;
     }
 
 
