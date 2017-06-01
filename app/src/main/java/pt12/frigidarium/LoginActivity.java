@@ -179,7 +179,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         called = true;
                         String stockID = getCurrentStock();
                         if (stockID.equals("")){
-                            if (owner.getStocks() .size() == 0){//the user is in no stocks
+                            if (owner.getStocks().size() == 0){//the user is in no stocks
                                 String stockUid = UUID.randomUUID().toString();
                                 Stock.createStock(new Stock(stockUid, owner.getName()),owner.getUid());
                                 User.addUserToStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stockUid);
@@ -190,6 +190,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     break;
                                 }
                             }
+                        }else if (owner.getStocks().size() == 0){//the user is in no stocks
+                                String stockUid = UUID.randomUUID().toString();
+                                Stock.createStock(new Stock(stockUid, owner.getName()),owner.getUid());
+                                User.addUserToStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stockUid);
+                                setCurrentStock(stockUid);
                         }
                         goToNextActivity();
                     }
