@@ -52,6 +52,11 @@
         <item>L</item>
         <item>pieces</item>
     </string-array>
-
+    <string-array name="languages">
+        <item>English</item>
+        <item>Dutch</item>
+        <item>German</item>
+    </string-array>
+    <string name="select_lang">Choose a language</string>
 </resources>
 

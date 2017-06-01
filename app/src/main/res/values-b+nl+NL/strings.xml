@@ -52,6 +52,12 @@
         <item>L</item>
         <item>stuks</item>
     </string-array>
+    <string-array name="languages">
+        <item>Engels</item>
+        <item>Nederlands</item>
+        <item>Duits</item>
+    </string-array>
 
+    <string name="select_lang">Kies een taal</string>
 </resources>
 

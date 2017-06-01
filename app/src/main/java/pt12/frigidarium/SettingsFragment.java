@@ -11,9 +11,13 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
@@ -30,7 +34,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener, AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -90,9 +94,21 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
         String stockID = LoginActivity.getCurrentStock();
         TextView tv = (TextView) view.findViewById(R.id.current_stock_view);
         tv.setText(stockID);
+        Spinner language_select = (Spinner) view.findViewById(R.id.spinner_lang);
+        ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(getContext(),R.array.languages,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        language_select.setAdapter(adapter);
+        language_select.setOnItemSelectedListener(this);
+        TextView prompt = (TextView) view.findViewById(R.id.text_lang);
+        prompt.setText(R.string.select_lang);
         return view;
     }
 
+    /**
+     * Uses the ImageView to set up a Bitmap.
+     * From the user's ID a QR code will be generated
+     * and pixels will be colored black or white.
+     */
     private void createQRCode() {
         ImageView mImageView = (ImageView) getView().findViewById(R.id.image_qr);
         super.onStart();
@@ -147,6 +163,16 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
             TextView tv = (TextView) getActivity().findViewById(R.id.current_stock_view);
             tv.setText(stockID);
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     /**
