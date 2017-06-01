@@ -21,6 +21,9 @@
     <string name="settings">Settings</string>
     <string name="listPicker">List picker</string>
 
+    <string name="defaultLogin">Frigidarium</string>
+    <string name="defaultEmail">frigidarium@frigidarium.com</string>
+
     <string name="new_product_message">This product has not yet been registered, please fill in the following fields to help expand the Frigidarium database:</string>
     <string name="product_name_hint">product name (without brandname)</string>
     <string name="brand_name_hint">brand name</string>

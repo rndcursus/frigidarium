@@ -21,6 +21,8 @@
     <string name="settings">Instellingen</string>
     <string name="listPicker">Lijst kiezer</string>
 
+    <string name="defaultEmail">frigidarium@frigidarium.nl</string>
+
     <string name="new_product_message">Dit product is nog niet geregristreerd. Vul het formulier in om de datbase uit te breiden.</string>
     <string name="product_name_hint">productnaam (zonder merk)</string>
     <string name="brand_name_hint">merk</string>
