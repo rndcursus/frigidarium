@@ -31,17 +31,19 @@
     <string name="brand_name_hint">brand name</string>
     <string name="content_hint">content</string>
     <string name="url_hint">url</string>
-    <string name="submit">submit</string>
+    <string name="submit">submit + add to stock</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
     <string name="cancel">cancel</string>
     <string name="cont">continue</string>
     <string name="add">add</string>
-    <string name="dialog_switch_list">Are you sure you want to switch to another list? This will make you unable to access your current stock and shopping lists.</string>
+    <string name="dialog_switch_list">Add user to stock? This user will be unable to access their current stock and shopping lists.</string>
     <string name="dialog_add_to_stock">Add %1$s to stock?</string>
+    <string name="dialog_add_to_stock_does_not_exist">This product has not yet been added to the Frigidarium database. Do you want to register this product and add it to stock?</string>
     <string name="dialog_add_title">Add product to stock</string>
-    <string name="date_hint">Enter expiration date (dd-mm-yyyy) (optional)</string>
-    <string name="date_toast">Please follow the format dd-mm-yy</string>
+    <string name="date_hint">Expiration date (dd-mm-yyyy) (optional)</string>
+    <string name="date_toast">To add a expiring date follow the format: dd-mm-yy</string>
+    <string name="date_invalid">The added date is invalid</string>
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
 
