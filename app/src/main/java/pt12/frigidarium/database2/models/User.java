@@ -1,5 +1,6 @@
 package pt12.frigidarium.database2.models;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -90,9 +91,40 @@ public class User {
     /**
      * Dont forget to call Stock.removeUserToStock(String stockUid, String userUidKey);
      * @param userUid
-     * @param stockUidKey
+     * @param stockUid
      */
-    public static void removeUserFromStock(String userUid, String stockUidKey){
-        getRef(userUid).child(STOCKS).child(stockUidKey).removeValue();
+    public static void removeUserFromStock(final String userUid, final String stockUid){
+        getRef(userUid).child(STOCKS).addChildEventListener(new ChildEventListener() {
+            boolean called = false;
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (!called){
+                    if (stockUid.equals(dataSnapshot.getValue(String.class))){
+                        getRef(userUid).child(STOCKS).child(dataSnapshot.getKey()).removeValue();
+                        called = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

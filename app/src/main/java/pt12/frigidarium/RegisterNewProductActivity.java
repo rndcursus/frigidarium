@@ -18,6 +18,7 @@ import pt12.frigidarium.database2.models.StockEntry;
 public class RegisterNewProductActivity extends AppCompatActivity {
 
     public static final String BARCODE = "barcode";
+    public static final String EXDATE = "exdate";
     private EditText productName;
     private EditText productBrand;
     private EditText productContent;
@@ -25,6 +26,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
     private RadioButton liter;
     private RadioButton gram;
     private Button submit;
+    long exdate;
     private Spinner contentUnitDropdown;
     private String barcode = "ERROR";
 
@@ -35,6 +37,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
         {
             barcode = getIntent().getStringExtra(BARCODE);
         }
+        getIntent().getLongExtra(EXDATE, exdate);
         setContentView(R.layout.fragment_register_new_product);
         productName = (EditText) findViewById(R.id.product_name);
         productBrand = (EditText) findViewById(R.id.product_brand);
@@ -60,7 +63,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                         purl = productUrl.getText().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
                         {
-                            Toast.makeText(getApplicationContext(), "Not all required fields are filled", Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
+                            Toast.makeText(getApplicationContext(), R.string.not_all_field_filled_in, Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
                         }
                         else
                         {
@@ -81,12 +84,11 @@ public class RegisterNewProductActivity extends AppCompatActivity {
         Product.createProduct(new Product(Product.createProductUID(barcode),productName,productBrand, barcode, productUrl, productContent)); //product gaat aangemaakt worden
         String stockId = LoginActivity.getCurrentStock();
         if (!stockId.equals("")) {
-            long best_before = 0L;//// TODO: 30-5-2017 add best before
-            Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),best_before));
+            Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
         }else {
             //// TODO: 30-5-2017 user heeft geen current stock
         }
-        Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
+        //Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
     }
 
 }

@@ -2,6 +2,7 @@ package pt12.frigidarium.database2.models;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +22,7 @@ public class Product {
     public static final String NAME = "name";
     public static final String CONTENT = "content";
 
+    public String added_by;
     public String name;
     public String brand;
     public String barcode;
@@ -44,6 +46,7 @@ public class Product {
         this.url = url;
         this.content =  content;
         this.brand = brand;
+        this.added_by = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     public static void createProduct(Product p){

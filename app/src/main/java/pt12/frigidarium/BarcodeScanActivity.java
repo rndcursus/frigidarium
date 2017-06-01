@@ -8,6 +8,9 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -53,8 +56,9 @@ public class BarcodeScanActivity extends Activity {
     private Boolean scanningPaused = false;
     private String barcode;
     Activity a = this;
+    long exdate;
 
-    public static String BARCODE = null;
+    public static final String BARCODE = "barcode";
 
 
 
@@ -64,10 +68,6 @@ public class BarcodeScanActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
         //addNewProduct("hoi");
-
-        if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
-        else Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
     }
@@ -136,14 +136,25 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(!scanningPaused)
-                {
+                if(!scanningPaused){
                     if(barcodes.size() > 0){
                         scanningPaused = true;
-                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
-                            addNewProduct(barcodes.valueAt(0).displayValue);
-                        else
-                            addToNewList(barcodes.valueAt(0).displayValue);
+                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }else {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[0];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }
+                        scanningPaused = false;
                     }
                 }
             }
@@ -160,28 +171,12 @@ public class BarcodeScanActivity extends Activity {
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
             public void onExist(Product product) {
-                long best_before = 0L;
-                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
-                String stockId = LoginActivity.getCurrentStock();
-                if (stockId.equals("")){
-                    //todo no current stock
-                    return;
-                }
-                Stock.addStockEntryToInStock(stockId, entry);
-                Intent intent;
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                createDialog(barcode, true);
             }
 
             @Override
             public void onDoesNotExist(String uid) {
-                Intent intent;
-                intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-                intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Product succesvol toegevoegd", Toast.LENGTH_SHORT).show();
-                //CreateDialog();
-                //// TODO: 31-5-2017 dialog kan pas worden aangeroepen nadat het formulier is ingevuld.
+                createDialog(barcode, false);
             }
 
             @Override
@@ -199,41 +194,28 @@ public class BarcodeScanActivity extends Activity {
     private void addUserToList(String userID){
         String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
-        if (stockId != null) {
+        if (!stockId.equals("")) {
             Stock.addUserToStock(stockId, userID);
             User.addUserToStock(userID, stockId);
         }else{
             // todo current user is not set.
         }
-    }
-    /**
-     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
-     * @return
-     */
-    private boolean permissionsGranted(){
-        String permission = "android.permission.CAMERA";
-        int res = checkCallingOrSelfPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
-    }
-
-    /**
-     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
-     */
-    private void requestPermissionsForCamera(){
-        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
-        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
+        finish();
     }
 
     /**
      * INVULLEN NOG
      * @param barcode
      */
-    private void CreateDialog(final String barcode)
+    private void createDialog(final String barcode, final boolean exists)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
         final EditText input = new EditText(this);
-        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, "loading name"));
+
+        input.setInputType(InputType.TYPE_CLASS_DATETIME);
+
+        add_dialog.setMessage(exists ? (getResources().getString(R.string.dialog_add_to_stock, "loading name")) : (getResources().getString(R.string.dialog_add_to_stock_does_not_exist)));
         ref.addValueEventListener(new ValueEventListener(){
 
             @Override
@@ -253,7 +235,7 @@ public class BarcodeScanActivity extends Activity {
         input.setHint(R.string.date_hint);
         add_dialog.setView(input);
 
-        add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+        add_dialog.setPositiveButton(exists ? R.string.add : R.string.cont, new DialogInterface.OnClickListener() {
 
             /**
              *
@@ -265,25 +247,29 @@ public class BarcodeScanActivity extends Activity {
                 if(!exdatestring.equals(""))
                 {
                     try {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                         Date date = simpleDateFormat.parse(exdatestring);
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(date);
-                        long exdate = (cal.getTimeInMillis() / 1000L);
-                        StockEntry entry = new StockEntry(Product.createProductUID(barcode), exdate);
-                        String stockId = getPreferences(0).getString("current_stock", "");
-                        if (stockId.equals("")){
-                            //todo no current stock
-                            return;
-                        }
-                        Stock.addStockEntryToInStock(stockId, entry);
-                        Log.v("datalog", "barcode:"+barcode+", date:"+exdate);
-
+                        exdate = (cal.getTimeInMillis() / 1000L);
                     } catch (ParseException e) {
                         Toast.makeText(a, R.string.date_toast, Toast.LENGTH_SHORT).show();
+                        exdate = 0L;
                     }
                 }
+                if(!exists)
+                {
+                    Intent intent;
+                    intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+                    intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
+                    intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
+                    startActivity(intent);
+                }
 
+
+
+                //Toast.makeText(getApplicationContext(), "Product succesvol toegevoegd", Toast.LENGTH_SHORT).show();
+                scanningPaused = false;
             }
         });
         add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -301,20 +287,18 @@ public class BarcodeScanActivity extends Activity {
      */
     private void addToNewList(final String qrcode){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
 
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                addUserToList(qrcode);
+                //addUserToList(qrcode);
+                Log.v("add_user", "user: "+qrcode);
+                scanningPaused = false;
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-            }
-        });
-        scanningPaused = false;
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
 
