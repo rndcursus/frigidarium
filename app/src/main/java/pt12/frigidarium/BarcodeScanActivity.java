@@ -64,10 +64,6 @@ public class BarcodeScanActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
         //addNewProduct("hoi");
-
-        if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
-        else Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
     }
@@ -190,7 +186,7 @@ public class BarcodeScanActivity extends Activity {
                 intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                 intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Product succesvol toegevoegd", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.addedSuccesful, Toast.LENGTH_SHORT).show();
                 //CreateDialog();
                 //// TODO: 31-5-2017 dialog kan pas worden aangeroepen nadat het formulier is ingevuld.
             }
@@ -207,7 +203,7 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param userID the userID to be added to te current list.
      */
-    private void addToNewList(String userID){
+    private void addUserToList(String userID){
         String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
         if (!stockId.equals("")) {
@@ -217,23 +213,6 @@ public class BarcodeScanActivity extends Activity {
             // todo current user is not set.
         }
         finish();
-    }
-    /**
-     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
-     * @return
-     */
-    private boolean permissionsGranted(){
-        String permission = "android.permission.CAMERA";
-        int res = checkCallingOrSelfPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
-    }
-
-    /**
-     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
-     */
-    private void requestPermissionsForCamera(){
-        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
-        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
     }
 
     /**
