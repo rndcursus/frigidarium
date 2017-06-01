@@ -10,9 +10,7 @@
         android:id="@+id/button_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true" />
 
     <ImageView android:id="@+id/image_qr"
@@ -20,5 +18,21 @@
         android:layout_height="256dp"
         android:layout_below="@+id/button_share"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Huidige Stock" />
+
+    <TextView
+        android:id="@+id/current_stock_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3"
+        android:text="TextView" />
 
 </RelativeLayout>
