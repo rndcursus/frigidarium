@@ -1,16 +1,19 @@
 package pt12.frigidarium;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
@@ -27,7 +30,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -68,6 +71,7 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
 
@@ -83,6 +87,9 @@ public class SettingsFragment extends Fragment {
                 createQRCode();
             }
         });
+        String stockID = LoginActivity.getCurrentStock();
+        TextView tv = (TextView) view.findViewById(R.id.current_stock_view);
+        tv.setText(stockID);
         return view;
     }
 
@@ -131,6 +138,15 @@ public class SettingsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
       //  mListener = null;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(LoginActivity.STOCKPREFERNCEKEY)){
+            String stockID = sharedPreferences.getString(LoginActivity.STOCKPREFERNCEKEY,"Error");
+            TextView tv = (TextView) getActivity().findViewById(R.id.current_stock_view);
+            tv.setText(stockID);
+        }
     }
 
     /**

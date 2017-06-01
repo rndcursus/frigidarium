@@ -18,6 +18,10 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Instellingen" />
+        <item
+            android:id="@+id/nav_stockchoose"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="Lijst kiezer" />
     </group>
 <!--
     <item android:title="Communicate">

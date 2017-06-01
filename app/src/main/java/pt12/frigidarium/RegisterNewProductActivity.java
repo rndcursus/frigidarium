@@ -79,8 +79,8 @@ public class RegisterNewProductActivity extends AppCompatActivity {
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
         Product.createProduct(new Product(Product.createProductUID(barcode),productName,productBrand, barcode, productUrl, productContent)); //product gaat aangemaakt worden
-        String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
-        if (stockId != null && !stockId.equals("")) {
+        String stockId = LoginActivity.getCurrentStock();
+        if (!stockId.equals("")) {
             long best_before = 0L;//// TODO: 30-5-2017 add best before
             Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),best_before));
         }else {

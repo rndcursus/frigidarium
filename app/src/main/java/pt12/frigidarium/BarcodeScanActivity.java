@@ -161,7 +161,16 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void onExist(Product product) {
                 long best_before = 0L;
-                CreateDialog(barcode);
+                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
+                String stockId = LoginActivity.getCurrentStock();
+                if (stockId.equals("")){
+                    //todo no current stock
+                    return;
+                }
+                Stock.addStockEntryToInStock(stockId, entry);
+                Intent intent;
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -187,8 +196,8 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param userID the userID to be added to te current list.
      */
-    private void addUserToList(String userID){
-        String stockId = getPreferences(MODE_PRIVATE).getString("current_stock",null); //// TODO: 30-5-2017 uitzoeken welke mode moet en magic number weghalen
+    private void addToNewList(String userID){
+        String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
         if (stockId != null) {
             Stock.addUserToStock(stockId, userID);

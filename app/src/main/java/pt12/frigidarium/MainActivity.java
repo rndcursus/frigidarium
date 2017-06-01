@@ -1,9 +1,10 @@
 package pt12.frigidarium;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.support.annotation.RequiresPermission;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -21,13 +22,10 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    TextView codeView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,8 +37,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        //codeView = (TextView) findViewById(R.id.code_info);
     }
 
     @Override
@@ -92,7 +88,9 @@ public class MainActivity extends AppCompatActivity
             fragment = StockFragment.newInstance(false);
         } else if (id == R.id.nav_manage) {
             fragment= new SettingsFragment();
-        } /*else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_stockchoose){
+            fragment = StockListFragment.newInstance(1);
+        }/*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
@@ -113,5 +111,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
