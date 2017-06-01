@@ -19,7 +19,6 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAda
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import pt12.frigidarium.database2.models.StockEntry;
 
@@ -27,10 +26,10 @@ public class ProductsAdapter
         extends AbstractExpandableItemAdapter<ProductViewHolder.ProductTitleViewHolder, ProductViewHolder.ProductDetailsViewHolder>
         implements ExpandableSwipeableItemAdapter<ProductViewHolder.ProductTitleViewHolder, ProductViewHolder.ProductDetailsViewHolder> {
 
-    private List<Pair<String,Map<String, StockEntry>>> data;
+    private List<Pair<String,List<StockEntry>>> data;
     private final RecyclerViewExpandableItemManager expandableItemManager;
 
-    public ProductsAdapter(RecyclerViewExpandableItemManager expandableItemManager, List<Pair<String,Map<String, StockEntry>> > data) {
+    public ProductsAdapter(RecyclerViewExpandableItemManager expandableItemManager, List<Pair<String,List<StockEntry>> > data) {
         setHasStableIds(true);
         this.data = data;
         this.expandableItemManager = expandableItemManager;
@@ -237,7 +236,7 @@ public class ProductsAdapter
     @Override
     public void onBindChildViewHolder(ProductViewHolder.ProductDetailsViewHolder holder, int groupPosition, int childPosition, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         //holder.getTextView().setText(data.get(groupPosition).getName());
-        LinkedList<StockEntry> entries = new LinkedList<StockEntry>(data.get(groupPosition).second.values());
+        LinkedList<StockEntry> entries = new LinkedList<StockEntry>(data.get(groupPosition).second);
         holder.setDetails(entries.get(childPosition));
 
         final int swipeState = holder.getSwipeStateFlags();

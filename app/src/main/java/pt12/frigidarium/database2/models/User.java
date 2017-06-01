@@ -6,7 +6,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +22,7 @@ public class User {
     public static final String NAME = "name";
     public String uid;
     public String name;
-    public Map<String,String> stocks;
+    public List<String> stocks;
     public String getUid(){
         return uid;
     }
@@ -28,9 +30,9 @@ public class User {
         return name;
     }
 
-    public Map<String, String> getStocks(){
+    public List<String> getStocks(){
         if (stocks == null){
-            stocks = new HashMap<>();
+            stocks = new ArrayList<>();
         }
         return stocks;
     }

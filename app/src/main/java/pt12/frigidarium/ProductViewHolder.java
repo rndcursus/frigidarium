@@ -17,7 +17,7 @@ import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemViewHo
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 
 
-import java.util.Map;
+import java.util.List;
 
 import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.StockEntry;
@@ -117,7 +117,7 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             }*/
         }
 
-        public void setproduct(final Pair<String, Map<String, StockEntry>> products){
+        public void setproduct(final Pair<String, List<StockEntry>> products){
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products/"+products.first);
             if (mValueEventListener != null){
                 ref.removeEventListener(mValueEventListener);

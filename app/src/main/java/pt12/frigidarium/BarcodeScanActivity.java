@@ -140,10 +140,12 @@ public class BarcodeScanActivity extends Activity {
                 {
                     if(barcodes.size() > 0){
                         scanningPaused = true;
-                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
+                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
                             addNewProduct(barcodes.valueAt(0).displayValue);
-                        else
+                        }
+                        else {
                             addToNewList(barcodes.valueAt(0).displayValue);
+                        }
                     }
                 }
             }
@@ -196,10 +198,10 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
      * @param userID the userID to be added to te current list.
      */
-    private void addToNewList(String userID){
+    private void addUserToList(String userID){
         String stockId = LoginActivity.getCurrentStock();
         //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
-        if (stockId != null) {
+        if (!stockId.equals("")) {
             Stock.addUserToStock(stockId, userID);
             User.addUserToStock(userID, stockId);
         }else{

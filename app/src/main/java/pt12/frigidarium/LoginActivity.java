@@ -35,7 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
+
 import java.util.UUID;
 
 import pt12.frigidarium.database2.models.CheckExist;
@@ -184,7 +184,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 User.addUserToStock(FirebaseAuth.getInstance().getCurrentUser().getUid(),stockUid);
                                 setCurrentStock(stockUid);
                             }else {
-                                for (String stockId : owner.getStocks().values()){// put the first stock in the list as the current stock visible.
+                                for (String stockId : owner.getStocks()){// put the first stock in the list as the current stock visible.
                                     setCurrentStock(stockId);
                                     break;
                                 }

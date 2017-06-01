@@ -7,7 +7,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,9 +25,9 @@ public class Stock {
     public static final String UID = "name";
     public String uid;
     public String name;
-    public Map<String, String> users;
-    public Map<String, Map<String, StockEntry>> in_stock;
-    public Map<String, Map<String, StockEntry>> out_stock;
+    public List<String> users;
+    public Map<String, List<StockEntry>> in_stock;
+    public Map<String,List<StockEntry>> out_stock;
 
     public String getUid(){
         return uid;
@@ -35,19 +37,19 @@ public class Stock {
         return name;
     }
 
-    public Map<String,String> getUsers(){
+    public List<String> getUsers(){
         if (users == null){
-            return new HashMap<>();
+            return new ArrayList<>();
         }
         return users;
     }
-    public Map<String, Map<String, StockEntry>> getIn_stock(){
+    public Map<String, List<StockEntry>> getIn_stock(){
         if (in_stock == null) {
             return new HashMap<>();
         }
         return in_stock;
     }
-    public Map<String, Map<String, StockEntry>>  getOut_stock(){
+    public Map<String, List<StockEntry>>  getOut_stock(){
         if (out_stock == null){
             return  new HashMap<>();
         }
