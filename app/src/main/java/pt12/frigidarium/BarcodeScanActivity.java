@@ -5,9 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -34,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 
 import android.app.AlertDialog;
@@ -53,8 +58,9 @@ public class BarcodeScanActivity extends Activity {
     private Boolean scanningPaused = false;
     private String barcode;
     Activity a = this;
-
+    private Handler dialogHandler;
     public static final String BARCODE = "barcode";
+    private static final int CREATE_NEW_USER_DIALOG = 10;
 
 
 
@@ -66,6 +72,19 @@ public class BarcodeScanActivity extends Activity {
         //addNewProduct("hoi");
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
+        dialogHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case CREATE_NEW_USER_DIALOG:
+                        if (msg.obj instanceof String){
+                            String stockId = (String) msg.obj;
+                            addToNewList(stockId);
+                        }
+                        break;
+                }
+            }
+        };
     }
 
     @Override
@@ -101,6 +120,8 @@ public class BarcodeScanActivity extends Activity {
                 try {
                     // CHECK AGAIN IF PERMISSION GRANTED. IF PERMISSION NOT GRANTED, THEN THE CAMERA IS NOT STARTED.
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        //// TODO: 1-6-2017 alert the user that the camera is not started
+                        finish();
                         return;
                     }
                     cameraSource.start(cameraView.getHolder());
@@ -138,19 +159,18 @@ public class BarcodeScanActivity extends Activity {
                         if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
                             if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
                                 String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
-                                addToNewList(s);
+                                dialogHandler.sendMessage(Message.obtain(dialogHandler,CREATE_NEW_USER_DIALOG,s));
                             }else {
                                 addNewProduct(barcodes.valueAt(0).displayValue);
                             }
                         }else {
                             if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
-                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[0];
-                                addToNewList(s);
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
+                                dialogHandler.sendMessage(Message.obtain(dialogHandler,CREATE_NEW_USER_DIALOG,s));
                             }else {
                                 addNewProduct(barcodes.valueAt(0).displayValue);
                             }
                         }
-                        scanningPaused = false;
                     }
                 }
             }
@@ -298,13 +318,17 @@ public class BarcodeScanActivity extends Activity {
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 addUserToList(qrcode);
+                scanningPaused = false;
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                scanningPaused = false;
             }
         });
+        boolean uithread = Looper.myLooper() == Looper.getMainLooper();
+        AlertDialog dialog = builder.create();
+        dialog.show();
         scanningPaused = false;
     }
 
