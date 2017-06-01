@@ -40,6 +40,11 @@
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
 
+    <string name="brand">Brand</string>
+    <string name="productname">Productname</string>
+    <string name="property">An important property</string>
+    <string name="barcode">Barcode:</string>
+
     <string name="stap_uit_de_lijst">Leave list</string>
     <string name="huidige_lijst">Current list</string>
     <string-array name="content_units">
