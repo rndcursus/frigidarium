@@ -58,7 +58,7 @@ public class BarcodeScanActivity extends Activity {
     Activity a = this;
     long exdate;
 
-    public static String BARCODE = null;
+    public static final String BARCODE = "barcode";
 
 
 
@@ -67,12 +67,7 @@ public class BarcodeScanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
-        //addToNewList("jeboi");
-        addNewProduct("hoi");
-
-        if(!permissionsGranted()) requestPermissionsForCamera(); // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
-        else Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-
+        //addNewProduct("hoi");
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
     }
@@ -141,14 +136,25 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(!scanningPaused)
-                {
+                if(!scanningPaused){
                     if(barcodes.size() > 0){
                         scanningPaused = true;
-                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE)
-                            addNewProduct(barcodes.valueAt(0).displayValue);
-                        else
-                            addToNewList(barcodes.valueAt(0).displayValue);
+                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }else {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[0];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
+                        }
+                        scanningPaused = false;
                     }
                 }
             }
@@ -182,25 +188,26 @@ public class BarcodeScanActivity extends Activity {
     }
 
     /**
-     * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
-     * @return
+     * FUNCTION THAT IS CALLED WHEN A QR CODE IS SCANNED. USER ADDED TO NEW LIST
+     * @param userID the userID to be added to te current list.
      */
-    private boolean permissionsGranted(){
-        String permission = "android.permission.CAMERA";
-        int res = checkCallingOrSelfPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
+    private void addUserToList(String userID){
+        String stockId = LoginActivity.getCurrentStock();
+        //// TODO: 30-5-2017 ask the user for permission to add the user to add the user to a list.
+        if (!stockId.equals("")) {
+            Stock.addUserToStock(stockId, userID);
+            User.addUserToStock(userID, stockId);
+        }else{
+            // todo current user is not set.
+        }
+        finish();
     }
 
     /**
-     * FUNCTION THAT REQUESTS THE PERMISSION FOR THE CAMERA
+     * INVULLEN NOG
+     * @param barcode
      */
-    private void requestPermissionsForCamera(){
-        final int PERMISSION_CODE = 123; // USED FOR CAMERA PERMISSIONS
-        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, PERMISSION_CODE); // REQUEST CAMERA PERMISSIONS
-    }
-
-
-    private void createDialog(final String barcode, final boolean exists)
+    private void reateDialog(final String barcode)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);

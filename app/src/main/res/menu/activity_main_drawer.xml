@@ -5,23 +5,23 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Scannen" />
+            android:title="@string/scan" />
         <item
             android:id="@+id/nav_stocklist"
             android:icon="@drawable/ic_list_black_24dp"
-            android:title="Voorraadlijst" />
+            android:title="@string/stock" />
         <item
             android:id="@+id/nav_shoppinglist"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
-            android:title="Boodschappenlijst" />
+            android:title="@string/shoppingList" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Instellingen" />
+            android:title="@string/settings" />
         <item
             android:id="@+id/nav_stockchoose"
             android:icon="@drawable/ic_list_black_24dp"
-            android:title="Lijst kiezer" />
+            android:title="@string/listPicker" />
     </group>
 <!--
     <item android:title="Communicate">

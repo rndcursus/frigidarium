@@ -65,7 +65,13 @@ public class StockFragment extends Fragment
     private static final String SAVED_STATE_EXPANDABLE_ITEM_MANAGER = "RecyclerViewExpandableItemManager";
     private RecyclerView.Adapter wrappedAdapter;
 
-    private StockFragment() {
+    private static long lastID = 0;
+    private static long getNextId(){
+        lastID ++;
+        return lastID;
+    }
+
+    public StockFragment() {
         // Required empty public constructor
     }
 
@@ -117,7 +123,7 @@ public class StockFragment extends Fragment
         recyclerView.addItemDecoration(dividerDecoration);
 
         // Init data set
-        final LinkedList<Pair<String,Map<String,StockEntry>>> data = new LinkedList<>();
+        final LinkedList<Pair<Pair<String, Long>,Map<String,StockEntry>>> data = new LinkedList<>();
         adapter = new ProductsAdapter(recyclerViewExpandableItemManager, data);
 
         // Add swipe functionality -------------------------------------------------
@@ -155,7 +161,7 @@ public class StockFragment extends Fragment
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {
                     };
-                    Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                    Pair<Pair<String, Long>, Map<String, StockEntry>> pair = new Pair<>(new Pair<>(dataSnapshot.getKey() , getNextId()), dataSnapshot.getValue(genericTypeIndicator));
                     data.add(pair);
                     int index = data.indexOf(pair);
                     adapter.notifyItemInserted(index);
@@ -164,8 +170,8 @@ public class StockFragment extends Fragment
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     int index = -1;
-                    for (Pair<String, Map<String, StockEntry>> entry : data) {
-                        if (entry.first.equals(dataSnapshot.getKey())) {
+                    for (Pair<Pair<String, Long>, Map<String, StockEntry>> entry : data) {
+                        if (entry.first.first.equals(dataSnapshot.getKey())) {
                             index = data.indexOf(entry);
                             break;
                         }
@@ -175,7 +181,7 @@ public class StockFragment extends Fragment
                     }
                     GenericTypeIndicator<Map<String, StockEntry>> genericTypeIndicator = new GenericTypeIndicator<Map<String, StockEntry>>() {
                     };
-                    Pair<String, Map<String, StockEntry>> pair = new Pair<>(dataSnapshot.getKey(), dataSnapshot.getValue(genericTypeIndicator));
+                    Pair<Pair<String, Long>, Map<String, StockEntry>> pair = new Pair<>(new Pair<>(dataSnapshot.getKey(), getNextId()), dataSnapshot.getValue(genericTypeIndicator));
                     data.set(index, pair);
                     adapter.notifyItemChanged(index);
                 }
@@ -183,8 +189,8 @@ public class StockFragment extends Fragment
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     int index = -1;
-                    for (Pair<String, Map<String, StockEntry>> entry : data) {
-                        if (entry.first.equals(dataSnapshot.getKey())) {
+                    for (Pair<Pair<String, Long>, Map<String, StockEntry>> entry : data) {
+                        if (entry.first.first.equals(dataSnapshot.getKey())) {
                             index = data.indexOf(entry);
                             break;
                         }

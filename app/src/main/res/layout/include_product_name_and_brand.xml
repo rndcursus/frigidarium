@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        tools:text="Fabrikant" />
+        tools:text="@string/brand" />
 
     <TextView
         android:id="@+id/product_name"
@@ -21,21 +21,21 @@
         android:maxLines="1"
         android:textStyle="bold"
         android:layout_marginTop="5dp"
-        tools:text="Productnaam" />
+        tools:text="@string/productname" />
 
     <TextView
         android:id="@+id/product_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        tools:text="Een belangrijke eigenschap" />
+        tools:text="@string/property" />
 
     <TextView
         android:id="@+id/product_barcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Barcode:" />
+        android:text="@string/barcode" />
 
 
 </LinearLayout>

@@ -88,7 +88,7 @@ public class MyStockItemRecyclerViewAdapter extends RecyclerView.Adapter<MyStock
         }
 
         public void setStock(final String stock) {
-            final String current_sid = mActivity.getPreferences(Context.MODE_PRIVATE).getString(LoginActivity.STOCKPREFERNCEKEY, "");
+            final String current_sid = LoginActivity.getCurrentStock();
             if (current_sid.equals(stock)){
                 mView.setBackgroundColor(selectedColor);
             }
