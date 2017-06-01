@@ -22,6 +22,8 @@
     <string name="listPicker">Lijst kiezer</string>
 
     <string name="defaultEmail">frigidarium@frigidarium.nl</string>
+    
+    <string name="addedSuccesful">Product succesvol toegevoegd</string>
 
     <string name="new_product_message">Dit product is nog niet geregristreerd. Vul het formulier in om de datbase uit te breiden.</string>
     <string name="product_name_hint">productnaam (zonder merk)</string>
@@ -41,6 +43,11 @@
     <string name="date_toast">Vul de datum in als dd-mm-jjjj</string>
     <string name="on_current_list">Je bent al onderdeel van deze lijst.</string>
     <string name="share_button">Deel jouw vooraadlijst</string>
+
+    <string name="opVooraad">"Nog %1$d op voorraad" </string>
+    <string name="expirationDate">Houdbaarheidsdatum: </string>
+
+    <string name="not_all_field_filled_in">Niet alle vereiste velden zijn ingevuld</string>
 
     <string name="brand">Merk</string>
     <string name="productname">Product naam</string>

@@ -24,6 +24,8 @@
     <string name="defaultLogin">Frigidarium</string>
     <string name="defaultEmail">frigidarium@frigidarium.com</string>
 
+    <string name="addedSuccesful">Product added succesful</string>
+
     <string name="new_product_message">This product has not yet been registered, please fill in the following fields to help expand the Frigidarium database:</string>
     <string name="product_name_hint">product name (without brandname)</string>
     <string name="brand_name_hint">brand name</string>
@@ -42,6 +44,11 @@
     <string name="date_toast">Please follow the format dd-mm-yy</string>
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
+
+    <string name="opVooraad">"%1$d in stock" </string>
+    <string name="expirationDate">Expiration date: </string>
+
+    <string name="not_all_field_filled_in">Not all required fields are filled</string>
 
     <string name="brand">Brand</string>
     <string name="productname">Productname</string>
