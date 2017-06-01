@@ -99,6 +99,8 @@ public class BarcodeScanActivity extends Activity {
     protected void onPause() {
         super.onPause();
         //Simple fix to stop the barcode detector when activity is not running.
+        //// TODO: 1-6-2017 this does not work and trhows errors.
+        //// TODO: 1-6-2017 close camera clean
         barcodeDetector.release();
     }
 
@@ -148,6 +150,13 @@ public class BarcodeScanActivity extends Activity {
             }
         });
 
+
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
         /**
          * BARCODE TETECTOR. KEEPS TRACK OF NEW BARCODES THAT ARE SCANNED, AND CALLS THE CORRESPONDING FUNCTION
          */
@@ -183,9 +192,7 @@ public class BarcodeScanActivity extends Activity {
                 }
             }
         });
-
     }
-
 
     /**
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
