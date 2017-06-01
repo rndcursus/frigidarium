@@ -136,19 +136,25 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(!scanningPaused)
-                {
+                if(!scanningPaused){
                     if(barcodes.size() > 0){
                         scanningPaused = true;
                         if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
                             if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
-                                addToNewList(barcodes.valueAt(0).displayValue);
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
+                                addToNewList(s);
                             }else {
                                 addNewProduct(barcodes.valueAt(0).displayValue);
                             }
                         }else {
-                            addToNewList(barcodes.valueAt(0).displayValue);
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                                String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[0];
+                                addToNewList(s);
+                            }else {
+                                addNewProduct(barcodes.valueAt(0).displayValue);
+                            }
                         }
+                        scanningPaused = false;
                     }
                 }
             }
@@ -210,6 +216,7 @@ public class BarcodeScanActivity extends Activity {
         }else{
             // todo current user is not set.
         }
+        finish();
     }
     /**
      * FUNCTION TO CHECK IF CAMERA PERMISSION IS GRANTED
