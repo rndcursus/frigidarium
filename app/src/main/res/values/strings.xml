@@ -15,6 +15,17 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
+    <string name="scan">Scan</string>
+    <string name="stock">Stock</string>
+    <string name="shoppingList">Shopping list</string>
+    <string name="settings">Settings</string>
+    <string name="listPicker">List picker</string>
+
+    <string name="defaultLogin">Frigidarium</string>
+    <string name="defaultEmail">frigidarium@frigidarium.com</string>
+
+    <string name="addedSuccesful">Product added succesful</string>
+
     <string name="new_product_message">This product has not yet been registered, please fill in the following fields to help expand the Frigidarium database:</string>
     <string name="product_name_hint">product name (without brandname)</string>
     <string name="brand_name_hint">brand name</string>
@@ -34,8 +45,18 @@
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
 
-    <string name="stap_uit_de_lijst">Stap uit de lijst</string>
-    <string name="huidige_lijst">Huidige Lijst</string>
+    <string name="opVooraad">"%1$d in stock" </string>
+    <string name="expirationDate">Expiration date: </string>
+
+    <string name="not_all_field_filled_in">Not all required fields are filled</string>
+
+    <string name="brand">Brand</string>
+    <string name="productname">Productname</string>
+    <string name="property">An important property</string>
+    <string name="barcode">Barcode:</string>
+
+    <string name="stap_uit_de_lijst">Leave list</string>
+    <string name="huidige_lijst">Current list</string>
     <string-array name="content_units">
         <item>g</item>
         <item>L</item>

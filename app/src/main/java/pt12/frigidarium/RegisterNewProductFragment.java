@@ -113,7 +113,7 @@ public class RegisterNewProductFragment extends Fragment {
                         purl = productUrl.getText().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
                         {
-                            Toast.makeText(getActivity(), "Not all required fields are filled", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.not_all_field_filled_in, Toast.LENGTH_LONG).show();
                         }
                         else
                         {

@@ -60,7 +60,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                         purl = productUrl.getText().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
                         {
-                            Toast.makeText(getApplicationContext(), "Not all required fields are filled", Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
+                            Toast.makeText(getApplicationContext(), R.string.not_all_field_filled_in, Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
                         }
                         else
                         {
