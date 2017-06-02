@@ -42,7 +42,6 @@ public class RegisterNewProductActivity extends AppCompatActivity {
         productName = (EditText) findViewById(R.id.product_name);
         productBrand = (EditText) findViewById(R.id.product_brand);
         productContent = (EditText) findViewById(R.id.product_content);
-        productUrl = (EditText) findViewById(R.id.product_url);
         submit = (Button) findViewById(R.id.submit);
         contentUnitDropdown = (Spinner) findViewById(R.id.content_units_drop);
 
@@ -56,12 +55,11 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String pn, pb, pc, purl;
+                        String pn, pb, pc, purl = "ditiseenurl";
                         pn = productName.getText().toString().trim();
                         pb = productBrand.getText().toString().trim();
                         pc = productContent.getText().toString().trim() + " " + contentUnitDropdown.getSelectedItem().toString();
-                        purl = productUrl.getText().toString();
-                        if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals("") || purl.equals(""))
+                        if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals(""))
                         {
                             Toast.makeText(getApplicationContext(), R.string.not_all_field_filled_in, Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
                         }
@@ -84,7 +82,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
         Product.createProduct(new Product(Product.createProductUID(barcode),productName,productBrand, barcode, productUrl, productContent)); //product gaat aangemaakt worden
         String stockId = LoginActivity.getCurrentStock();
         if (!stockId.equals("")) {
-            Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+            Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode), exdate));
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.dialog_add_to_stock, productName), Toast.LENGTH_SHORT).show();
         }else {
             //// TODO: 30-5-2017 user heeft geen current stock
