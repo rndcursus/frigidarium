@@ -80,17 +80,7 @@ public class ProductsAdapter
     public SwipeResultAction onSwipeItem(ProductViewHolder holder, int position, int result) {
         if (result == SwipeableItemConstants.RESULT_SWIPED_LEFT) {
             return new SwipeLeftResultAction(this, position);
-            /*
-            return new SwipeResultActionMoveToSwipedDirection() {
 
-                // Optionally, you can override these three methods
-                // - void onPerformAction()
-                // - void onSlideAnimationEnd()
-                public void onSlideAnimationEnd(){
-                    Log.e("Animation", "Ended");
-                }
-                // - void onCleanUp()
-            };*/
         } else if(result == SwipeableItemConstants.RESULT_SWIPED_RIGHT){
             return new SwipeRightResultAction(this, position);
         } else {
@@ -193,11 +183,7 @@ public class ProductsAdapter
                 bgResId = R.drawable.product_swiping_normal_state;
             }
 
-            if ((expandState & ExpandableItemConstants.STATE_FLAG_IS_EXPANDED) != 0) {
-                isExpanded = true;
-            } else {
-                isExpanded = false;
-            }
+            isExpanded = (expandState & ExpandableItemConstants.STATE_FLAG_IS_EXPANDED) != 0;
 
             viewHolder.setExpandState(isExpanded/*, animateIndicator*/);
             viewHolder.getContainer().setBackgroundResource(bgResId);

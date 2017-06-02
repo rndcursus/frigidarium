@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -30,9 +29,7 @@ import pt12.frigidarium.database2.models.User;
  */
 public class StockListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private List<String> data;
     private MyStockItemRecyclerViewAdapter mAdapter;
@@ -44,7 +41,6 @@ public class StockListFragment extends Fragment {
     public StockListFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static StockListFragment newInstance(int columnCount) {
         StockListFragment fragment = new StockListFragment();
@@ -126,7 +122,7 @@ public class StockListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
     }
-
+  
     @Override
     public void onDetach() {
         super.onDetach();

@@ -229,4 +229,14 @@ public class Stock {
         entry.best_before =  null;
         getRef(stockUid).child(OUTSTOCK).child(entry.getProductUid()).push().setValue(entry);
     }
+
+    /**
+     * Remove a stock entry from a out-stock
+     * @param stockUid the id of the stock that the entry should be removed from
+     * @param product_uid the uid of the product that the product is
+     * @param stockEntryKey the key of the entry
+     */
+    public static void removeFromOutStock(String stockUid,String product_uid, String stockEntryKey){
+        getRef(stockUid).child(OUTSTOCK).child(product_uid).child(stockEntryKey).removeValue();
+    }
 }

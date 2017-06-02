@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -33,12 +32,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
 import java.util.UUID;
 
 import pt12.frigidarium.database2.models.CheckExist;
@@ -54,20 +50,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "loginActivity";
     private static final int RC_SIGN_IN = 12;
     public static final String STOCKPREFERNCEKEY = "current_stock";
-    private static final int WRITE = 0;// todo
-    private static final int READ = 0;  // todo
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private Class<?> nextActivity = MainActivity.class;
     private static SharedPreferences pref;
     private boolean wentToNext = false;
+    private boolean persistencset  = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        if (persistencset) {
+            persistencset = true;
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
         pref = getPreferences(MODE_PRIVATE);
         setContentView(R.layout.activity_login);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

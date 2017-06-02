@@ -45,7 +45,7 @@ public class User {
     /**
      * Don't use this constructor to create your own instance.
      */
-    public User(){};
+    public User(){}
 
     /**
      * This constructor creates a new user that can be added to the firebase database

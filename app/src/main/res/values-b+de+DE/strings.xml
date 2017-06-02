@@ -7,9 +7,7 @@
     <string name="navigation_drawer_close">Schließe navigation drawer</string>
 
     <string name="action_settings">Einstellungen</string>
-   
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
     <string name="title_activity_barcode_reader">BarcodeReaderActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -37,9 +35,10 @@
     <string name="cancel">Annulieren</string>
     <string name="cont">Weiter</string>
     <string name="add">Zufügen</string>
-    <string name="dialog_switch_list">Bist du sicher, dass du die Liste wechseln willst? Dadurch verlierst du den Zugang zu deiner heutigen Vorrats- und Einkaufsliste.</string>
+    <string name="dialog_switch_list">%1$s zur Vorratsliste zufügen?</string>
     <string name="dialog_add_to_stock"> %1$s zur Vorratsliste zufügen?</string>
     <string name="dialog_add_to_stock_does_not_exist">Dieses Produkt wurde noch nicht in die Frigidarium-Datenbank aufgenommen. Möchten Sie dieses Produkt registrieren und hinzufügen?</string>
+    <string name="product_succes">%1$s erfolgreich hinzugefügt.</string>
     <string name="dialog_add_title">Füge das Produkt zur Vorratsliste zu</string>
     <string name="date_hint">Fülle das Mindesthaltbarkeitsdatum ein(dd-mm-jjjj) (optionell)</string>
     <string name="date_toast">Fülle das Datum in dieser Form ein: dd-mm-jjjj</string>
@@ -47,9 +46,11 @@
     <string name="on_current_list">Du gehörst schon zu dieser Liste.</string>
     <string name="share_button">Teile Ihren persönlichen QR-Code</string>
     <string name="opVooraad">"Vorrätig: "</string>
+    <string name="inShoppingCart">"Im Einkaufswagen: "</string>
     <string name="expirationDate">"Haltbarkeitsdatum: "</string>
     <string name="not_all_field_filled_in">Nicht alle Pflichtfelder sind gefüllt</string>
-
+    <string name="add_without_date">Ohne Datum hinzufügen</string>
+    <string name="qr_info">Letzten Sie ihre QR-code scannen durch ein Fridarium Benutzer</string>
     <string name="brand">Marke</string>
     <string name="productname">Produktname</string>
     <string name="property">Eine wichtige Eigenschaft</string>
@@ -58,8 +59,10 @@
     <string name="huidige_lijst">Aktuelle Liste</string>
     <string-array name="content_units">
         <item>g</item>
-        <item>L</item>
+        <item>kg</item>
         <item>Stück</item>
+        <item>L</item>
+        <item>mL</item>
     </string-array>
     <string-array name="languages">
         <item>Englisch</item>

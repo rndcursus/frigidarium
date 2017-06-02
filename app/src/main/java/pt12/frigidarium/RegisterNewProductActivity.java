@@ -11,6 +11,10 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
@@ -80,9 +84,26 @@ public class RegisterNewProductActivity extends AppCompatActivity {
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
         Product.createProduct(new Product(Product.createProductUID(barcode),productName,productBrand, barcode, productUrl, productContent)); //product gaat aangemaakt worden
-        String stockId = LoginActivity.getCurrentStock();
+        final String stockId = LoginActivity.getCurrentStock();
         if (!stockId.equals("")) {
             Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode), exdate));
+            Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Stock stock = dataSnapshot.getValue(Stock.class);
+                    if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                        for (String key: stock.getOut_stock().keySet()){
+                            Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.product_succes, productName), Toast.LENGTH_SHORT).show();
         }else {
             //// TODO: 30-5-2017 user heeft geen current stock

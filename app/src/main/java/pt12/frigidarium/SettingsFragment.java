@@ -1,17 +1,12 @@
 package pt12.frigidarium;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
@@ -41,7 +35,7 @@ import java.util.Locale;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener, AdapterView.OnItemSelectedListener {
+public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -54,7 +48,6 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
 
     private boolean firstSelection;
 
-  //  private OnFragmentInteractionListener mListener;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -101,9 +94,6 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
                 createQRCode();
             }
         });
-        String stockID = LoginActivity.getCurrentStock();
-        TextView tv = (TextView) view.findViewById(R.id.current_stock_view);
-        tv.setText(stockID);
 
         /*
         Creates the language selection spinner
@@ -158,38 +148,15 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-      /* if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }*/
-    }
-
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-      /*  if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-      //  mListener = null;
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(LoginActivity.STOCKPREFERNCEKEY)){
-            String stockID = sharedPreferences.getString(LoginActivity.STOCKPREFERNCEKEY,"Error");
-            TextView tv = (TextView) getActivity().findViewById(R.id.current_stock_view);
-            tv.setText(stockID);
-        }
     }
 
     /**
@@ -201,7 +168,7 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
-        if(firstSelection==true)
+        if(firstSelection)
         firstSelection=false;
         else {
             switch (pos) {
@@ -218,7 +185,6 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
                     break;
             }
         }
-       // setLocale(lang.toString());
     }
 
     /**

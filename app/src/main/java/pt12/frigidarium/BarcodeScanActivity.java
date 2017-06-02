@@ -8,37 +8,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
 
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-
-import android.support.v4.app.NotificationCompat;
-
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.DatePicker;
-import android.widget.EditText;
 
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,9 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
 
 
 import android.app.AlertDialog;
@@ -58,8 +45,6 @@ import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
 import pt12.frigidarium.database2.models.User;
-
-import static android.R.id.input;
 
 public class BarcodeScanActivity extends Activity {
 
@@ -289,18 +274,37 @@ public class BarcodeScanActivity extends Activity {
              */
             public void onClick(DialogInterface dialog, int whichButton) {
                 exdate = calcExdate(input.getDayOfMonth(), input.getMonth(), input.getYear());
-                if(!exists)
-                {
+                if(!exists) {
                     Intent intent;
                     intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                     intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
                     intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
                     startActivity(intent);
                 }
-                else
-                {
-                    String stockId = LoginActivity.getCurrentStock();
-                    Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+                else {
+                    final String stockId = LoginActivity.getCurrentStock();
+                    if (stockId.equals("")){
+
+                    }else {
+                        Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode), exdate));
+                        Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Stock stock = dataSnapshot.getValue(Stock.class);
+                                if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                                    for (String key: stock.getOut_stock().keySet()){
+                                        Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
                 }
 
                 scanningPaused = false;
@@ -327,8 +331,25 @@ public class BarcodeScanActivity extends Activity {
                 }
                 else
                 {
-                    String stockId = LoginActivity.getCurrentStock();
+                    final String stockId = LoginActivity.getCurrentStock();
                     Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+                    Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Stock stock = dataSnapshot.getValue(Stock.class);
+                            if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                                for (String key: stock.getOut_stock().keySet()){
+                                    Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                                    break;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 scanningPaused = false;
@@ -345,7 +366,6 @@ public class BarcodeScanActivity extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createDatePickerDialog(final Product product){
-        //test datepicker
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(System.currentTimeMillis());
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -355,15 +375,35 @@ public class BarcodeScanActivity extends Activity {
                 date.set(year,month,dayOfMonth);
                 long bestBefore = date.getTimeInMillis()/1000L;
                 StockEntry entry = new StockEntry(Product.createProductUID(product.getUid()), bestBefore);
-                String stockId = LoginActivity.getCurrentStock();
+                final String stockId = LoginActivity.getCurrentStock();
                 if (stockId.equals("")){
                     //todo no current stock
                     return;
                 }
                 Stock.addStockEntryToInStock(stockId, entry);
+                Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Stock stock = dataSnapshot.getValue(Stock.class);
+                        if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                            for (String key: stock.getOut_stock().keySet()){
+                                Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 scanningPaused = false;
             }
-        },cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH));
+        },
+                cal.get(GregorianCalendar.YEAR),
+                cal.get(GregorianCalendar.MONTH),
+                cal.get(GregorianCalendar.DAY_OF_MONTH));
         dialog.show();
     }
 

@@ -1,6 +1,5 @@
 package pt12.frigidarium;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -11,9 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
-import android.text.LoginFilter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +36,11 @@ public class StockFragment extends Fragment
         implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
         RecyclerViewExpandableItemManager.OnGroupExpandListener {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_IS_IN_STOCK = "isInStock";
 
     private boolean isInStock;
 
-    //private OnFragmentInteractionListener mListener;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -211,16 +205,9 @@ public class StockFragment extends Fragment
                 }
             });
         } else {
-            //todo er is geen stock in de settings code zal hier nooit  mogen komen.
+            //todo er is geen stock in de settings
         }
         return rootView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {/*
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }*/
     }
 
     @Override
@@ -231,7 +218,6 @@ public class StockFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
-        //mListener = null;
     }
 
     @Override
