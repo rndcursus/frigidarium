@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/frigidariumGitHub.iml" filepath="$PROJECT_DIR$/frigidariumGitHub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frigidarium.iml" filepath="$PROJECT_DIR$/frigidarium.iml" />
     </modules>
   </component>
 </project>
