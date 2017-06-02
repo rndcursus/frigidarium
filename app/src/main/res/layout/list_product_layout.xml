@@ -59,14 +59,14 @@ android:paddingBottom="10dp">
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/amount_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="5dp"
                     android:background="?attr/selectableItemBackground"
-                    android:src="@drawable/ic_shopping_cart_black_24dp" />
+                    android:src="@drawable/ic_shopping_cart_black_24dp" />-->
 
                 <ImageButton
                     android:id="@+id/indicator"
@@ -74,7 +74,7 @@ android:paddingBottom="10dp">
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="0dp"
                     android:background="?attr/selectableItemBackground"
                     android:src="@drawable/ic_expand_more_black_24dp" />
 
