@@ -335,7 +335,7 @@ public class BarcodeScanActivity extends Activity {
                 scanningPaused = false;
               }
         });
-                /
+
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 scanningPaused = false;
