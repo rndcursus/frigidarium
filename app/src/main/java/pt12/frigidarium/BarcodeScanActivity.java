@@ -366,7 +366,6 @@ public class BarcodeScanActivity extends Activity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void createDatePickerDialog(final Product product){
-        //test datepicker
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(System.currentTimeMillis());
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -401,7 +400,10 @@ public class BarcodeScanActivity extends Activity {
                 });
                 scanningPaused = false;
             }
-        },cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH));
+        },
+                cal.get(GregorianCalendar.YEAR),
+                cal.get(GregorianCalendar.MONTH),
+                cal.get(GregorianCalendar.DAY_OF_MONTH));
         dialog.show();
     }
 

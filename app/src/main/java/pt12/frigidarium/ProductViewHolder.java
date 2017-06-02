@@ -98,24 +98,7 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
         }
 
         public void onExpansionToggled(boolean expanded) {
-            //super.onExpansionToggled(expanded);
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                RotateAnimation rotateAnimation;
-                if (expanded) { // rotate clockwise
-                    rotateAnimation = new RotateAnimation(ROTATED_POSITION,
-                            INITIAL_POSITION,
-                            RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                            RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-                } else { // rotate counterclockwise
-                    rotateAnimation = new RotateAnimation(-1 * INITIAL_POSITION,
-                            ROTATED_POSITION,
-                            RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                            RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-                }
-                rotateAnimation.setDuration(200);
-                rotateAnimation.setFillAfter(true);
-                indicator.startAnimation(rotateAnimation);
-            }*/
+
         }
 
         /**
