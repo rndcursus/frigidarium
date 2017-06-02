@@ -113,13 +113,20 @@ public class BarcodeScanActivity extends Activity {
     protected void onPause() {
         super.onPause();
         //Simple fix to stop the barcode detector when activity is not running.
-        barcodeDetector.release();
+        scanningPaused = true;
+        //barcodeDetector.release();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //scanningPaused = false;
     }
 
     /**
      * FUNCTION THAT CREATES THE CAMERA SOURCE, AND KEEPS HOLD OF NEW BARCODES THAT ARE SCANNED.
      */
-    private void createCameraSource(){
+    private void createCameraSource() {
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.EAN_13 | Barcode.EAN_8 | Barcode.QR_CODE)
@@ -128,7 +135,7 @@ public class BarcodeScanActivity extends Activity {
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1600,1024)
+                .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(15.0f)
                 .build();
 
@@ -165,7 +172,7 @@ public class BarcodeScanActivity extends Activity {
         /**
          * BARCODE TETECTOR. KEEPS TRACK OF NEW BARCODES THAT ARE SCANNED, AND CALLS THE CORRESPONDING FUNCTION
          */
-        barcodeDetector.setProcessor( new Detector.Processor<Barcode>(){
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
 
             @Override
             public void release() {
@@ -175,11 +182,11 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(!scanningPaused){
-                    if(barcodes.size() > 0){
+                if (!scanningPaused) {
+                    if (barcodes.size() > 0) {
                         scanningPaused = true;
-                        if(barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
-                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)){
+                        if (barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
+                            if (barcodes.valueAt(0).displayValue.startsWith(SettingsFragment.USERPREFIX)) {
                                 String s = barcodes.valueAt(0).displayValue.split(SettingsFragment.USERPREFIX)[1];
                                 dialogHandler.sendMessage(Message.obtain(dialogHandler,CREATE_NEW_USER_DIALOG,s));
                             }else {
@@ -205,7 +212,10 @@ public class BarcodeScanActivity extends Activity {
      * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
      * @param barcode
      */
-    private void addNewProduct(final String barcode){
+    private void addNewProduct(final String barcode) {
+        //scanningPaused = true;
+        //barcodeDetector.release();
+
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
             public void onExist(Product product) {
@@ -222,7 +232,7 @@ public class BarcodeScanActivity extends Activity {
                 //// TODO: 30-5-2017 handle error
             }
         });
-
+        //scanningPaused = false;
     }
 
     /**
@@ -363,6 +373,9 @@ public class BarcodeScanActivity extends Activity {
      */
     private void addToNewList(final String qrcode){
 
+        scanningPaused = true;
+        barcodeDetector.release();
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
 
@@ -373,6 +386,7 @@ public class BarcodeScanActivity extends Activity {
                 scanningPaused = false;
               }
         });
+        
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 scanningPaused = false;

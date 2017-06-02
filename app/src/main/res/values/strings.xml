@@ -24,7 +24,7 @@
     <string name="defaultLogin">Frigidarium</string>
     <string name="defaultEmail">frigidarium@frigidarium.com</string>
 
-    <string name="addedSuccesful">Product added succesful</string>
+    <string name="addedSuccesful">Product added successful</string>
 
     <string name="new_product_message">This product has not yet been registered, please fill in the following fields to help expand the Frigidarium database:</string>
     <string name="product_name_hint">product name (without brandname)</string>
@@ -34,8 +34,8 @@
     <string name="submit">submit + add to stock</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
-    <string name="cancel">cancel</string>
-    <string name="cont">continue</string>
+    <string name="cancel">Cancel</string>
+    <string name="cont">Continue</string>
     <string name="add">add</string>
     <string name="dialog_switch_list">Add user to stock? This user will be unable to access their current stock and shopping lists.</string>
     <string name="dialog_add_to_stock">Add %1$s to stock?</string>
@@ -46,17 +46,17 @@
     <string name="date_toast">To add a expiring date follow the format: dd-mm-yy</string>
     <string name="date_invalid">The added date is invalid</string>
     <string name="on_current_list">"You are already part of this list."</string>
-    <string name="share_button">Share your stock</string>
+    <string name="share_button">Share your personal QR-code</string>
     <string name="login_text">Welcome to Frigidarium!</string>
-    <string name="login_text2">Please use your google account to log in</string>
     <string name="opVooraad">"In stock: "</string>
+    <string name="inShoppingCart">"In shopping cart: "</string>
     <string name="expirationDate">"Expiration date: "</string>
     <string name="not_all_field_filled_in">Not all required fields are filled</string>
     <string name="add_without_date">Add without date</string>
     <string name="brand">Brand</string>
     <string name="productname">Productname</string>
     <string name="property">An important property</string>
-    <string name="barcode">Barcode:</string>
+    <string name="barcode">"Barcode: "</string>
     <string name="stap_uit_de_lijst">Leave list</string>
     <string name="huidige_lijst">Current list</string>
     <string-array name="content_units">
@@ -71,5 +71,6 @@
     </string-array>
     <string name="select_lang">Choose a language</string>
     <string name="spinner_prompt">Choose a language</string>
+    <string name="login_text2">Please use your google account to log in</string>
 </resources>
 

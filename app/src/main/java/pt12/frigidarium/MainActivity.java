@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class MainActivity extends AppCompatActivity
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,6 +83,13 @@ public class MainActivity extends AppCompatActivity
     public void onStart(){
         super.onStart();
 
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        navigationView.getMenu().getItem(1).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(1));
     }
 
     @Override
