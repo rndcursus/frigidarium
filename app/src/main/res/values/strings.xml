@@ -37,7 +37,7 @@
     <string name="cancel">cancel</string>
     <string name="cont">continue</string>
     <string name="add">add</string>
-    <string name="dialog_switch_list">Add user to stock? This user will be unable to access their current stock and shopping lists.</string>
+    <string name="dialog_switch_list">Add %1$s to your stock?</string>
     <string name="dialog_add_to_stock">Add %1$s to stock?</string>
     <string name="dialog_add_to_stock_does_not_exist">This product has not yet been added to the Frigidarium database. Do you want to register this product and add it to stock?</string>
     <string name="dialog_add_title">Add product to stock</string>
