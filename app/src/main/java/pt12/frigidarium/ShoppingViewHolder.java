@@ -82,7 +82,10 @@ public class ShoppingViewHolder extends AbstractSwipeableItemViewHolder
                     Product p =  dataSnapshot.getValue(Product.class);
                     getTextView().setText(p.name);
                     ((TextView) view.findViewById(R.id.product_brand)).setText(p.brand);
-                    ((TextView) view.findViewById(R.id.product_description)).setText(R.string.opVooraad + products.second.size());
+
+                    TextView product_disc = (TextView) view.findViewById(R.id.product_description);
+                    product_disc.setText(R.string.opVooraad);
+                    product_disc.setText(product_disc.getText() + Integer.toString(products.second.size()));
                 }
 
                 @Override
