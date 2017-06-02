@@ -21,6 +21,11 @@
     <string name="settings">Einstellungen</string>
     <string name="listPicker">Wähle eine Liste</string>
 
+    <string name="defaultLogin">Frigidarium</string>
+    <string name="defaultEmail">frigidarium@frigidarium.de</string>
+
+    <string name="addedSuccesful">Produkt erfolgreich hinzugefügt</string>
+
     <string name="new_product_message">Dieses Produkt ist noch nicht registriert. Fülle das Formular aus, um die Datenbank zu erweitern.</string>
     <string name="product_name_hint">Produktname (ohne Marke)</string>
     <string name="brand_name_hint">Marke</string>
@@ -34,17 +39,21 @@
     <string name="add">Zufügen</string>
     <string name="dialog_switch_list">Bist du sicher, dass du die Liste wechseln willst? Dadurch verlierst du den Zugang zu deiner heutigen Vorrats- und Einkaufsliste.</string>
     <string name="dialog_add_to_stock"> %1$s zur Vorratsliste zufügen?</string>
+    <string name="dialog_add_to_stock_does_not_exist">Dieses Produkt wurde noch nicht in die Frigidarium-Datenbank aufgenommen. Möchten Sie dieses Produkt registrieren und hinzufügen?</string>
     <string name="dialog_add_title">Füge das Produkt zur Vorratsliste zu</string>
     <string name="date_hint">Fülle das Mindesthaltbarkeitsdatum ein(dd-mm-jjjj) (optionell)</string>
     <string name="date_toast">Fülle das Datum in dieser Form ein: dd-mm-jjjj</string>
+    <string name="date_invalid">Das hinzugefügte Datum ist ungültig</string>
     <string name="on_current_list">Du gehörst schon zu dieser Liste.</string>
-    <string name="share_button">Teile deine Vorratsliste!</string>
+    <string name="share_button">Teile Ihren persönlichen QR-Code</string>
+    <string name="opVooraad">"Vorrätig: "</string>
+    <string name="expirationDate">"Haltbarkeitsdatum: "</string>
+    <string name="not_all_field_filled_in">Nicht alle Pflichtfelder sind gefüllt</string>
 
     <string name="brand">Marke</string>
     <string name="productname">Produktname</string>
     <string name="property">Eine wichtige Eigenschaft</string>
-    <string name="barcode">Barcode:</string>
-
+    <string name="barcode">"Barcode: "</string>
     <string name="stap_uit_de_lijst">Verlasse Liste</string>
     <string name="huidige_lijst">Aktuelle Liste</string>
     <string-array name="content_units">
@@ -60,6 +69,7 @@
 
     <string name="select_lang">Wähle eine Sprache</string>
     <string name="login_text">Wilkommen zu Frigidarium!</string>
+    <string name="spinner_prompt">Wähle eine Sprache</string>
     <string name="login_text2">Bitte nutze deinen Google Account zum einloggen</string>
 </resources>
 

@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Huidige Stock" />
+        android:text="@string/huidige_lijst" />
 
     <TextView
         android:id="@+id/current_stock_view"

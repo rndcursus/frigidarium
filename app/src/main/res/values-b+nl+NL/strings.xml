@@ -16,11 +16,12 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="scan">Scannen</string>
-    <string name="stock">Vooraadlijst</string>
+    <string name="stock">Voorraadlijst</string>
     <string name="shoppingList">Boodschappenlijst</string>
     <string name="settings">Instellingen</string>
     <string name="listPicker">Lijst kiezer</string>
 
+    <string name="defaultLogin">Frigidarium</string>
     <string name="defaultEmail">frigidarium@frigidarium.nl</string>
     
     <string name="addedSuccesful">Product succesvol toegevoegd</string>
@@ -33,16 +34,18 @@
     <string name="submit">verstuur</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
-    <string name="cancel">annuleren</string>
-    <string name="cont">doorgaan</string>
+    <string name="cancel">Annuleren</string>
+    <string name="cont">Doorgaan</string>
     <string name="add">toevoegen</string>
-    <string name="dialog_switch_list">Weet je zeker dat je van lijst wil wisselen? Hiermee verlies je toegang tot je huidige vooraad- en boodschappenlijst.</string>
-    <string name="dialog_add_to_stock"> %1$s aan de vooraadlijst toevoegen?</string>
-    <string name="dialog_add_title">Voeg product toe aan de vooraadlijst</string>
+    <string name="dialog_switch_list">Weet je zeker dat je van lijst wil wisselen? Hiermee verlies je toegang tot je huidige voorraad- en boodschappenlijst.</string>
+    <string name="dialog_add_to_stock"> %1$s aan de voorraadlijst toevoegen?</string>
+    <string name="dialog_add_to_stock_does_not_exist">Dit product staat nog niet in de Frigidarium database. Wil je het product regristreren en aan de voorraadlijst toevoegen?</string>
+    <string name="dialog_add_title">Voeg product toe aan de voorraadlijst</string>
     <string name="date_hint">Vul de houdbaarheiddatum in (dd-mm-jjjj) (optioneel)</string>
     <string name="date_toast">Vul de datum in als dd-mm-jjjj</string>
+    <string name="date_invalid">De ingevoerde datum is niet correct</string>
     <string name="on_current_list">Je bent al onderdeel van deze lijst.</string>
-    <string name="share_button">Deel jouw vooraadlijst</string>
+    <string name="share_button">Deel jouw persoonlijke QR-code</string>
 
     <string name="opVooraad">"Voorraad: "</string>
     <string name="inShoppingCart">"Aantal in boodschappenlijst: "</string>
@@ -53,7 +56,7 @@
     <string name="brand">Merk</string>
     <string name="productname">Product naam</string>
     <string name="property">Een belangrijke eigenschap</string>
-    <string name="barcode">Barcode:</string>
+    <string name="barcode">"Barcode: "</string>
 
     <string name="stap_uit_de_lijst">Verlaat lijst</string>
     <string name="huidige_lijst">Huidige lijst</string>
@@ -70,6 +73,7 @@
 
     <string name="select_lang">Kies een taal</string>
     <string name="login_text">Welkom bij Frigidarium!</string>
-    <string name="login_text2">Gebruik a.j.b. je Google account om in te loggen</string>
+    <string name="spinner_prompt">Kies een taal</string>
+    <string name="login_text2">Gebruik je Google account om in te loggen</string>
 </resources>
 
