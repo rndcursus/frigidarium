@@ -82,7 +82,7 @@ public class RegisterNewProductFragment extends Fragment {
         productContent = (EditText) rootView.findViewById(R.id.product_content);
         //liter = (RadioButton) rootView.findViewById(R.id.liter);
         //gram = (RadioButton) rootView.findViewById(R.id.gram);
-        productUrl = (EditText) rootView.findViewById(R.id.product_url);
+        //productUrl = (EditText) rootView.findViewById(R.id.product_url);
         submit = (Button) rootView.findViewById(R.id.submit);
         contentUnitDropdown = (Spinner) rootView.findViewById(R.id.content_units_drop);
 
