@@ -56,6 +56,7 @@
     <string name="barcode">"Barcode: "</string>
     <string name="stap_uit_de_lijst">Leave list</string>
     <string name="huidige_lijst">Current list</string>
+    <string name="qr_info">Get your qr-code scanned by another Frigidarium user to join there list</string>
     <string-array name="content_units">
         <item>g</item>
         <item>kg</item>

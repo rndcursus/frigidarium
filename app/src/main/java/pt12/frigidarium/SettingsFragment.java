@@ -41,7 +41,7 @@ import java.util.Locale;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener, AdapterView.OnItemSelectedListener {
+public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -101,9 +101,6 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
                 createQRCode();
             }
         });
-        String stockID = LoginActivity.getCurrentStock();
-        TextView tv = (TextView) view.findViewById(R.id.current_stock_view);
-        tv.setText(stockID);
 
         /*
         Creates the language selection spinner
@@ -181,15 +178,6 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
     public void onDetach() {
         super.onDetach();
       //  mListener = null;
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(LoginActivity.STOCKPREFERNCEKEY)){
-            String stockID = sharedPreferences.getString(LoginActivity.STOCKPREFERNCEKEY,"Error");
-            TextView tv = (TextView) getActivity().findViewById(R.id.current_stock_view);
-            tv.setText(stockID);
-        }
     }
 
     /**
