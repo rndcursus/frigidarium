@@ -45,7 +45,7 @@
     <string name="share_button">Deel jouw vooraadlijst</string>
 
     <string name="opVooraad">"Voorraad: "</string>
-    <string name="expirationDate">Houdbaarheidsdatum: </string>
+    <string name="expirationDate">"Houdbaarheidsdatum: "</string>
 
     <string name="not_all_field_filled_in">Niet alle vereiste velden zijn ingevuld</string>
 
@@ -61,6 +61,14 @@
         <item>L</item>
         <item>stuks</item>
     </string-array>
+    <string-array name="languages">
+        <item>Engels</item>
+        <item>Nederlands</item>
+        <item>Duits</item>
+    </string-array>
 
+    <string name="select_lang">Kies een taal</string>
+    <string name="login_text">Welkom bij Frigidarium!</string>
+    <string name="login_text2">Gebruik a.j.b. je Google account om in te loggen</string>
 </resources>
 

@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        setTitle("Frigidarium");
         View headerView = navigationView.getHeaderView(0);
         TextView email_tv = (TextView) headerView.findViewById(R.id.email_tv);
         email_tv.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -91,9 +92,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

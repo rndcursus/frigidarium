@@ -11,7 +11,13 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
+
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+
 import android.support.v4.app.NotificationCompat;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -58,7 +64,10 @@ public class BarcodeScanActivity extends Activity {
     private Boolean scanningPaused = false;
     private String barcode;
     Activity a = this;
+
+    long exdate;
     private Handler dialogHandler;
+
     public static final String BARCODE = "barcode";
     private static final int CREATE_NEW_USER_DIALOG = 10;
 
@@ -187,28 +196,12 @@ public class BarcodeScanActivity extends Activity {
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
             public void onExist(Product product) {
-                long best_before = 0L;
-                StockEntry entry = new StockEntry(Product.createProductUID(barcode), best_before);
-                String stockId = LoginActivity.getCurrentStock();
-                if (stockId.equals("")){
-                    //todo no current stock
-                    return;
-                }
-                Stock.addStockEntryToInStock(stockId, entry);
-                Intent intent;
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                createDialog(barcode, true);
             }
 
             @Override
             public void onDoesNotExist(String uid) {
-                Intent intent;
-                intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-                intent.putExtra(RegisterNewProductActivity.BARCODE, barcode); //Get the latest Barcode
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), R.string.addedSuccesful, Toast.LENGTH_SHORT).show();
-                //CreateDialog();
-                //// TODO: 31-5-2017 dialog kan pas worden aangeroepen nadat het formulier is ingevuld.
+                createDialog(barcode, false);
             }
 
             @Override
@@ -239,12 +232,15 @@ public class BarcodeScanActivity extends Activity {
      * INVULLEN NOG
      * @param barcode
      */
-    private void reateDialog(final String barcode)
+    private void createDialog(final String barcode, final boolean exists)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Product.TABLENAME + "/" + Product.createProductUID(barcode));
         final AlertDialog.Builder add_dialog = new AlertDialog.Builder(BarcodeScanActivity.this);
         final EditText input = new EditText(this);
-        add_dialog.setMessage(getResources().getString(R.string.dialog_add_to_stock, "loading name"));
+
+        input.setInputType(InputType.TYPE_CLASS_DATETIME);
+
+        add_dialog.setMessage(exists ? (getResources().getString(R.string.dialog_add_to_stock, "loading name")) : (getResources().getString(R.string.dialog_add_to_stock_does_not_exist)));
         ref.addValueEventListener(new ValueEventListener(){
 
             @Override
@@ -264,7 +260,7 @@ public class BarcodeScanActivity extends Activity {
         input.setHint(R.string.date_hint);
         add_dialog.setView(input);
 
-        add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+        add_dialog.setPositiveButton(exists ? R.string.add : R.string.cont, new DialogInterface.OnClickListener() {
 
             /**
              *
@@ -276,25 +272,29 @@ public class BarcodeScanActivity extends Activity {
                 if(!exdatestring.equals(""))
                 {
                     try {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                         Date date = simpleDateFormat.parse(exdatestring);
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(date);
-                        long exdate = (cal.getTimeInMillis() / 1000L);
-                        StockEntry entry = new StockEntry(Product.createProductUID(barcode), exdate);
-                        String stockId = getPreferences(0).getString("current_stock", "");
-                        if (stockId.equals("")){
-                            //todo no current stock
-                            return;
-                        }
-                        Stock.addStockEntryToInStock(stockId, entry);
-                        Log.v("datalog", "barcode:"+barcode+", date:"+exdate);
-
+                        exdate = (cal.getTimeInMillis() / 1000L);
                     } catch (ParseException e) {
                         Toast.makeText(a, R.string.date_toast, Toast.LENGTH_SHORT).show();
+                        exdate = 0L;
                     }
                 }
+                if(!exists)
+                {
+                    Intent intent;
+                    intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+                    intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
+                    intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
+                    startActivity(intent);
+                }
 
+
+
+                //Toast.makeText(getApplicationContext(), "Product succesvol toegevoegd", Toast.LENGTH_SHORT).show();
+                scanningPaused = false;
             }
         });
         add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -312,24 +312,24 @@ public class BarcodeScanActivity extends Activity {
      */
     private void addToNewList(final String qrcode){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_switch_list);
 
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+
                 addUserToList(qrcode);
                 scanningPaused = false;
-            }
+              }
         });
+                /
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 scanningPaused = false;
             }
         });
-        boolean uithread = Looper.myLooper() == Looper.getMainLooper();
         AlertDialog dialog = builder.create();
         dialog.show();
-        scanningPaused = false;
     }
 
 

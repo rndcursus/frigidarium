@@ -31,30 +31,30 @@
     <string name="brand_name_hint">brand name</string>
     <string name="content_hint">content</string>
     <string name="url_hint">url</string>
-    <string name="submit">submit</string>
+    <string name="submit">submit + add to stock</string>
     <string name="liter">L</string>
     <string name="gram">g</string>
     <string name="cancel">cancel</string>
     <string name="cont">continue</string>
     <string name="add">add</string>
-    <string name="dialog_switch_list">Are you sure you want to switch to another list? This will make you unable to access your current stock and shopping lists.</string>
+    <string name="dialog_switch_list">Add user to stock? This user will be unable to access their current stock and shopping lists.</string>
     <string name="dialog_add_to_stock">Add %1$s to stock?</string>
+    <string name="dialog_add_to_stock_does_not_exist">This product has not yet been added to the Frigidarium database. Do you want to register this product and add it to stock?</string>
     <string name="dialog_add_title">Add product to stock</string>
-    <string name="date_hint">Enter expiration date (dd-mm-yyyy) (optional)</string>
-    <string name="date_toast">Please follow the format dd-mm-yy</string>
+    <string name="date_hint">Expiration date (dd-mm-yyyy) (optional)</string>
+    <string name="date_toast">To add a expiring date follow the format: dd-mm-yy</string>
+    <string name="date_invalid">The added date is invalid</string>
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
-
+    <string name="login_text">Welcome to Frigidarium!</string>
+    <string name="login_text2">Please use your google account to log in</string>
     <string name="opVooraad">"In stock: "</string>
-    <string name="expirationDate">Expiration date: </string>
-
+    <string name="expirationDate">"Expiration date: "</string>
     <string name="not_all_field_filled_in">Not all required fields are filled</string>
-
     <string name="brand">Brand</string>
     <string name="productname">Productname</string>
     <string name="property">An important property</string>
     <string name="barcode">Barcode:</string>
-
     <string name="stap_uit_de_lijst">Leave list</string>
     <string name="huidige_lijst">Current list</string>
     <string-array name="content_units">
@@ -62,6 +62,12 @@
         <item>L</item>
         <item>pieces</item>
     </string-array>
-
+    <string-array name="languages">
+        <item>English</item>
+        <item>Dutch</item>
+        <item>German</item>
+    </string-array>
+    <string name="select_lang">Choose a language</string>
+    <string name="spinner_prompt">Choose a language</string>
 </resources>
 

@@ -14,8 +14,10 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="locale|orientation">
             android:screenOrientation="portrait"
             ></activity>
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
