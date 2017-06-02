@@ -105,7 +105,7 @@ public class BarcodeScanActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        //scanningPaused = false;
+        scanningPaused = false;
     }
 
     /**
