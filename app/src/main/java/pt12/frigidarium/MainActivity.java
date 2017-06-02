@@ -84,6 +84,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        navigationView.getMenu().getItem(1).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(1));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
