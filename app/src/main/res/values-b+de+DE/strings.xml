@@ -59,8 +59,10 @@
     <string name="huidige_lijst">Aktuelle Liste</string>
     <string-array name="content_units">
         <item>g</item>
-        <item>L</item>
+        <item>kg</item>
         <item>Stück</item>
+        <item>L</item>
+        <item>mL</item>
     </string-array>
     <string-array name="languages">
         <item>Englisch</item>

@@ -62,8 +62,10 @@
     <string name="qr_info">Laat je QR-code scannen door een andere Frigidarium gebruiker om toegang te kijgen tot zijn lijst</string>
     <string-array name="content_units">
         <item>g</item>
-        <item>L</item>
+        <item>kg</item>
         <item>stuks</item>
+        <item>L</item>
+        <item>mL</item>
     </string-array>
     <string-array name="languages">
         <item>Engels</item>
