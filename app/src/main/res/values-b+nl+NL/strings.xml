@@ -7,9 +7,6 @@
     <string name="navigation_drawer_close">Sluit navigation drawer</string>
 
     <string name="action_settings">Instellingen</string>
-   
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="title_activity_barcode_reader">BarcodeReaderActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -40,6 +37,7 @@
     <string name="add_without_date">toevoegen exlc. datum</string>
     <string name="dialog_switch_list">Weet je zeker dat je van lijst wil wisselen? Hiermee verlies je toegang tot je huidige voorraad- en boodschappenlijst.</string>
     <string name="dialog_add_to_stock"> %1$s aan de voorraadlijst toevoegen?</string>
+    <string name="product_succes">%1$s succesvol toegevoegd.</string>
     <string name="dialog_add_to_stock_does_not_exist">Dit product staat nog niet in de Frigidarium database. Wil je het product regristreren en aan de voorraadlijst toevoegen?</string>
     <string name="dialog_add_title">Voeg product toe aan de voorraadlijst</string>
     <string name="date_hint">Vul de houdbaarheiddatum in (dd-mm-jjjj) (optioneel)</string>
