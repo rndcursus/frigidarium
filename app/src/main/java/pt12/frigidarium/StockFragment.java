@@ -36,13 +36,11 @@ public class StockFragment extends Fragment
         implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
         RecyclerViewExpandableItemManager.OnGroupExpandListener {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_IS_IN_STOCK = "isInStock";
 
     private boolean isInStock;
 
-    //private OnFragmentInteractionListener mListener;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -207,16 +205,9 @@ public class StockFragment extends Fragment
                 }
             });
         } else {
-            //todo er is geen stock in de settings code zal hier nooit  mogen komen.
+            //todo er is geen stock in de settings
         }
         return rootView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {/*
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }*/
     }
 
     @Override
@@ -227,7 +218,6 @@ public class StockFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
-        //mListener = null;
     }
 
     @Override

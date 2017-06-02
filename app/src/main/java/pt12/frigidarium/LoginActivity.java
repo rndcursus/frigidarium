@@ -50,8 +50,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "loginActivity";
     private static final int RC_SIGN_IN = 12;
     public static final String STOCKPREFERNCEKEY = "current_stock";
-    private static final int WRITE = 0;// todo
-    private static final int READ = 0;  // todo
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;

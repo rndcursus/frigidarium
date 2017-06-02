@@ -49,7 +49,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
     private boolean firstSelection;
 
-  //  private OnFragmentInteractionListener mListener;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -150,29 +149,15 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-      /* if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }*/
-    }
-
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-      /*  if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-      //  mListener = null;
     }
 
     /**
@@ -201,7 +186,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                     break;
             }
         }
-       // setLocale(lang.toString());
     }
 
     /**

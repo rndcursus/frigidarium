@@ -29,9 +29,7 @@ import pt12.frigidarium.database2.models.User;
  */
 public class StockListFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private List<String> data;
     private MyStockItemRecyclerViewAdapter mAdapter;
@@ -42,8 +40,7 @@ public class StockListFragment extends Fragment {
      */
     public StockListFragment() {
     }
-
-    // TODO: Customize parameter initialization
+    
     @SuppressWarnings("unused")
     public static StockListFragment newInstance(int columnCount) {
         StockListFragment fragment = new StockListFragment();

@@ -126,11 +126,7 @@ public class MainActivity extends AppCompatActivity
             fragment= new SettingsFragment();
         } else if (id == R.id.nav_stockchoose){
             fragment = StockListFragment.newInstance(1);
-        }/*else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragment != null) {

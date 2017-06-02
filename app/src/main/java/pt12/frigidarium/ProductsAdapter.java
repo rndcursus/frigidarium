@@ -80,17 +80,7 @@ public class ProductsAdapter
     public SwipeResultAction onSwipeItem(ProductViewHolder holder, int position, int result) {
         if (result == SwipeableItemConstants.RESULT_SWIPED_LEFT) {
             return new SwipeLeftResultAction(this, position);
-            /*
-            return new SwipeResultActionMoveToSwipedDirection() {
 
-                // Optionally, you can override these three methods
-                // - void onPerformAction()
-                // - void onSlideAnimationEnd()
-                public void onSlideAnimationEnd(){
-                    Log.e("Animation", "Ended");
-                }
-                // - void onCleanUp()
-            };*/
         } else if(result == SwipeableItemConstants.RESULT_SWIPED_RIGHT){
             return new SwipeRightResultAction(this, position);
         } else {

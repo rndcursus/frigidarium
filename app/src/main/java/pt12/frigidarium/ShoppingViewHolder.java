@@ -7,6 +7,7 @@ import android.media.Image;
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -82,7 +83,6 @@ public class ShoppingViewHolder extends AbstractSwipeableItemViewHolder
 
             plus.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View v){
-                    // Some code
                     if(product != null){
                         StockEntry entry = new StockEntry(product.getUid(), null);
                         Stock.addStockEntryToOutStock(LoginActivity.getCurrentStock(), entry);
@@ -92,7 +92,6 @@ public class ShoppingViewHolder extends AbstractSwipeableItemViewHolder
             });
             minus.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View v){
-                    // Some code
                     if(product != null){
                         LinkedList<String> keys = new LinkedList<String>(adapter.getData().get(position).second.keySet());
                         if(keys.size() > 0){
