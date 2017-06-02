@@ -40,58 +40,6 @@ public class ProductsAdapter
         this.expandableItemManager = expandableItemManager;
     }
 
-    /*@Override
-    public ProductViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Inflate the view for this view holder
-        View thisItemsView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_product_layout,
-                viewGroup, false);
-        // Call the view holder's constructor, and pass the view to it;
-        // return that new view holder
-        return new ProductViewHolder(thisItemsView);
-    }
-
-    @Override
-    public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
-        viewHolder.setproduct(data.get(position));
-
-        // set background resource (target view ID: container)
-        final int swipeState = viewHolder.getSwipeStateFlags();
-
-        if ((swipeState & SwipeableItemConstants.STATE_FLAG_IS_UPDATED) != 0) {
-            int bgResId = 0;
-
-            if ((swipeState & SwipeableItemConstants.STATE_FLAG_IS_ACTIVE) != 0) {
-                bgResId = R.drawable.product_swiping_active_state;
-            } else if ((swipeState & SwipeableItemConstants.STATE_FLAG_SWIPING) != 0) {
-                //bgResId = R.drawable.product_swiping_state;
-            } else {
-                bgResId = R.drawable.product_swiping_normal_state;
-            }
-
-            viewHolder.getContainer().setBackgroundResource(bgResId);
-        }
-
-        // set swiping properties
-        //viewHolder.setSwipeItemHorizontalSlideAmount(item.isPinned() ? SwipeableItemConstants.OUTSIDE_OF_THE_WINDOW_LEFT : 0);
-
-    }*/
-
-    /*@Override
-    public int getItemCount() {
-        return data.size();
-    }
-
-    @Override
-    public long getItemId(int position){
-        return 0;// // TODO: 24/05/17 deze functie moet een goed id teruggeven
-    }
-        return data.get(position).getId();
-    }*/
-
-    /*public int onGetSwipeReactionType(ProductViewHolder holder, int position, int x, int y) {
-        return SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H;
-    }*/
-
     @Override
     public int onGetGroupItemSwipeReactionType(ProductViewHolder.ProductTitleViewHolder holder, int groupPosition, int x, int y) {
         return SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H;
