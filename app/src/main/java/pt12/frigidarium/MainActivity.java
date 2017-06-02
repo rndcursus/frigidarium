@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
 
             if(permissionsGranted()){
-                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();// CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
+                // CHECK IF PERMISSIONS GRANTED. IF NOT, REQUEST PERMISSIONS.
                 intent = new Intent(this, BarcodeScanActivity.class);
                 startActivity(intent);
             }
