@@ -1,10 +1,6 @@
 package pt12.frigidarium.database2.models;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ServerValue;
-
-import java.security.PublicKey;
-import java.util.Map;
 
 /**
  * Created by mattijn on 24/05/17.
