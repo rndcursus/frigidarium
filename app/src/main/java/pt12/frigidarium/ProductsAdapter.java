@@ -209,6 +209,7 @@ public class ProductsAdapter
         //holder.getTextView().setText(data.get(groupPosition).getName());
         LinkedList<Map.Entry<String, StockEntry>> entries = new LinkedList<Map.Entry<String, StockEntry>>(data.get(groupPosition).second.entrySet());
         holder.setDetails(entries.get(childPosition));
+        holder.setBestBeforeText();
 
         final int swipeState = holder.getSwipeStateFlags();
 

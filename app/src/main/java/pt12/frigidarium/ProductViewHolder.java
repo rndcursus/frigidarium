@@ -18,6 +18,9 @@ import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemViewHo
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import pt12.frigidarium.database2.models.Product;
@@ -177,9 +180,17 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
          * Set the best before value in the view
          */
         public void setBestBeforeText(){
-            TextView best_before = (TextView) view.findViewById(R.id.product_best_before);
-            best_before.setText(R.string.expirationDate);
-            best_before.setText(best_before.getText() + details.getValue().best_before.toString());
+            String best_before;
+            if(details.getValue().best_before == null){
+                best_before = "-";
+            }else{
+                best_before = details.getValue().best_before.toString();
+                /*Calendar calendar = new GregorianCalendar();
+                calendar.setTimeInMillis(details.getValue().best_before * 1000);*/
+            }
+            TextView best_beforeText = (TextView) view.findViewById(R.id.product_best_before);
+            best_beforeText.setText(R.string.expirationDate);
+            best_beforeText.setText(best_beforeText.getText() + best_before);
         }
 
         /**
