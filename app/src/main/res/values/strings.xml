@@ -45,7 +45,7 @@
     <string name="date_toast">To add a expiring date follow the format: dd-mm-yy</string>
     <string name="date_invalid">The added date is invalid</string>
     <string name="on_current_list">"You are already part of this list."</string>
-    <string name="share_button">Share your stock</string>
+    <string name="share_button">Share your personal QR-code</string>
     <string name="login_text">Welcome to Frigidarium!</string>
     <string name="opVooraad">"In stock: "</string>
     <string name="expirationDate">"Expiration date: "</string>

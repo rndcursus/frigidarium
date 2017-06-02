@@ -45,8 +45,8 @@
     <string name="date_toast">Fülle das Datum in dieser Form ein: dd-mm-jjjj</string>
     <string name="date_invalid">Das hinzugefügte Datum ist ungültig</string>
     <string name="on_current_list">Du gehörst schon zu dieser Liste.</string>
-    <string name="share_button">Teile deine Vorratsliste!</string>
-    <string name="opVooraad">"vorrätig: "</string>
+    <string name="share_button">Teile Ihren persönlichen QR-Code</string>
+    <string name="opVooraad">"Vorrätig: "</string>
     <string name="expirationDate">"Haltbarkeitsdatum: "</string>
     <string name="not_all_field_filled_in">Nicht alle Pflichtfelder sind gefüllt</string>
 

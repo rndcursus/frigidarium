@@ -45,7 +45,7 @@
     <string name="date_toast">Vul de datum in als dd-mm-jjjj</string>
     <string name="date_invalid">De ingevoerde datum is niet correct</string>
     <string name="on_current_list">Je bent al onderdeel van deze lijst.</string>
-    <string name="share_button">Deel jouw voorraadlijst</string>
+    <string name="share_button">Deel jouw persoonlijke QR-code</string>
 
     <string name="opVooraad">"Voorraad: "</string>
     <string name="expirationDate">"Houdbaarheidsdatum: "</string>
