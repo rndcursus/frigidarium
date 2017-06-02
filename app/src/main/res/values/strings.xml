@@ -49,6 +49,7 @@
     <string name="login_text">Welcome to Frigidarium!</string>
     <string name="login_text2">Please use your google account to log in</string>
     <string name="opVooraad">"In stock: "</string>
+    <string name="inShoppingCart">"In shopping cart: "</string>
     <string name="expirationDate">"Expiration date: "</string>
     <string name="not_all_field_filled_in">Not all required fields are filled</string>
     <string name="brand">Brand</string>
