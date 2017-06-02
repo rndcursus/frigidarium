@@ -85,10 +85,13 @@ public class RegisterNewProductActivity extends AppCompatActivity {
         String stockId = LoginActivity.getCurrentStock();
         if (!stockId.equals("")) {
             Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.dialog_add_to_stock, productName), Toast.LENGTH_SHORT).show();
         }else {
             //// TODO: 30-5-2017 user heeft geen current stock
         }
-        //Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
+        Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
+        Log.v("datalog", "exdate: "+exdate);
+
     }
 
 }

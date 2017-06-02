@@ -39,6 +39,7 @@
     <string name="add">add</string>
     <string name="dialog_switch_list">Add user to stock? This user will be unable to access their current stock and shopping lists.</string>
     <string name="dialog_add_to_stock">Add %1$s to stock?</string>
+    <string name="product_succes">%1$s added succesfully.</string>
     <string name="dialog_add_to_stock_does_not_exist">This product has not yet been added to the Frigidarium database. Do you want to register this product and add it to stock?</string>
     <string name="dialog_add_title">Add product to stock</string>
     <string name="date_hint">Expiration date (dd-mm-yyyy) (optional)</string>
@@ -51,6 +52,7 @@
     <string name="opVooraad">"In stock: "</string>
     <string name="expirationDate">"Expiration date: "</string>
     <string name="not_all_field_filled_in">Not all required fields are filled</string>
+    <string name="add_without_date">Add without date</string>
     <string name="brand">Brand</string>
     <string name="productname">Productname</string>
     <string name="property">An important property</string>
