@@ -1,7 +1,6 @@
 package pt12.frigidarium;
 
 
-import android.content.res.Resources;
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,7 +18,6 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemView
 
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
@@ -184,9 +182,10 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             if(details.getValue().best_before == null){
                 best_before = "-";
             }else{
-                best_before = details.getValue().best_before.toString();
-                /*Calendar calendar = new GregorianCalendar();
-                calendar.setTimeInMillis(details.getValue().best_before * 1000);*/
+                //best_before = details.getValue().best_before.toString();
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTimeInMillis(details.getValue().best_before * 1000);
+                best_before = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
             }
             TextView best_beforeText = (TextView) view.findViewById(R.id.product_best_before);
             best_beforeText.setText(R.string.expirationDate);
