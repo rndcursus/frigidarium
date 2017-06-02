@@ -76,14 +76,14 @@ public class BarcodeScanActivity extends Activity {
     protected void onPause() {
         super.onPause();
         //Simple fix to stop the barcode detector when activity is not running.
-        //scanningPaused = true;
+        scanningPaused = true;
         //barcodeDetector.release();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        scanningPaused = false;
+        //scanningPaused = false;
     }
 
     /**
@@ -143,7 +143,7 @@ public class BarcodeScanActivity extends Activity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if (true) {
+                if (!scanningPaused) {
                     if (barcodes.size() > 0) {
                         scanningPaused = true;
                         if (barcodes.valueAt(0).valueFormat != Barcode.QR_CODE) {
@@ -161,7 +161,7 @@ public class BarcodeScanActivity extends Activity {
                                 addNewProduct(barcodes.valueAt(0).displayValue);
                             }
                         }
-                        scanningPaused = false;
+                        //scanningPaused = false;
                     }
                 }
             }
@@ -175,8 +175,8 @@ public class BarcodeScanActivity extends Activity {
      * @param barcode
      */
     private void addNewProduct(final String barcode) {
-        scanningPaused = true;
-        barcodeDetector.release();
+        //scanningPaused = true;
+        //barcodeDetector.release();
 
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
@@ -194,22 +194,7 @@ public class BarcodeScanActivity extends Activity {
                 //// TODO: 30-5-2017 handle error
             }
         });
-        scanningPaused = false;
-        try {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            cameraSource.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //scanningPaused = false;
     }
 
     /**
