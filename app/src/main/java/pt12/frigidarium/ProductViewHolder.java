@@ -56,11 +56,6 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
     }
 
 
-
-
-
-
-
     public static class ProductTitleViewHolder extends ProductViewHolder {
         private ImageButton indicator;
         private boolean isExpanded;
@@ -90,6 +85,10 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             super.setExpandStateFlags(flags);
         }
 
+        /**
+         * Set the expand state of the view holder
+         * @param isExpanded Current value
+         */
         public void setExpandState(boolean isExpanded){
             if(this.isExpanded != isExpanded){
                 onExpansionToggled(isExpanded);
@@ -118,6 +117,10 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             }*/
         }
 
+        /**
+         * Set the data of the product to the view
+         * @param products List of products
+         */
         public void setproduct(final Pair<Pair<String, Long>, Map<String, StockEntry>> products){
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products/"+products.first.first);
             if (mValueEventListener != null){
@@ -162,16 +165,27 @@ public class ProductViewHolder extends AbstractSwipeableItemViewHolder
             this.view = v;
         }
 
+        /**
+         * set the details of a product
+         * @param details
+         */
         public void setDetails(final Map.Entry<String, StockEntry> details){
             this.details = details;
         }
 
+        /**
+         * Set the best before value in the view
+         */
         public void setBestBeforeText(){
             TextView best_before = (TextView) view.findViewById(R.id.product_best_before);
             best_before.setText(R.string.expirationDate);
             best_before.setText(best_before.getText() + details.getValue().best_before.toString());
         }
 
+        /**
+         * Returns the key  in the database of the current product
+         * @return database key
+         */
         public String getDatabaseKey(){
             return details.getKey();
         }
