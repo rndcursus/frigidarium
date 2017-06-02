@@ -153,7 +153,7 @@ public class ShoppingAdapter
         View thisItemsView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_shopping_layout, viewGroup, false);
         // Call the view holder's constructor, and pass the view to it;
         // return that new view holder
-        return new ShoppingViewHolder.ShoppingTitleViewHolder(thisItemsView);
+        return new ShoppingViewHolder.ShoppingTitleViewHolder(thisItemsView, this);
     }
 
     @Override
@@ -195,6 +195,10 @@ public class ShoppingAdapter
     @Override
     public boolean onCheckCanExpandOrCollapseGroup(ShoppingViewHolder.ShoppingTitleViewHolder holder, int groupPosition, int x, int y, boolean expand) {
         return false;
+    }
+
+    public List<Pair<Pair<String, Long>,Map<String, StockEntry>>> getData(){
+        return data;
     }
 
     // Class to perform left-swipe action: Remove from stock list and add to schopping list
