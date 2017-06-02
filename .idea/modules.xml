@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/frigidarium.iml" filepath="$PROJECT_DIR$/frigidarium.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frigidariumGitHub.iml" filepath="$PROJECT_DIR$/frigidariumGitHub.iml" />
     </modules>
   </component>
 </project>

@@ -33,12 +33,12 @@
 
             </LinearLayout>
 
-            <include
+            <!--<include
                 android:id="@+id/product_action_buttons"
                 layout="@layout/include_product_details_action_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                />-->
 
         </LinearLayout>
 
