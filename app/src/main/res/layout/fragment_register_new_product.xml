@@ -58,41 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!--
-            <RadioGroup
-                android:id="@+id/VolMass"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/line0"
-                android:orientation="horizontal" >
-
-                <RadioButton
-                    android:id="@+id/liter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/liter" />
-
-                <RadioButton
-                    android:id="@+id/gram"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/gram" />
-            </RadioGroup>
-            -->
-
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/product_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/url_hint"
-            android:inputType="textNoSuggestions"
-            android:singleLine="true"
-            android:text="" />
 
         <Button
             android:id="@+id/submit"

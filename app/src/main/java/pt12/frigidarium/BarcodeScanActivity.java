@@ -400,7 +400,7 @@ public class BarcodeScanActivity extends Activity {
                 if (user != null){
                     if (!called){
                         // todo do something with the user.getName()
-                        builder.setMessage(getResources().getString(R.string.dialog_switch_list, user));
+                        builder.setMessage(getResources().getString(R.string.dialog_switch_list, user.getName()));
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
