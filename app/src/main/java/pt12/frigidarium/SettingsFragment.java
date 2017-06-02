@@ -1,17 +1,12 @@
 package pt12.frigidarium;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
@@ -189,7 +183,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
-        if(firstSelection==true)
+        if(firstSelection)
         firstSelection=false;
         else {
             switch (pos) {

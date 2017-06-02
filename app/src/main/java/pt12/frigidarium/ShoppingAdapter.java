@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemConstants;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableSwipeableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
@@ -153,7 +152,7 @@ public class ShoppingAdapter
         View thisItemsView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_shopping_layout, viewGroup, false);
         // Call the view holder's constructor, and pass the view to it;
         // return that new view holder
-        return new ShoppingViewHolder.ShoppingTitleViewHolder(thisItemsView);
+        return new ShoppingViewHolder.ShoppingTitleViewHolder(thisItemsView, this);
     }
 
     @Override
@@ -167,7 +166,7 @@ public class ShoppingAdapter
     public void onBindGroupViewHolder(ShoppingViewHolder.ShoppingTitleViewHolder viewHolder, int position, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         // Corresponding original adapter method is: onBindViewHolder
         viewHolder.setproduct(data.get(position));
-
+        viewHolder.setPosistion(position);
         // set background resource (target view ID: container)
         final int swipeState = viewHolder.getSwipeStateFlags();
         final int expandState = viewHolder.getExpandStateFlags();
@@ -195,6 +194,10 @@ public class ShoppingAdapter
     @Override
     public boolean onCheckCanExpandOrCollapseGroup(ShoppingViewHolder.ShoppingTitleViewHolder holder, int groupPosition, int x, int y, boolean expand) {
         return false;
+    }
+
+    public List<Pair<Pair<String, Long>,Map<String, StockEntry>>> getData(){
+        return data;
     }
 
     // Class to perform left-swipe action: Remove from stock list and add to schopping list

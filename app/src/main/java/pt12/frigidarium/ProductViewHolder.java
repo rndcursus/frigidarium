@@ -1,7 +1,6 @@
 package pt12.frigidarium;
 
 
-import android.content.res.Resources;
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,7 +18,6 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemView
 
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
