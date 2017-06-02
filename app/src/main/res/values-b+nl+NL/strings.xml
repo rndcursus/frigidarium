@@ -52,7 +52,7 @@
     <string name="inShoppingCart">"Aantal in boodschappenlijst: "</string>
     <string name="expirationDate">"Houdbaarheidsdatum: "</string>
 
-    <string name="not_all_field_filled_in">Niet alle vereiste velden zijn ingevuld</string>
+    <string name="not_all_field_filled_in">Niet alle vereiste velden zijn ingevuld.</string>
 
     <string name="brand">Merk</string>
     <string name="productname">Product naam</string>
