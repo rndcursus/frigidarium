@@ -73,6 +73,6 @@
     <string name="select_lang">Kies een taal</string>
     <string name="login_text">Welkom bij Frigidarium!</string>
     <string name="spinner_prompt">Kies een taal</string>
-    <string name="login_text2">Gebruik a.u.b. je Google account om in te loggen</string>
+    <string name="login_text2">Gebruik je Google account om in te loggen</string>
 </resources>
 
