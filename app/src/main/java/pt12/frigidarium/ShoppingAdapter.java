@@ -167,7 +167,7 @@ public class ShoppingAdapter
     public void onBindGroupViewHolder(ShoppingViewHolder.ShoppingTitleViewHolder viewHolder, int position, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         // Corresponding original adapter method is: onBindViewHolder
         viewHolder.setproduct(data.get(position));
-
+        viewHolder.setPosistion(position);
         // set background resource (target view ID: container)
         final int swipeState = viewHolder.getSwipeStateFlags();
         final int expandState = viewHolder.getExpandStateFlags();
