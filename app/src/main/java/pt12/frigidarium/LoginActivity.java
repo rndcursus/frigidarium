@@ -62,12 +62,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private Class<?> nextActivity = MainActivity.class;
     private static SharedPreferences pref;
     private boolean wentToNext = false;
+    private boolean persistencset  = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        if (persistencset) {
+            persistencset = true;
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
         pref = getPreferences(MODE_PRIVATE);
         setContentView(R.layout.activity_login);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
