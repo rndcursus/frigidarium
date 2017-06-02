@@ -46,17 +46,15 @@
     <string name="date_invalid">The added date is invalid</string>
     <string name="on_current_list">"You are already part of this list."</string>
     <string name="share_button">Share your stock</string>
-
+    <string name="login_text">Welcome to Frigidarium!</string>
+    <string name="login_text2">Please use your google account to log in</string>
     <string name="opVooraad">"In stock: "</string>
     <string name="expirationDate">Expiration date: </string>
-
     <string name="not_all_field_filled_in">Not all required fields are filled</string>
-
     <string name="brand">Brand</string>
     <string name="productname">Productname</string>
     <string name="property">An important property</string>
     <string name="barcode">Barcode:</string>
-
     <string name="stap_uit_de_lijst">Leave list</string>
     <string name="huidige_lijst">Current list</string>
     <string-array name="content_units">
@@ -64,6 +62,12 @@
         <item>L</item>
         <item>pieces</item>
     </string-array>
-
+    <string-array name="languages">
+        <item>English</item>
+        <item>Dutch</item>
+        <item>German</item>
+    </string-array>
+    <string name="select_lang">Choose a language</string>
+    <string name="spinner_prompt">Choose a language</string>
 </resources>
 

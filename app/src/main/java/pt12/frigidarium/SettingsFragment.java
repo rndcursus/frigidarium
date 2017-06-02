@@ -1,25 +1,36 @@
 package pt12.frigidarium;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Layout;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.util.Locale;
 
 
 /**
@@ -30,7 +41,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener, AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -40,6 +51,8 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private boolean firstSelection;
 
   //  private OnFragmentInteractionListener mListener;
 
@@ -91,9 +104,38 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
         String stockID = LoginActivity.getCurrentStock();
         TextView tv = (TextView) view.findViewById(R.id.current_stock_view);
         tv.setText(stockID);
+
+        /*
+        Creates the language selection spinner
+         */
+        firstSelection=true; //needed for it to not fire off immediately
+        Spinner language_select = (Spinner) view.findViewById(R.id.spinner_lang);
+        ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(getContext(),R.array.languages,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        language_select.setAdapter(adapter);
+        language_select.setOnItemSelectedListener(this);
+        TextView prompt = (TextView) view.findViewById(R.id.text_lang);
+        prompt.setText(R.string.select_lang);
+        /*
+        Selects the current language as default selection.
+        Spinner will not fire off when it gets reselected.
+         */
+        int def = 0;
+        switch(Locale.getDefault().getDisplayLanguage()){
+            case "English":break;
+            case "Nederlands": def=1;break;
+            case "Deutsch": def=2;break;
+            default: break;
+        }
+        language_select.setSelection(def,true);
         return view;
     }
 
+    /**
+     * Uses the ImageView to set up a Bitmap.
+     * From the user's ID a QR code will be generated
+     * and pixels will be colored black or white.
+     */
     private void createQRCode() {
         ImageView mImageView = (ImageView) getView().findViewById(R.id.image_qr);
         super.onStart();
@@ -148,6 +190,56 @@ public class SettingsFragment extends Fragment implements SharedPreferences.OnSh
             TextView tv = (TextView) getActivity().findViewById(R.id.current_stock_view);
             tv.setText(stockID);
         }
+    }
+
+    /**
+     * Should set the language to the selected one
+     * @param parent Spinner
+     * @param view View
+     * @param pos selected position
+     * @param l
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
+        if(firstSelection==true)
+        firstSelection=false;
+        else {
+            switch (pos) {
+                case 0:
+                    setLocale("en");
+                    break;
+                case 1:
+                    setLocale("nl");
+                    break;
+                case 2:
+                    setLocale("de");
+                    break;
+                default:
+                    break;
+            }
+        }
+       // setLocale(lang.toString());
+    }
+
+    /**
+     * Should set the current locale to a different language
+     * @param lang language code
+     */
+    public void setLocale(String lang) {
+        Resources res = getContext().getResources();
+        // Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
+        // Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
+        getActivity().finish();
+
+        }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     /**
