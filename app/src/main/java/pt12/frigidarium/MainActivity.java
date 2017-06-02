@@ -2,6 +2,7 @@ package pt12.frigidarium;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +16,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,6 +26,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     public NavigationView navigationView;
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,12 @@ public class MainActivity extends AppCompatActivity
         TextView name_tv = (TextView) headerView.findViewById(R.id.name_tv);
         name_tv.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         //codeView = (TextView) findViewById(R.id.code_info);
+        Display display = getWindowManager().getDefaultDisplay();
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+        .build();
+        mAdView.loadAd(adRequest);
+
 
         //SET MENU ITEM TO STOCK LIST
         navigationView.getMenu().getItem(1).setChecked(true);
