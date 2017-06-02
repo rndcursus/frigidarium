@@ -35,7 +35,7 @@
     <string name="cancel">Annulieren</string>
     <string name="cont">Weiter</string>
     <string name="add">Zufügen</string>
-    <string name="dialog_switch_list">Bist du sicher, dass du die Liste wechseln willst? Dadurch verlierst du den Zugang zu deiner heutigen Vorrats- und Einkaufsliste.</string>
+    <string name="dialog_switch_list">%1$s zur Vorratsliste zufügen?</string>
     <string name="dialog_add_to_stock"> %1$s zur Vorratsliste zufügen?</string>
     <string name="dialog_add_to_stock_does_not_exist">Dieses Produkt wurde noch nicht in die Frigidarium-Datenbank aufgenommen. Möchten Sie dieses Produkt registrieren und hinzufügen?</string>
     <string name="product_succes">%1$s erfolgreich hinzugefügt.</string>
@@ -50,7 +50,7 @@
     <string name="expirationDate">"Haltbarkeitsdatum: "</string>
     <string name="not_all_field_filled_in">Nicht alle Pflichtfelder sind gefüllt</string>
     <string name="add_without_date">Ohne Datum hinzufügen</string>
-
+    <string name="qr_info">Letzten Sie ihre QR-code scannen durch ein Fridarium Benutzer</string>
     <string name="brand">Marke</string>
     <string name="productname">Produktname</string>
     <string name="property">Eine wichtige Eigenschaft</string>

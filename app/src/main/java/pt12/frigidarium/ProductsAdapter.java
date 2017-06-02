@@ -193,11 +193,7 @@ public class ProductsAdapter
                 bgResId = R.drawable.product_swiping_normal_state;
             }
 
-            if ((expandState & ExpandableItemConstants.STATE_FLAG_IS_EXPANDED) != 0) {
-                isExpanded = true;
-            } else {
-                isExpanded = false;
-            }
+            isExpanded = (expandState & ExpandableItemConstants.STATE_FLAG_IS_EXPANDED) != 0;
 
             viewHolder.setExpandState(isExpanded/*, animateIndicator*/);
             viewHolder.getContainer().setBackgroundResource(bgResId);

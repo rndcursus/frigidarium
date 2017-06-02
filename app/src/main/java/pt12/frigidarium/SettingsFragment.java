@@ -1,7 +1,6 @@
 package pt12.frigidarium;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -184,7 +183,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
-        if(firstSelection==true)
+        if(firstSelection)
         firstSelection=false;
         else {
             switch (pos) {

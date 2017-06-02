@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="32dp"
+        android:textSize="32sp"
         android:layout_marginTop="27dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="37dp"
         android:text="TextView"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_below="@+id/text_login"
         android:layout_centerHorizontal="true" />
