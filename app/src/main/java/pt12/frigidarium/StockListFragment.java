@@ -40,7 +40,7 @@ public class StockListFragment extends Fragment {
      */
     public StockListFragment() {
     }
-    
+
     @SuppressWarnings("unused")
     public static StockListFragment newInstance(int columnCount) {
         StockListFragment fragment = new StockListFragment();
@@ -122,7 +122,7 @@ public class StockListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
     }
-
+  
     @Override
     public void onDetach() {
         super.onDetach();
