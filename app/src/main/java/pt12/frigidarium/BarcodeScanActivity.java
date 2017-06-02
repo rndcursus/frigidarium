@@ -377,7 +377,7 @@ public class BarcodeScanActivity extends Activity {
         barcodeDetector.release();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_switch_list);
+
 
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -392,8 +392,26 @@ public class BarcodeScanActivity extends Activity {
                 scanningPaused = false;
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        FirebaseDatabase.getInstance().getReference(User.TABLENAME + "/" +qrcode).addValueEventListener(new ValueEventListener() {
+            boolean called = false;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null){
+                    if (!called){
+                        // todo do something with the user.getName()
+                        builder.setMessage(getResources().getString(R.string.dialog_switch_list, user));
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private long calcExdate(int day, int month, int year)
