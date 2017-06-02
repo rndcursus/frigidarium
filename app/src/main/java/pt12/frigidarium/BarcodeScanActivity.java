@@ -71,7 +71,6 @@ public class BarcodeScanActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
-        //addNewProduct("hoi");
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
         dialogHandler = new Handler(){
@@ -99,13 +98,12 @@ public class BarcodeScanActivity extends Activity {
         super.onPause();
         //Simple fix to stop the barcode detector when activity is not running.
         scanningPaused = true;
-        //barcodeDetector.release();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //scanningPaused = false;
+        scanningPaused = false;
     }
 
     /**
@@ -198,8 +196,7 @@ public class BarcodeScanActivity extends Activity {
      * @param barcode
      */
     private void addNewProduct(final String barcode) {
-        //scanningPaused = true;
-        //barcodeDetector.release();
+        
 
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
@@ -217,7 +214,7 @@ public class BarcodeScanActivity extends Activity {
                 //// TODO: 30-5-2017 handle error
             }
         });
-        //scanningPaused = false;
+
     }
 
     /**
