@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#ffbf00</color>
+    <color name="colorPrimaryDark">#e6ac00</color>
+    <color name="colorAccent">#ffcc00</color>
+
+    <!-- Swipe colors -->
+
+    <color name="bg_item_normal_state">#FFFFFF</color>
+    <color name="bg_item_dragging_state">#ffffdddd</color>
+    <color name="bg_item_dragging_active_state">#ffff9999</color>
+    <color name="bg_item_swiping_state">#FFFFFF</color>
+    <color name="bg_item_swiping_active_state">#ff9999ff</color>
+
+    <color name="bg_swipe_item_neutral">@android:color/transparent</color>
+    <color name="bg_swipe_item_dismiss">#fff9930d</color>
+    <color name="bg_swipe_item_pinned">#ff2f8b2a</color>
+    <color name="bg_swipe_item_gray">#999999</color>
+    <color name="bg_swipe_group_item_pinned">#fff45f30</color>
+    <color name="bg_swipe_group_item_dismiss">#ff295db3</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

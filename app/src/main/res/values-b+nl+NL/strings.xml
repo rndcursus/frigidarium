@@ -1,0 +1,80 @@
+<resources>
+    <string name="app_name">Frigidarium</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_login">Login</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Sluit navigation drawer</string>
+
+    <string name="action_settings">Instellingen</string>
+   
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_barcode_reader">BarcodeReaderActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="scan">Scannen</string>
+    <string name="stock">Voorraadlijst</string>
+    <string name="shoppingList">Boodschappenlijst</string>
+    <string name="settings">Instellingen</string>
+    <string name="listPicker">Lijst kiezer</string>
+
+    <string name="defaultLogin">Frigidarium</string>
+    <string name="defaultEmail">frigidarium@frigidarium.nl</string>
+    
+    <string name="addedSuccesful">Product succesvol toegevoegd</string>
+
+    <string name="new_product_message">Dit product is nog niet geregristreerd. Vul het formulier in om de datbase uit te breiden.</string>
+    <string name="product_name_hint">productnaam (zonder merk)</string>
+    <string name="brand_name_hint">merk</string>
+    <string name="content_hint">inhoud</string>
+    <string name="url_hint">url</string>
+    <string name="submit">verstuur</string>
+    <string name="liter">L</string>
+    <string name="gram">g</string>
+    <string name="cancel">Annuleren</string>
+    <string name="cont">Doorgaan</string>
+    <string name="add">Toevoegen</string>
+    <string name="add_without_date">toevoegen exlc. datum</string>
+    <string name="dialog_switch_list">Weet je zeker dat je van lijst wil wisselen? Hiermee verlies je toegang tot je huidige voorraad- en boodschappenlijst.</string>
+    <string name="dialog_add_to_stock"> %1$s aan de voorraadlijst toevoegen?</string>
+    <string name="dialog_add_to_stock_does_not_exist">Dit product staat nog niet in de Frigidarium database. Wil je het product regristreren en aan de voorraadlijst toevoegen?</string>
+    <string name="dialog_add_title">Voeg product toe aan de voorraadlijst</string>
+    <string name="date_hint">Vul de houdbaarheiddatum in (dd-mm-jjjj) (optioneel)</string>
+    <string name="date_toast">Vul de datum in als dd-mm-jjjj</string>
+    <string name="date_invalid">De ingevoerde datum is niet correct</string>
+    <string name="on_current_list">Je bent al onderdeel van deze lijst.</string>
+    <string name="share_button">Deel jouw persoonlijke QR-code</string>
+
+    <string name="opVooraad">"Voorraad: "</string>
+    <string name="inShoppingCart">"Aantal in boodschappenlijst: "</string>
+    <string name="expirationDate">"Houdbaarheidsdatum: "</string>
+
+    <string name="not_all_field_filled_in">Niet alle vereiste velden zijn ingevuld.</string>
+
+    <string name="brand">Merk</string>
+    <string name="productname">Product naam</string>
+    <string name="property">Een belangrijke eigenschap</string>
+    <string name="barcode">"Barcode: "</string>
+
+    <string name="stap_uit_de_lijst">Verlaat lijst</string>
+    <string name="huidige_lijst">Huidige lijst</string>
+    <string-array name="content_units">
+        <item>g</item>
+        <item>L</item>
+        <item>stuks</item>
+    </string-array>
+    <string-array name="languages">
+        <item>Engels</item>
+        <item>Nederlands</item>
+        <item>Duits</item>
+    </string-array>
+
+    <string name="select_lang">Kies een taal</string>
+    <string name="login_text">Welkom bij Frigidarium!</string>
+    <string name="spinner_prompt">Kies een taal</string>
+    <string name="login_text2">Gebruik je Google account om in te loggen</string>
+</resources>
+
