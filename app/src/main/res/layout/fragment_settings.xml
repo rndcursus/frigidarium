@@ -2,7 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pt12.frigidarium.SettingsFragment">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+   tools:context="pt12.frigidarium.SettingsFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -26,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Huidige Stock" />
+        android:text="@string/huidige_lijst" />
 
     <TextView
         android:id="@+id/current_stock_view"

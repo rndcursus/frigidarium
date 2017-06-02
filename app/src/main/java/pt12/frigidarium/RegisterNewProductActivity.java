@@ -89,7 +89,9 @@ public class RegisterNewProductActivity extends AppCompatActivity {
         }else {
             //// TODO: 30-5-2017 user heeft geen current stock
         }
-        //Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
+        Log.v("datalog", "barcode:"+barcode+", pn:"+productName+", pb:"+productBrand+", pc:"+productContent+", purl:"+productUrl);
+        Log.v("datalog", "exdate: "+exdate);
+
     }
 
 }
