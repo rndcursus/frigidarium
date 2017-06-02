@@ -79,16 +79,13 @@ public class BarcodeScanActivity extends Activity {
     private static final int CREATE_NEW_USER_DIALOG = 10;
     private static final int CREATE_NEW_DATE_DIALOG = 8;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan);
-        //addNewProduct("hoi");
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         createCameraSource();
+        addNewProduct("hoi");
         dialogHandler = new Handler(){
             @Override
             public void handleMessage(Message msg){
@@ -209,12 +206,10 @@ public class BarcodeScanActivity extends Activity {
 
 
     /**
-     * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED. BARCODE IS ADDED TO DATABASE.
+     * FUNCTION THAT IS CALLED WHEN A NEW BARCODE IS SCANNED.
      * @param barcode
      */
     private void addNewProduct(final String barcode) {
-        //scanningPaused = true;
-        //barcodeDetector.release();
 
         Product.checkExist(barcode, new CheckExist<Product>() {
             @Override
@@ -232,7 +227,6 @@ public class BarcodeScanActivity extends Activity {
                 //// TODO: 30-5-2017 handle error
             }
         });
-        //scanningPaused = false;
     }
 
     /**
@@ -252,8 +246,8 @@ public class BarcodeScanActivity extends Activity {
     }
 
     /**
-     * INVULLEN NOG
-     * @param barcode
+     * Creates a dialog that asks if user wants to add a scanned product to be added to their stock, with or without a date, and acts accordingly
+     * @param barcode the barcode of given product
      */
     private AlertDialog.Builder createDialog(final String barcode, final boolean exists)
     {
@@ -276,8 +270,6 @@ public class BarcodeScanActivity extends Activity {
 
             }
         });
-
-        //input.setHint(R.string.date_hint);
         add_dialog.setView(input);
 
         add_dialog.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
@@ -289,22 +281,7 @@ public class BarcodeScanActivity extends Activity {
              */
             public void onClick(DialogInterface dialog, int whichButton) {
                 exdate = calcExdate(input.getDayOfMonth(), input.getMonth(), input.getYear());
-                if(!exists)
-                {
-                    Intent intent;
-                    intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-                    intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
-                    intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
-                    startActivity(intent);
-                }
-                else
-                {
-                    String stockId = LoginActivity.getCurrentStock();
-                    Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
-                }
-
-                scanningPaused = false;
-
+                proceedAdding(barcode, exists);
             }
         });
         add_dialog.setNeutralButton(R.string.add_without_date,  new DialogInterface.OnClickListener() {
@@ -316,22 +293,8 @@ public class BarcodeScanActivity extends Activity {
              */
             public void onClick(DialogInterface dialog, int whichButton) {
                 exdate = 0L;
+                proceedAdding(barcode, exists);
 
-                if(!exists)
-                {
-                    Intent intent;
-                    intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
-                    intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
-                    intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
-                    startActivity(intent);
-                }
-                else
-                {
-                    String stockId = LoginActivity.getCurrentStock();
-                    Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
-                }
-
-                scanningPaused = false;
             }
         });
         add_dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -343,50 +306,54 @@ public class BarcodeScanActivity extends Activity {
         return add_dialog;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void createDatePickerDialog(final Product product){
-        //test datepicker
-        Calendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                GregorianCalendar date = new GregorianCalendar();
-                date.set(year,month,dayOfMonth);
-                long bestBefore = date.getTimeInMillis()/1000L;
-                StockEntry entry = new StockEntry(Product.createProductUID(product.getUid()), bestBefore);
-                String stockId = LoginActivity.getCurrentStock();
-                if (stockId.equals("")){
-                    //todo no current stock
-                    return;
-                }
-                Stock.addStockEntryToInStock(stockId, entry);
-                scanningPaused = false;
-            }
-        },cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH));
-        dialog.show();
+
+    private void proceedAdding(String barcode, boolean exists)
+    {
+        if(!exists)
+        {
+            Intent intent;
+            intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
+            intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
+            intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
+            startActivity(intent);
+        }
+        else
+        {
+            String stockId = LoginActivity.getCurrentStock();
+            Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+        }
+
+        scanningPaused = false;
     }
 
     /**
-     *
-     * @param qrcode
+     * Converts date to Unix timestamp
+     * @param day Day of month
+     * etc...
+     */
+    private long calcExdate(int day, int month, int year)
+    {
+        Calendar c = new GregorianCalendar();
+        c.set(year,month,day);
+        return c.getTimeInMillis() / 1000L;
+    }
+
+
+    /**
+     * Adds launches dialog with the option to add new user to stock
+     * @param qrcode the user id of the to be added user
      */
     private void addToNewList(final String qrcode){
 
         scanningPaused = true;
         barcodeDetector.release();
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-
         builder.setPositiveButton(R.string.cont, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
                 addUserToList(qrcode);
                 scanningPaused = false;
               }
         });
-        
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 scanningPaused = false;
@@ -414,10 +381,7 @@ public class BarcodeScanActivity extends Activity {
         });
     }
 
-    private long calcExdate(int day, int month, int year)
-    {
-        Calendar c = new GregorianCalendar();
-        c.set(year,month,day);
-        return c.getTimeInMillis() / 1000L;
-    }
+
+
+
 }

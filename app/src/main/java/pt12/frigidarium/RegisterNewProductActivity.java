@@ -16,20 +16,19 @@ import pt12.frigidarium.database2.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
 
 public class RegisterNewProductActivity extends AppCompatActivity {
-
     public static final String BARCODE = "barcode";
     public static final String EXDATE = "exdate";
     private EditText productName;
     private EditText productBrand;
     private EditText productContent;
-    private EditText productUrl;
-    private RadioButton liter;
-    private RadioButton gram;
     private Button submit;
-    long exdate;
+    long exdate; //expiring date of product
     private Spinner contentUnitDropdown;
     private String barcode = "ERROR";
 
+    /**
+     * Set up form behaviour on creation of activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +60,7 @@ public class RegisterNewProductActivity extends AppCompatActivity {
                         pc = productContent.getText().toString().trim() + " " + contentUnitDropdown.getSelectedItem().toString();
                         if(pn.equals("") || pb.equals("") || productContent.getText().toString().trim().equals(""))
                         {
-                            Toast.makeText(getApplicationContext(), R.string.not_all_field_filled_in, Toast.LENGTH_LONG).show(); // // TODO: 30-5-2017 remove magic number
+                            Toast.makeText(getApplicationContext(), R.string.not_all_field_filled_in, Toast.LENGTH_LONG).show();
                         }
                         else
                         {
@@ -77,6 +76,12 @@ public class RegisterNewProductActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Adds data filled in in form to database
+     * @param productName name of the product to be added to database
+     * etc...
+     * @param productUrl deprecated database field that still needs to be added to database
+     */
     public void RegisterProduct(String productName, String productBrand, String productContent, String productUrl)
     {
         Product.createProduct(new Product(Product.createProductUID(barcode),productName,productBrand, barcode, productUrl, productContent)); //product gaat aangemaakt worden
