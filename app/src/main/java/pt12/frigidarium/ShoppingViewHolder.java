@@ -1,6 +1,9 @@
 package pt12.frigidarium;
 
 
+import android.content.res.Resources;
+import android.media.Image;
+
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,9 +19,11 @@ import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemViewHo
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import pt12.frigidarium.database2.models.Product;
+import pt12.frigidarium.database2.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
 
 public class ShoppingViewHolder extends AbstractSwipeableItemViewHolder
@@ -59,12 +64,53 @@ public class ShoppingViewHolder extends AbstractSwipeableItemViewHolder
         private TextView textView;
         private ValueEventListener mValueEventListener;
         private View view;
+        private Product product;
+        private int position;
 
-        public ShoppingTitleViewHolder(View view) {
+        private ImageButton plus;
+        private ImageButton minus;
+        private final ShoppingAdapter adapter;
+
+        public ShoppingTitleViewHolder(View view, final ShoppingAdapter mAdapter) {
             super(view);
             this.view = view;
+            this.adapter = mAdapter;
 
             textView = (TextView) view.findViewById(R.id.product_name);
+            plus = (ImageButton) view.findViewById(R.id.plus);
+            minus = (ImageButton) view.findViewById(R.id.minus);
+
+            plus.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    // Some code
+                    if(product != null){
+                        StockEntry entry = new StockEntry(product.getUid(), null);
+                        Stock.addStockEntryToOutStock(LoginActivity.getCurrentStock(), entry);
+                    }
+
+                }
+            });
+            minus.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    // Some code
+                    if(product != null){
+                        LinkedList<String> keys = new LinkedList<String>(adapter.getData().get(position).second.keySet());
+                        if(keys.size() > 0){
+                            String key = keys.get(0);
+                            Stock.removeFromOutStock(LoginActivity.getCurrentStock(), adapter.getData().get(position).first.first, key);
+                        }
+                    }
+
+                }
+            });
+        }
+
+        /**
+         * Set the position in the recyclerlist of this viewHolder
+         * @param posistion position in list
+         */
+        public void setPosistion(int posistion){
+            this.position = posistion;
         }
 
         // Get product details from the database
@@ -78,6 +124,7 @@ public class ShoppingViewHolder extends AbstractSwipeableItemViewHolder
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Product p =  dataSnapshot.getValue(Product.class);
+                    product = p;
                     getTextView().setText(p.name);
                     ((TextView) view.findViewById(R.id.product_brand)).setText(p.brand);
 

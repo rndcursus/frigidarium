@@ -27,6 +27,7 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -273,18 +274,37 @@ public class BarcodeScanActivity extends Activity {
              */
             public void onClick(DialogInterface dialog, int whichButton) {
                 exdate = calcExdate(input.getDayOfMonth(), input.getMonth(), input.getYear());
-                if(!exists)
-                {
+                if(!exists) {
                     Intent intent;
                     intent = new Intent(getApplicationContext(), RegisterNewProductActivity.class);
                     intent.putExtra(RegisterNewProductActivity.BARCODE, barcode);
                     intent.putExtra(RegisterNewProductActivity.EXDATE, exdate);
                     startActivity(intent);
                 }
-                else
-                {
-                    String stockId = LoginActivity.getCurrentStock();
-                    Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+                else {
+                    final String stockId = LoginActivity.getCurrentStock();
+                    if (stockId.equals("")){
+
+                    }else {
+                        Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode), exdate));
+                        Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Stock stock = dataSnapshot.getValue(Stock.class);
+                                if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                                    for (String key: stock.getOut_stock().keySet()){
+                                        Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
                 }
 
                 scanningPaused = false;
@@ -311,8 +331,25 @@ public class BarcodeScanActivity extends Activity {
                 }
                 else
                 {
-                    String stockId = LoginActivity.getCurrentStock();
+                    final String stockId = LoginActivity.getCurrentStock();
                     Stock.addStockEntryToInStock(stockId, new StockEntry(Product.createProductUID(barcode),exdate));
+                    Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Stock stock = dataSnapshot.getValue(Stock.class);
+                            if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                                for (String key: stock.getOut_stock().keySet()){
+                                    Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                                    break;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 scanningPaused = false;
@@ -339,12 +376,29 @@ public class BarcodeScanActivity extends Activity {
                 date.set(year,month,dayOfMonth);
                 long bestBefore = date.getTimeInMillis()/1000L;
                 StockEntry entry = new StockEntry(Product.createProductUID(product.getUid()), bestBefore);
-                String stockId = LoginActivity.getCurrentStock();
+                final String stockId = LoginActivity.getCurrentStock();
                 if (stockId.equals("")){
                     //todo no current stock
                     return;
                 }
                 Stock.addStockEntryToInStock(stockId, entry);
+                Stock.getRef(stockId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Stock stock = dataSnapshot.getValue(Stock.class);
+                        if (stock.getOut_stock().containsKey(Product.createProductUID(barcode))){
+                            for (String key: stock.getOut_stock().keySet()){
+                                Stock.removeFromOutStock(stockId,Product.createProductUID(barcode),key);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 scanningPaused = false;
             }
         },cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH));
