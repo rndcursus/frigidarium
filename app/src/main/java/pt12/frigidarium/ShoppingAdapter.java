@@ -64,7 +64,7 @@ public class ShoppingAdapter
                 bgRes = R.drawable.product_swipe_neutral;
                 break;
             case SwipeableItemConstants.DRAWABLE_SWIPE_LEFT_BACKGROUND:
-                bgRes = R.drawable.product_swipe_left;
+                bgRes = R.drawable.shopping_swipe_left;
                 break;
             case SwipeableItemConstants.DRAWABLE_SWIPE_RIGHT_BACKGROUND:
                 bgRes = R.drawable.product_swipe_right;
@@ -122,8 +122,6 @@ public class ShoppingAdapter
 
     @Override
     public long getGroupId(int groupPosition) {
-        //return data.get(groupPosition).getId();
-        //return data.get(groupPosition).hashCode();
         return data.get(groupPosition).first.second;
     }
 
@@ -215,7 +213,7 @@ public class ShoppingAdapter
 
             // Add to shopping list
             LinkedList<Map.Entry<String, StockEntry>> entries = new LinkedList<>(adapter.data.get(position).second.entrySet());
-            Stock.addStockEntryToOutStock(LoginActivity.getCurrentStock(), entries.getFirst().getValue());
+            Stock.addStockEntryToInStock(LoginActivity.getCurrentStock(), entries.getFirst().getValue());
 
             // Remove from stock list
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Stock.TABLENAME + "/" + LoginActivity.getCurrentStock() + "/" + Stock.OUTSTOCK + "/" + adapter.data.get(position).first.first);
@@ -248,7 +246,6 @@ public class ShoppingAdapter
             super.onPerformAction();
 
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference(Stock.TABLENAME + "/" + LoginActivity.getCurrentStock() + "/" + Stock.OUTSTOCK + "/" + adapter.data.get(position).first.first);
-            //adapter.notifyDataSetChanged();
             adapter.data.remove(position);
             adapter.expandableItemManager.notifyGroupItemRemoved(position);
             ref.removeValue();

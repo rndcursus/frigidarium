@@ -28,6 +28,7 @@ import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 
 
 import java.util.LinkedList;
@@ -58,7 +59,7 @@ public class StockFragment extends Fragment
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private ProductsAdapter adapter;
+    private AbstractExpandableItemAdapter adapter;
 
     // Variables for expand and swipe funtionality
     private RecyclerViewExpandableItemManager recyclerViewExpandableItemManager;
@@ -124,7 +125,11 @@ public class StockFragment extends Fragment
 
         // Init data set
         final LinkedList<Pair<Pair<String, Long>,Map<String,StockEntry>>> data = new LinkedList<>();
-        adapter = new ProductsAdapter(recyclerViewExpandableItemManager, data);
+        if(isInStock) {
+            adapter = new ProductsAdapter(recyclerViewExpandableItemManager, data);
+        } else {
+            adapter = new ShoppingAdapter(recyclerViewExpandableItemManager, data);
+        }
 
         // Add swipe functionality -------------------------------------------------
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
