@@ -71,10 +71,11 @@
         <item>Nederlands</item>
         <item>Duits</item>
     </string-array>
-
+    <string name="product_succes">%1$s is succesvol toegevoegd.</string>
     <string name="select_lang">Kies een taal</string>
     <string name="login_text">Welkom bij Frigidarium!</string>
     <string name="spinner_prompt">Kies een taal</string>
     <string name="login_text2">Gebruik je Google account om in te loggen</string>
+    <string name="banner_ad_unit_id">"ca-app-pub-2408289193706423/7805506794"</string>
 </resources>
 

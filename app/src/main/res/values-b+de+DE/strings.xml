@@ -71,5 +71,9 @@
     <string name="login_text">Wilkommen zu Frigidarium!</string>
     <string name="spinner_prompt">Wähle eine Sprache</string>
     <string name="login_text2">Bitte nutze deinen Google Account zum einloggen</string>
+    <string name="product_succes">%1$s added succesfully.</string> <!--todo  vertalen naar duits-->
+    <string name="inShoppingCart">"In shopping cart: "</string><!--todo  vertalen naar duits-->
+    <string name="add_without_date">Add without date</string>
+    <string name="banner_ad_unit_id">"ca-app-pub-2408289193706423/7805506794"</string>
 </resources>
 
