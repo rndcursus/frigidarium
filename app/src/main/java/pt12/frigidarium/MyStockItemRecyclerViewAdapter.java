@@ -1,10 +1,8 @@
 package pt12.frigidarium;
 
 import android.app.Activity;
-import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.Context;
 import android.graphics.Color;
-import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

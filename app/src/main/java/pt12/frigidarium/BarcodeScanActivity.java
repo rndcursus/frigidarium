@@ -8,31 +8,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 
 import android.os.Bundle;
 
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-
-import android.support.v4.app.NotificationCompat;
-
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.DatePicker;
-import android.widget.EditText;
 
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -47,9 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
 
 
 import android.app.AlertDialog;
@@ -58,8 +44,6 @@ import pt12.frigidarium.database2.models.Product;
 import pt12.frigidarium.database2.models.Stock;
 import pt12.frigidarium.database2.models.StockEntry;
 import pt12.frigidarium.database2.models.User;
-
-import static android.R.id.input;
 
 public class BarcodeScanActivity extends Activity {
 
